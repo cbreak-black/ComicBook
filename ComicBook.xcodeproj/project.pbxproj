@@ -10,6 +10,7 @@
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		256AC3DA0F4B6AC300CF3369 /* ComicBookAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* ComicBookAppDelegate.m */; };
 		70C7E0CE11342433000C644D /* ComicBookGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 70C7E0CC11342433000C644D /* ComicBookGLView.m */; };
+		70C7E10B11343175000C644D /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C7E10A11343175000C644D /* OpenGL.framework */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -28,6 +29,7 @@
 		70C7E09011341C79000C644D /* ComicBook_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComicBook_Prefix.pch; path = src/ComicBook_Prefix.pch; sourceTree = "<group>"; };
 		70C7E0CC11342433000C644D /* ComicBookGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ComicBookGLView.m; path = src/ComicBookGLView.m; sourceTree = "<group>"; };
 		70C7E0CD11342433000C644D /* ComicBookGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComicBookGLView.h; path = src/ComicBookGLView.h; sourceTree = "<group>"; };
+		70C7E10A11343175000C644D /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		8D1107310486CEB800E47090 /* ComicBook-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "ComicBook-Info.plist"; path = "resources/ComicBook-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* ComicBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ComicBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -38,6 +40,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				70C7E10B11343175000C644D /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -47,8 +50,8 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				70C7E0CC11342433000C644D /* ComicBookGLView.m */,
 				70C7E0CD11342433000C644D /* ComicBookGLView.h */,
+				70C7E0CC11342433000C644D /* ComicBookGLView.m */,
 				256AC3D80F4B6AC300CF3369 /* ComicBookAppDelegate.h */,
 				256AC3D90F4B6AC300CF3369 /* ComicBookAppDelegate.m */,
 			);
@@ -59,6 +62,7 @@
 			isa = PBXGroup;
 			children = (
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+				70C7E10A11343175000C644D /* OpenGL.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";

@@ -16,7 +16,7 @@
 	ComicBookGLView * view;
 }
 
-@property (assign) IBOutlet NSWindow * window;
-@property (assign) IBOutlet ComicBookGLView * view;
+@property (assign, readonly) IBOutlet NSWindow * window;
+@property (assign, readonly) IBOutlet ComicBookGLView * view;
 
 @end
