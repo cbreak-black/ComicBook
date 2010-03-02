@@ -9,7 +9,16 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class CBListController;
+@class CBPageController;
+
 @interface CBDocument : NSDocument
 {
+	CBListController * listController;
+	CBPageController * pageController;
 }
+
+@property (retain) CBListController * listController;
+@property (retain) CBPageController * pageController;
+
 @end

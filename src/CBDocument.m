@@ -8,6 +8,9 @@
 
 #import "CBDocument.h"
 
+#import "Controllers/CBListController.h"
+#import "Controllers/CBPageController.h"
+
 @implementation CBDocument
 
 - (id)init
@@ -19,9 +22,23 @@
     return self;
 }
 
-- (NSString *)windowNibName
+- (void)dealloc
 {
-    return @"CBDocument";
+	[listController release];
+	[pageController release];
+	[super dealloc];
+}
+
+- (void)makeWindowControllers
+{
+	CBListController * lc = [[CBListController alloc] init];
+	CBPageController * pc = [[CBPageController alloc] init];
+	[self setListController:lc];
+	[self setPageController:pc];
+	[self addWindowController:lc];
+	[self addWindowController:pc];
+	[lc release];
+	[pc release];
 }
 
 - (void)windowControllerDidLoadNib:(NSWindowController *) aController
@@ -47,5 +64,8 @@
 	//}
     return YES;
 }
+
+@synthesize listController;
+@synthesize pageController;
 
 @end
