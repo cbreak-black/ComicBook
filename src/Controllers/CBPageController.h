@@ -9,9 +9,8 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface CBPageController : NSWindowController
+@interface CBPageController : NSWindowController <NSTableViewDataSource>
 {
-
 }
 
 // Designated Initializer

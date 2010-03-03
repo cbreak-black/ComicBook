@@ -14,6 +14,10 @@
 - (id)init
 {
 	self = [super initWithWindowNibName:@"CBPage"];
+	if (self)
+	{
+		[self setShouldCloseDocument:YES];
+	}
 	return self;
 }
 

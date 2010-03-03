@@ -16,9 +16,16 @@
 {
 	CBListController * listController;
 	CBPageController * pageController;
+
+	NSMutableArray * pages;
 }
+
+// Adds URLs to the pages array
+- (void)addDirectoryURL:(NSURL *)url;
+- (void)addFileURL:(NSURL *)url;
 
 @property (retain) CBListController * listController;
 @property (retain) CBPageController * pageController;
+@property (retain, readonly) NSArray * pages;
 
 @end
