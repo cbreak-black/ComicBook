@@ -11,11 +11,14 @@
 
 @class CBListController;
 @class CBPageController;
+@class CBPage;
 
 @interface CBDocument : NSDocument
 {
 	CBListController * listController;
 	CBPageController * pageController;
+
+	NSURL * baseURL;
 
 	NSMutableArray * pages;
 }
@@ -24,8 +27,12 @@
 - (void)addDirectoryURL:(NSURL *)url;
 - (void)addFileURL:(NSURL *)url;
 
+// Page access
+- (NSInteger)pageCount;
+- (CBPage *)getPage:(NSInteger)number;
+
 @property (retain) CBListController * listController;
 @property (retain) CBPageController * pageController;
-@property (retain, readonly) NSArray * pages;
+@property (retain, readonly) NSURL * baseURL;
 
 @end

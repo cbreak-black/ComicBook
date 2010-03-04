@@ -17,6 +17,7 @@
 	if (self)
 	{
 		[self setShouldCloseDocument:YES];
+		[self setShouldCascadeWindows:NO];
 	}
 	return self;
 }

@@ -11,6 +11,9 @@
 #import "Controllers/CBListController.h"
 #import "Controllers/CBPageController.h"
 
+#import "CBPage.h"
+#import "CBURLPage.h"
+
 @implementation CBDocument
 
 - (id)init
@@ -28,6 +31,7 @@
 	[listController release];
 	[pageController release];
 	[pages release];
+	[baseURL release];
 	[super dealloc];
 }
 
@@ -64,12 +68,20 @@
 	[absoluteURL getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL];
 	if ([isDirectory boolValue])
 	{
+		if (baseURL != absoluteURL)
+		{
+			[baseURL release];
+			baseURL = [absoluteURL retain];
+		}
 		[self addDirectoryURL:absoluteURL];
 	}
 	else
 	{
+		[baseURL release];
+		baseURL = [[absoluteURL URLByDeletingLastPathComponent] retain];
 		[self addFileURL:absoluteURL];
 	}
+	[listController documentUpdated];
     return YES;
 }
 
@@ -100,16 +112,27 @@
 
 - (void)addFileURL:(NSURL *)url
 {
-	NSString * typeID;
-	if ([url getResourceValue:&typeID forKey:NSURLTypeIdentifierKey error:NULL])
+	CBPage * page = [[CBURLPage alloc] initWithURL:url];
+	if (page)
 	{
-		[pages addObject:url];
-		[listController documentUpdated];
+		[pages addObject:page];
 	}
 }
 
+// Page access
+- (NSInteger)pageCount
+{
+	return [pages count];
+}
+
+- (CBPage *)getPage:(NSInteger)number
+{
+	return (CBPage *)[pages objectAtIndex:number];
+}
+
+
 @synthesize listController;
 @synthesize pageController;
-@synthesize pages;
+@synthesize baseURL;
 
 @end

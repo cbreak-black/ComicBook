@@ -16,6 +16,10 @@
 - (id)init
 {
 	self = [super initWithWindowNibName:@"CBList"];
+	if (self)
+	{
+		[self setShouldCascadeWindows:NO];
+	}
 	return self;
 }
 
@@ -28,16 +32,20 @@
 // TableView DataSource
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
-	return [[(CBDocument*)[self document] pages] count];
+	return [(CBDocument*)[self document] pageCount];
 }
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
-	NSArray * pages = [(CBDocument*)[self document] pages];
-	NSParameterAssert(rowIndex >= 0 && rowIndex < [pages count]);
-	if ([[aTableColumn identifier] isEqual:@"path"])
+	CBDocument * doc = (CBDocument*)[self document];
+	if (doc)
 	{
-		return [pages objectAtIndex:rowIndex];
+		NSParameterAssert(rowIndex >= 0 && rowIndex < [doc pageCount]);
+		if ([[aTableColumn identifier] isEqual:@"path"])
+		{
+			NSString * path = [[doc getPage:rowIndex] path];
+			return [path stringByReplacingOccurrencesOfString:[[doc baseURL] path] withString:@""];
+		}
 	}
 	return nil;
 }
