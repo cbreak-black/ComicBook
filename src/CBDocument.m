@@ -91,9 +91,9 @@
 	NSFileManager * fm = [[NSFileManager alloc] init];
 	NSDirectoryEnumerator * de =
 		[fm enumeratorAtURL:url includingPropertiesForKeys:[NSArray arrayWithObjects:NSURLTypeIdentifierKey,NSURLIsDirectoryKey,nil]
-					options:NULL errorHandler:^(NSURL *url, NSError *error)
+					options:NSDirectoryEnumerationSkipsHiddenFiles errorHandler:^(NSURL *url, NSError *error)
 	{
-		NSLog(@"AddURL Error: %@", error);
+		NSLog(@"addDirectoryURL enumerator error: %@", error);
 		return YES;
 	}];
 	for (NSURL * url in de)

@@ -16,10 +16,24 @@
 	self = [super init];
 	if (self)
 	{
-		url = imgURL;
-		img = [[NSImage alloc] initByReferencingURL:url];
-		if (!img)
+		NSArray * imageTypes = [NSImage imageTypes];
+		NSString * urlType;
+		[imgURL getResourceValue:&urlType forKey:NSURLTypeIdentifierKey error:NULL];
+		if (urlType && [imageTypes containsObject:urlType])
 		{
+			// Known type
+			url = imgURL;
+			img = [[NSImage alloc] initByReferencingURL:url];
+			if (!img)
+			{
+				// Could not allocate image
+				[self release];
+				return nil;
+			}
+		}
+		else
+		{
+			// Could not read type
 			[self release];
 			return nil;
 		}
