@@ -116,6 +116,7 @@
 	if (page)
 	{
 		[pages addObject:page];
+		[page release];
 	}
 }
 

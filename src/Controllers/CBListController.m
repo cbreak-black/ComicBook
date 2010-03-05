@@ -23,6 +23,11 @@
 	return self;
 }
 
+- (NSString*)windowFrameAutosaveName
+{
+	return @"ListPanel";
+}
+
 // Document updated
 - (void)documentUpdated
 {

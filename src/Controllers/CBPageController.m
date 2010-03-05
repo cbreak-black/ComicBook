@@ -22,4 +22,9 @@
 	return self;
 }
 
+- (NSString*)windowFrameAutosaveName
+{
+	return @"PageWindow";
+}
+
 @end

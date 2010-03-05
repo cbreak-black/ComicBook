@@ -25,6 +25,7 @@
     if (self)
 	{
 	}
+	[pixFmt release];
     return self;
 }
 
