@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface CBListController : NSWindowController
+@interface CBListController : NSWindowController <NSTableViewDataSource, NSTableViewDelegate>
 {
 	IBOutlet NSTableView * tableView;
 }
@@ -23,5 +23,8 @@
 // TableView DataSource
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView;
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex;
+
+// Selection
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification;
 
 @end

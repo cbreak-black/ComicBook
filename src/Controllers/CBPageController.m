@@ -8,6 +8,8 @@
 
 #import "CBPageController.h"
 
+#import "CBDocument.h"
+#import "CBPage.h"
 
 @implementation CBPageController
 
@@ -25,6 +27,16 @@
 - (NSString*)windowFrameAutosaveName
 {
 	return @"PageWindow";
+}
+
+- (void)windowDidLoad
+{
+	[self pageChanged];
+}
+
+- (void)pageChanged
+{
+	CBPage * page = [[self document] getCurrentPage];
 }
 
 @end

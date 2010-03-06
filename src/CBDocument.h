@@ -21,6 +21,7 @@
 	NSURL * baseURL;
 
 	NSMutableArray * pages;
+	NSUInteger currentPage;
 }
 
 // Adds URLs to the pages array
@@ -29,7 +30,10 @@
 
 // Page access
 - (NSInteger)pageCount;
-- (CBPage *)getPage:(NSInteger)number;
+- (CBPage *)getCurrentPage;
+- (CBPage *)getPage:(NSUInteger)number;
+- (void)selectPage:(NSUInteger)number;
+- (void)advancePage:(NSInteger)offset;
 
 @property (retain) CBListController * listController;
 @property (retain) CBPageController * pageController;

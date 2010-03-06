@@ -127,11 +127,41 @@
 	return [pages count];
 }
 
-- (CBPage *)getPage:(NSInteger)number
+- (CBPage *)getCurrentPage
 {
-	return (CBPage *)[pages objectAtIndex:number];
+	return [self getPage:currentPage];
 }
 
+- (CBPage *)getPage:(NSUInteger)number
+{
+	if (number < [pages count])
+	{
+		return (CBPage *)[pages objectAtIndex:number];
+	}
+	else
+	{
+		return nil;
+	}
+
+}
+
+- (void)selectPage:(NSUInteger)number
+{
+	if (number < [pages count])
+	{
+		currentPage = number;
+		[pageController pageChanged];
+	}
+}
+
+- (void)advancePage:(NSInteger)offset
+{
+	if (currentPage + offset < [pages count])
+	{
+		currentPage += offset;
+		[pageController pageChanged];
+	}
+}
 
 @synthesize listController;
 @synthesize pageController;

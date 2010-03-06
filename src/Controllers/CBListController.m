@@ -28,6 +28,11 @@
 	return @"ListPanel";
 }
 
+- (void)windowDidLoad
+{
+	[(NSPanel*)[self window] setBecomesKeyOnlyIfNeeded:YES];
+}
+
 // Document updated
 - (void)documentUpdated
 {
@@ -53,6 +58,15 @@
 		}
 	}
 	return nil;
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
+{
+	NSInteger selectedRow = [tableView selectedRow];
+	if (selectedRow >= 0)
+	{
+		[[self document] selectPage:selectedRow];
+	}
 }
 
 @end

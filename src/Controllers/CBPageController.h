@@ -16,4 +16,7 @@
 // Designated Initializer
 - (id)init;
 
+// Document notifications
+- (void)pageChanged;
+
 @end
