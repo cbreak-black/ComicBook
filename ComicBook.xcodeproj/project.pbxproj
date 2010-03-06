@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		1DDD582C0DA1D0D100B32029 /* CBPage.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58280DA1D0D100B32029 /* CBPage.xib */; };
 		1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
-		70B95D78113C337B0069E257 /* CBGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 70B95D77113C337B0069E257 /* CBGLView.m */; };
 		70B95D85113C35800069E257 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B95D84113C35800069E257 /* OpenGL.framework */; };
 		70B95E06113D70A50069E257 /* CBList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 70B95E05113D70A50069E257 /* CBList.xib */; };
 		70B95E1A113D75DC0069E257 /* CBListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70B95E19113D75DC0069E257 /* CBListController.m */; };
@@ -37,8 +36,6 @@
 		2A37F4BAFDCFA73011CA2CEA /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Credits.rtf; path = resources/English.lproj/Credits.rtf; sourceTree = "<group>"; };
 		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		70B95D76113C337B0069E257 /* CBGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBGLView.h; path = src/CBGLView.h; sourceTree = "<group>"; };
-		70B95D77113C337B0069E257 /* CBGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBGLView.m; path = src/CBGLView.m; sourceTree = "<group>"; };
 		70B95D84113C35800069E257 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		70B95E03113D70940069E257 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = resources/English.lproj/CBList.xib; sourceTree = "<group>"; };
 		70B95E18113D75DC0069E257 /* CBListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBListController.h; path = src/Controllers/CBListController.h; sourceTree = "<group>"; };
@@ -114,8 +111,6 @@
 				70B95E17113D756D0069E257 /* Controllers */,
 				2A37F4AEFDCFA73011CA2CEA /* CBDocument.h */,
 				2A37F4ACFDCFA73011CA2CEA /* CBDocument.m */,
-				70B95D76113C337B0069E257 /* CBGLView.h */,
-				70B95D77113C337B0069E257 /* CBGLView.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -238,7 +233,6 @@
 			files = (
 				8D15AC310486D014006FF6A4 /* CBDocument.m in Sources */,
 				8D15AC320486D014006FF6A4 /* main.m in Sources */,
-				70B95D78113C337B0069E257 /* CBGLView.m in Sources */,
 				70B95E1A113D75DC0069E257 /* CBListController.m in Sources */,
 				70B95E1D113D75F10069E257 /* CBPageController.m in Sources */,
 				70B95F2C113F32E00069E257 /* CBPage.m in Sources */,
