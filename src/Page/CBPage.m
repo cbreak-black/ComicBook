@@ -21,4 +21,24 @@
 	return nil;
 }
 
+
+// NSDiscardableContent
+- (BOOL)beginContentAccess
+{
+	return NO;
+}
+
+- (void)endContentAccess
+{
+}
+
+- (void)discardContentIfPossible
+{
+}
+
+- (BOOL)isContentDiscarded
+{
+	return YES;
+}
+
 @end

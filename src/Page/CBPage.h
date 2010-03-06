@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface CBPage : NSObject
+@interface CBPage : NSObject <NSDiscardableContent>
 {
 
 }
@@ -17,5 +17,11 @@
 // To query image
 @property (retain, readonly) NSImage * image;
 @property (retain, readonly) NSString * path;
+
+// NSDiscardableContent
+- (BOOL)beginContentAccess;
+- (void)endContentAccess;
+- (void)discardContentIfPossible;
+- (BOOL)isContentDiscarded;
 
 @end

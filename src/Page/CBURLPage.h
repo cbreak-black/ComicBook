@@ -14,8 +14,16 @@
 {
 	NSURL * url;
 	NSImage * img;
+
+	NSUInteger accessCounter;
 }
 
 - (id)initWithURL:(NSURL *)imgURL;
+
+// NSDiscardableContent
+- (BOOL)beginContentAccess;
+- (void)endContentAccess;
+- (void)discardContentIfPossible;
+- (BOOL)isContentDiscarded;
 
 @end

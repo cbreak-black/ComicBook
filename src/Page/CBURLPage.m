@@ -23,13 +23,8 @@
 		{
 			// Known type
 			url = imgURL;
-			img = [[NSImage alloc] initByReferencingURL:url];
-			if (!img)
-			{
-				// Could not allocate image
-				[self release];
-				return nil;
-			}
+			img = nil;
+			accessCounter = 0; // Should be 1, but this class lazily loads the Data
 		}
 		else
 		{
@@ -41,14 +36,81 @@
 	return self;
 }
 
+- (void)dealloc
+{
+	[url release];
+	[img release];
+	[super dealloc];
+}
+
+// Loads the Image lazily (internal)
+- (BOOL)loadImage
+{
+	if (!img)
+	{
+		img = [[NSImage alloc] initByReferencingURL:url];
+	}
+	return img != nil;
+}
+
 - (NSImage *)image
 {
-	return img;
+	NSImage * rImg;
+	@synchronized (self)
+	{
+		[self loadImage];
+		rImg = [img retain];
+	}
+	return [rImg autorelease];
 }
 
 - (NSString *)path;
 {
 	return [url path];
+}
+
+// NSDiscardableContent
+- (BOOL)beginContentAccess
+{
+	BOOL r = NO;
+	@synchronized (self)
+	{
+		if ([self loadImage])
+		{
+			accessCounter++;
+			r = YES;
+		}
+		else
+		{
+			r = NO;
+		}
+	}
+	return r;
+}
+
+- (void)endContentAccess
+{
+	@synchronized (self)
+	{
+		accessCounter--;
+	}
+}
+
+- (void)discardContentIfPossible
+{
+	@synchronized (self)
+	{
+		if (accessCounter <= 0)
+		{
+			[img release];
+			img = nil;
+		}
+	}
+}
+
+- (BOOL)isContentDiscarded
+{
+	return img == nil;
 }
 
 @end
