@@ -108,6 +108,7 @@
 		};
 	};
 	[fm release];
+	[pages sortWithOptions:NSSortConcurrent usingComparator:^(id o1, id o2){return [[o1 path] localizedStandardCompare:[o2 path]];}];
 }
 
 - (void)addFileURL:(NSURL *)url
