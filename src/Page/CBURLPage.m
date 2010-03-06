@@ -22,7 +22,7 @@
 		if (urlType && [imageTypes containsObject:urlType])
 		{
 			// Known type
-			url = imgURL;
+			url = [imgURL retain];
 			img = nil;
 			accessCounter = 0; // Should be 1, but this class lazily loads the Data
 		}
@@ -30,7 +30,7 @@
 		{
 			// Could not read type
 			[self release];
-			return nil;
+			self = nil;
 		}
 	}
 	return self;
