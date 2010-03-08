@@ -17,9 +17,6 @@
 // Designated Initializer
 - (id)init;
 
-// Document updated
-- (void)documentUpdated;
-
 // TableView DataSource
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView;
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex;

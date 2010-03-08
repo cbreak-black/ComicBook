@@ -81,7 +81,6 @@
 		baseURL = [[absoluteURL URLByDeletingLastPathComponent] retain];
 		[self addFileURL:absoluteURL];
 	}
-	[listController documentUpdated];
     return YES;
 }
 
@@ -108,7 +107,9 @@
 		};
 	};
 	[fm release];
+	[self willChangeValueForKey:@"pages"];
 	[pages sortWithOptions:NSSortConcurrent usingComparator:^(id o1, id o2){return [[o1 path] localizedStandardCompare:[o2 path]];}];
+	[self didChangeValueForKey:@"pages"];
 }
 
 - (void)addFileURL:(NSURL *)url
@@ -116,7 +117,10 @@
 	CBPage * page = [[CBURLPage alloc] initWithURL:url];
 	if (page)
 	{
+		NSIndexSet * insertionIndex = [NSIndexSet indexSetWithIndex:[pages count]];
+		[self willChange:NSKeyValueChangeInsertion valuesAtIndexes:insertionIndex forKey:@"pages"];
 		[pages addObject:page];
+		[self didChange:NSKeyValueChangeInsertion valuesAtIndexes:insertionIndex forKey:@"pages"];
 		[page release];
 	}
 }

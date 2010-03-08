@@ -35,15 +35,11 @@
 
 - (void)setDocument:(NSDocument *)document
 {
-	[[self document] removeObserver:self];
+	[[self document] removeObserver:self forKeyPath:@"currentPage"];
+	[[self document] removeObserver:self forKeyPath:@"pages"];
 	[super setDocument:document];
 	[[self document] addObserver:self forKeyPath:@"currentPage" options:NULL context:NULL];
-}
-
-// Document updated
-- (void)documentUpdated
-{
-	[tableView reloadData];
+	[[self document] addObserver:self forKeyPath:@"pages" options:NULL context:NULL];
 }
 
 // TableView DataSource
@@ -89,6 +85,11 @@
 		{
 			[tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:currentPage] byExtendingSelection:NO];
 		}
+	}
+	else if ([keyPath isEqualToString:@"pages"])
+	{
+		// Can be optimized if needed
+		[tableView reloadData];
 	}
 	else
 	{
