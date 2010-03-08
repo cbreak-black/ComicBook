@@ -33,6 +33,13 @@
 	[(NSPanel*)[self window] setBecomesKeyOnlyIfNeeded:YES];
 }
 
+- (void)setDocument:(NSDocument *)document
+{
+	[[self document] removeObserver:self];
+	[super setDocument:document];
+	[[self document] addObserver:self forKeyPath:@"currentPage" options:NULL context:NULL];
+}
+
 // Document updated
 - (void)documentUpdated
 {
@@ -42,7 +49,7 @@
 // TableView DataSource
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
-	return [(CBDocument*)[self document] pageCount];
+	return [(CBDocument*)[self document] countOfPages];
 }
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
@@ -50,22 +57,42 @@
 	CBDocument * doc = (CBDocument*)[self document];
 	if (doc)
 	{
-		NSParameterAssert(rowIndex >= 0 && rowIndex < [doc pageCount]);
+		NSParameterAssert(rowIndex >= 0 && rowIndex < [doc countOfPages]);
 		if ([[aTableColumn identifier] isEqual:@"path"])
 		{
-			NSString * path = [[doc getPage:rowIndex] path];
+			NSString * path = [[doc pageAtIndex:rowIndex] path];
 			return [path stringByReplacingOccurrencesOfString:[[doc baseURL] path] withString:@""];
 		}
 	}
 	return nil;
 }
 
+// Selection
+// Changed from the GUI
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
 	NSInteger selectedRow = [tableView selectedRow];
 	if (selectedRow >= 0)
 	{
-		[[self document] selectPage:selectedRow];
+		[[self document] setCurrentPage:selectedRow];
+	}
+}
+
+// Changed from the Document
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([keyPath isEqualToString:@"currentPage"])
+	{
+		NSIndexSet * selectedRows = [tableView selectedRowIndexes];
+		NSUInteger currentPage = [[self document] currentPage];
+		if (![selectedRows containsIndex:currentPage])
+		{
+			[tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:currentPage] byExtendingSelection:NO];
+		}
+	}
+	else
+	{
+		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 	}
 }
 

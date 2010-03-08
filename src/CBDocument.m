@@ -121,18 +121,13 @@
 	}
 }
 
-// Page access
-- (NSInteger)pageCount
+// Accessors pages
+- (NSInteger)countOfPages
 {
 	return [pages count];
 }
 
-- (CBPage *)getCurrentPage
-{
-	return [self getPage:currentPage];
-}
-
-- (CBPage *)getPage:(NSUInteger)number
+- (CBPage *)pageAtIndex:(NSUInteger)number
 {
 	if (number < [pages count])
 	{
@@ -142,27 +137,40 @@
 	{
 		return nil;
 	}
-
 }
 
-- (void)selectPage:(NSUInteger)number
+- (CBPage *)objectInPagesAtIndex:(NSUInteger)number
+{
+	return [self pageAtIndex:number];
+}
+
+- (void)getPages:(CBPage **)buffer range:(NSRange)inRange
+{
+	[pages getObjects:buffer range:inRange];
+}
+
+// Accessors currentPage
+- (void)advancePage:(NSInteger)offset
+{
+	if (currentPage + offset < [pages count] && offset != 0)
+	{
+		[self willChangeValueForKey:@"currentPage"];
+		currentPage += offset;
+		[self didChangeValueForKey:@"currentPage"];
+	}
+}
+
+- (void)setCurrentPage:(NSUInteger)number
 {
 	if (number < [pages count])
 	{
 		currentPage = number;
-		[pageController pageChanged];
 	}
 }
 
-- (void)advancePage:(NSInteger)offset
-{
-	if (currentPage + offset < [pages count])
-	{
-		currentPage += offset;
-		[pageController pageChanged];
-	}
-}
+@synthesize currentPage; // Only synthesize getter
 
+// Misc Accessors
 @synthesize listController;
 @synthesize pageController;
 @synthesize baseURL;

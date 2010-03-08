@@ -29,6 +29,13 @@
 	return @"PageWindow";
 }
 
+- (void)setDocument:(NSDocument *)document
+{
+	[[self document] removeObserver:self];
+	[super setDocument:document];
+	[[self document] addObserver:self forKeyPath:@"currentPage" options:NULL context:NULL];
+}
+
 - (void)windowDidLoad
 {
 	[self pageChanged];
@@ -36,7 +43,18 @@
 
 - (void)pageChanged
 {
-	CBPage * page = [[self document] getCurrentPage];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([keyPath isEqualToString:@"currentPage"])
+	{
+		[self pageChanged];
+	}
+	else
+	{
+		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+	}
 }
 
 @end

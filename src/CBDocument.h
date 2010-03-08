@@ -28,12 +28,14 @@
 - (void)addDirectoryURL:(NSURL *)url;
 - (void)addFileURL:(NSURL *)url;
 
-// Page access
-- (NSInteger)pageCount;
-- (CBPage *)getCurrentPage;
-- (CBPage *)getPage:(NSUInteger)number;
-- (void)selectPage:(NSUInteger)number;
+// Page access (KVC Compliant)
+- (NSInteger)countOfPages;
+- (CBPage *)pageAtIndex:(NSUInteger)number;
+- (CBPage *)objectInPagesAtIndex:(NSUInteger)number; // KVC version of above
+- (void)getPages:(CBPage **)buffer range:(NSRange)inRange;
+
 - (void)advancePage:(NSInteger)offset;
+@property (assign) NSUInteger currentPage;
 
 @property (retain) CBListController * listController;
 @property (retain) CBPageController * pageController;
