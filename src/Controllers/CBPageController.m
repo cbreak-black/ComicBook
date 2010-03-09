@@ -31,7 +31,7 @@
 
 - (void)setDocument:(NSDocument *)document
 {
-	[[self document] removeObserver:self];
+	[[self document] removeObserver:self forKeyPath:@"currentPage"];
 	[super setDocument:document];
 	[[self document] addObserver:self forKeyPath:@"currentPage" options:NULL context:NULL];
 }
