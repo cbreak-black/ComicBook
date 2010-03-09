@@ -8,9 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class CBCAView;
 
 @interface CBPageController : NSWindowController <NSTableViewDataSource>
 {
+	IBOutlet CBCAView * caView;
 }
 
 // Designated Initializer
