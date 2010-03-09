@@ -45,12 +45,69 @@
 	// Content layer
 	containerLayer = [[CALayer alloc] init];
 	containerLayer.frame = backgroundLayer.frame;
+	containerLayer.contentsGravity = kCAGravityResizeAspect;
+	containerLayer.autoresizingMask = (kCALayerWidthSizable | kCALayerHeightSizable);
 	containerLayer.layoutManager = [CAConstraintLayoutManager layoutManager];
 	[backgroundLayer addSublayer:containerLayer];
+
+	pageLayerLeft = [[CALayer alloc] init];
+	pageLayerRight = [[CALayer alloc] init];
+	pageLayerLeft.name = @"pageLayerLeft";
+	pageLayerRight.name = @"pageLayerRight";
+	pageLayerLeft.contentsGravity = kCAGravityResizeAspect;
+	pageLayerRight.contentsGravity = kCAGravityResizeAspect;
+	[pageLayerLeft addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMinY
+															relativeTo:@"superlayer"
+															 attribute:kCAConstraintMinY]];
+	[pageLayerLeft addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMaxY
+															relativeTo:@"superlayer"
+															 attribute:kCAConstraintMaxY]];
+	[pageLayerLeft addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMinX
+															relativeTo:@"superlayer"
+															 attribute:kCAConstraintMinX]];
+	[pageLayerLeft addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMaxX
+															relativeTo:@"superlayer"
+															 attribute:kCAConstraintMidX]];
+	[pageLayerRight addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMinY
+															 relativeTo:@"superlayer"
+															  attribute:kCAConstraintMinY]];
+	[pageLayerRight addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMaxY
+															 relativeTo:@"superlayer"
+															  attribute:kCAConstraintMaxY]];
+	[pageLayerRight addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMinX
+															 relativeTo:@"pageLayerLeft"
+															  attribute:kCAConstraintMaxX]];
+	[pageLayerRight addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMaxX
+															 relativeTo:@"superlayer"
+															  attribute:kCAConstraintMaxX]];
+	[containerLayer addSublayer:pageLayerLeft];
+	[containerLayer addSublayer:pageLayerRight];
+
+	// Disable animation for size changes
+	NSMutableDictionary * customActions = [NSMutableDictionary dictionary];
+	[customActions setObject:[NSNull null] forKey:@"bounds"];
+	[customActions setObject:[NSNull null] forKey:@"position"];
+	[customActions setObject:[NSNull null] forKey:@"frame"];
+	containerLayer.actions = customActions;
+	pageLayerLeft.actions = customActions;
+	pageLayerRight.actions = customActions;
 
 	// Cleanup
 	[backgroundLayer release];
 }
 
+- (void)setImage:(NSImage*)img
+{
+	pageLayerLeft.contents = nil;
+	pageLayerRight.contents = nil;
+	containerLayer.contents = img;
+}
+
+- (void)setImageLeft:(NSImage*)imgLeft right:(NSImage*)imgRight
+{
+	containerLayer.contents = nil;
+	pageLayerLeft.contents = imgLeft;
+	pageLayerRight.contents = imgRight;
+}
 
 @end

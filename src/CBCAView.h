@@ -22,4 +22,8 @@
 - (void)awakeFromNib;
 - (void)configureLayers;
 
+// Image display
+- (void)setImage:(NSImage*)img;
+- (void)setImageLeft:(NSImage*)imgLeft right:(NSImage*)imgRight;
+
 @end

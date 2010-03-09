@@ -10,6 +10,7 @@
 
 #import "CBDocument.h"
 #import "CBPage.h"
+#import "CBCAView.h"
 
 @implementation CBPageController
 
@@ -43,6 +44,9 @@
 
 - (void)pageChanged
 {
+	CBDocument * doc = [self document];
+	NSImage * img = [[doc pageAtIndex:[doc currentPage]] image];
+	[caView setImage:img];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
