@@ -8,6 +8,7 @@
 
 #import "CBCAView.h"
 
+#import "CBInputDelegate.h"
 
 @implementation CBCAView
 
@@ -32,6 +33,27 @@
 {
 	[self configureLayers];
 }
+
+// Events
+
+- (BOOL)acceptsFirstResponder
+{
+    return YES;
+}
+
+- (void)moveUp:(id)sender
+{
+	[delegate advancePage:-1];
+}
+
+- (void)moveDown:(id)sender
+{
+	[delegate advancePage:+1];
+}
+
+@synthesize delegate;
+
+// UI / Animation
 
 - (void)configureLayers
 {

@@ -40,6 +40,7 @@
 		700700DB11469FB6004C7B39 /* CBCAView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBCAView.h; path = src/CBCAView.h; sourceTree = "<group>"; };
 		700700DC11469FB6004C7B39 /* CBCAView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBCAView.m; path = src/CBCAView.m; sourceTree = "<group>"; };
 		700700E41146A46C004C7B39 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		700703161147575F004C7B39 /* CBInputDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBInputDelegate.h; path = src/CBInputDelegate.h; sourceTree = "<group>"; };
 		70B95E03113D70940069E257 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = resources/English.lproj/CBList.xib; sourceTree = "<group>"; };
 		70B95E18113D75DC0069E257 /* CBListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBListController.h; path = src/Controllers/CBListController.h; sourceTree = "<group>"; };
 		70B95E19113D75DC0069E257 /* CBListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBListController.m; path = src/Controllers/CBListController.m; sourceTree = "<group>"; };
@@ -116,6 +117,7 @@
 				2A37F4ACFDCFA73011CA2CEA /* CBDocument.m */,
 				700700DB11469FB6004C7B39 /* CBCAView.h */,
 				700700DC11469FB6004C7B39 /* CBCAView.m */,
+				700703161147575F004C7B39 /* CBInputDelegate.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";

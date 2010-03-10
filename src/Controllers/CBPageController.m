@@ -25,6 +25,11 @@
 	return self;
 }
 
+- (void)dealloc
+{
+	[caView setDelegate:nil];
+}
+
 - (NSString*)windowFrameAutosaveName
 {
 	return @"PageWindow";
@@ -39,6 +44,8 @@
 
 - (void)windowDidLoad
 {
+	[caView setDelegate:self];
+	[[self window] makeFirstResponder:caView];
 	[self pageChanged];
 }
 
@@ -59,6 +66,11 @@
 	{
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 	}
+}
+
+- (void)advancePage:(NSInteger)offset
+{
+	[[self document] advancePage:offset];
 }
 
 @end

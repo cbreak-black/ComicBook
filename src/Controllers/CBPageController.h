@@ -8,9 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
+#import "CBInputDelegate.h"
+
 @class CBCAView;
 
-@interface CBPageController : NSWindowController <NSTableViewDataSource>
+@interface CBPageController : NSWindowController <CBInputDelegate>
 {
 	IBOutlet CBCAView * caView;
 }
@@ -20,5 +22,8 @@
 
 // Document notifications
 - (void)pageChanged;
+
+// View Delegate
+- (void)advancePage:(NSInteger)offset;
 
 @end

@@ -9,17 +9,27 @@
 #import <Cocoa/Cocoa.h>
 #import <QuartzCore/CoreAnimation.h>
 
+@protocol CBInputDelegate;
+
 @interface CBCAView : NSView
 {
 	CALayer * containerLayer;
 	CALayer * pageLayerLeft;
 	CALayer * pageLayerRight;
+
+	id<CBInputDelegate> delegate;
 }
 
 - (void)dealloc;
 
 // Initialisation
 - (void)awakeFromNib;
+
+// Events
+- (BOOL)acceptsFirstResponder;
+@property (assign) id<CBInputDelegate> delegate;
+
+// UI / Animation
 - (void)configureLayers;
 
 // Image display
