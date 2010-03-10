@@ -11,7 +11,6 @@
 		1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
 		700700DD11469FB7004C7B39 /* CBCAView.m in Sources */ = {isa = PBXBuildFile; fileRef = 700700DC11469FB6004C7B39 /* CBCAView.m */; };
 		700700E51146A46C004C7B39 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 700700E41146A46C004C7B39 /* QuartzCore.framework */; };
-		70B95D85113C35800069E257 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B95D84113C35800069E257 /* OpenGL.framework */; };
 		70B95E06113D70A50069E257 /* CBList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 70B95E05113D70A50069E257 /* CBList.xib */; };
 		70B95E1A113D75DC0069E257 /* CBListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70B95E19113D75DC0069E257 /* CBListController.m */; };
 		70B95E1D113D75F10069E257 /* CBPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70B95E1C113D75F10069E257 /* CBPageController.m */; };
@@ -41,7 +40,6 @@
 		700700DB11469FB6004C7B39 /* CBCAView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBCAView.h; path = src/CBCAView.h; sourceTree = "<group>"; };
 		700700DC11469FB6004C7B39 /* CBCAView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBCAView.m; path = src/CBCAView.m; sourceTree = "<group>"; };
 		700700E41146A46C004C7B39 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		70B95D84113C35800069E257 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		70B95E03113D70940069E257 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = resources/English.lproj/CBList.xib; sourceTree = "<group>"; };
 		70B95E18113D75DC0069E257 /* CBListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBListController.h; path = src/Controllers/CBListController.h; sourceTree = "<group>"; };
 		70B95E19113D75DC0069E257 /* CBListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBListController.m; path = src/Controllers/CBListController.m; sourceTree = "<group>"; };
@@ -63,7 +61,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
-				70B95D85113C35800069E257 /* OpenGL.framework in Frameworks */,
 				700700E51146A46C004C7B39 /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -75,7 +72,6 @@
 			isa = PBXGroup;
 			children = (
 				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
-				70B95D84113C35800069E257 /* OpenGL.framework */,
 				700700E41146A46C004C7B39 /* QuartzCore.framework */,
 			);
 			name = "Linked Frameworks";
