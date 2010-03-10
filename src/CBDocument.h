@@ -22,6 +22,9 @@
 
 	NSMutableArray * pages;
 	NSUInteger currentPage;
+
+	NSMutableArray * preloadedPages;
+	NSOperationQueue * preloadQueue;
 }
 
 // Adds URLs to the pages array
@@ -36,6 +39,7 @@
 
 - (void)advancePage:(NSInteger)offset;
 @property (assign) NSUInteger currentPage;
+- (void)preloadPages; // preloads pages
 
 @property (retain) CBListController * listController;
 @property (retain) CBPageController * pageController;

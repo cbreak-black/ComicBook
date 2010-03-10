@@ -11,6 +11,7 @@
 		1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
 		700700DD11469FB7004C7B39 /* CBCAView.m in Sources */ = {isa = PBXBuildFile; fileRef = 700700DC11469FB6004C7B39 /* CBCAView.m */; };
 		700700E51146A46C004C7B39 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 700700E41146A46C004C7B39 /* QuartzCore.framework */; };
+		7007033E1147DE26004C7B39 /* CBPageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7007033D1147DE26004C7B39 /* CBPageOperation.m */; };
 		70B95E06113D70A50069E257 /* CBList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 70B95E05113D70A50069E257 /* CBList.xib */; };
 		70B95E1A113D75DC0069E257 /* CBListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70B95E19113D75DC0069E257 /* CBListController.m */; };
 		70B95E1D113D75F10069E257 /* CBPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70B95E1C113D75F10069E257 /* CBPageController.m */; };
@@ -41,6 +42,8 @@
 		700700DC11469FB6004C7B39 /* CBCAView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBCAView.m; path = src/CBCAView.m; sourceTree = "<group>"; };
 		700700E41146A46C004C7B39 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		700703161147575F004C7B39 /* CBInputDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBInputDelegate.h; path = src/CBInputDelegate.h; sourceTree = "<group>"; };
+		7007033C1147DE26004C7B39 /* CBPageOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBPageOperation.h; path = src/CBPageOperation.h; sourceTree = "<group>"; };
+		7007033D1147DE26004C7B39 /* CBPageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBPageOperation.m; path = src/CBPageOperation.m; sourceTree = "<group>"; };
 		70B95E03113D70940069E257 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = resources/English.lproj/CBList.xib; sourceTree = "<group>"; };
 		70B95E18113D75DC0069E257 /* CBListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBListController.h; path = src/Controllers/CBListController.h; sourceTree = "<group>"; };
 		70B95E19113D75DC0069E257 /* CBListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBListController.m; path = src/Controllers/CBListController.m; sourceTree = "<group>"; };
@@ -118,6 +121,8 @@
 				700700DB11469FB6004C7B39 /* CBCAView.h */,
 				700700DC11469FB6004C7B39 /* CBCAView.m */,
 				700703161147575F004C7B39 /* CBInputDelegate.h */,
+				7007033C1147DE26004C7B39 /* CBPageOperation.h */,
+				7007033D1147DE26004C7B39 /* CBPageOperation.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -246,6 +251,7 @@
 				70B95F35113F33410069E257 /* CBURLPage.m in Sources */,
 				70B95FB9114181A60069E257 /* CBDocumentController.m in Sources */,
 				700700DD11469FB7004C7B39 /* CBCAView.m in Sources */,
+				7007033E1147DE26004C7B39 /* CBPageOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -14,6 +14,10 @@
 #import "CBPage.h"
 #import "CBURLPage.h"
 
+#import "CBPageOperation.h"
+
+const NSUInteger preloadWindowSize = 11;
+
 @implementation CBDocument
 
 - (id)init
@@ -22,6 +26,9 @@
 	if (self)
 	{
 		pages = [[NSMutableArray alloc] init];
+		preloadQueue = [[NSOperationQueue alloc] init];
+		preloadQueue.name = @"preloadQueue";
+		preloadedPages = [[NSMutableArray alloc] init];
 	}
 	return self;
 }
@@ -32,6 +39,8 @@
 	[pageController release];
 	[pages release];
 	[baseURL release];
+	[preloadQueue release];
+	[preloadedPages release];
 	[super dealloc];
 }
 
@@ -110,6 +119,7 @@
 	[self willChangeValueForKey:@"pages"];
 	[pages sortWithOptions:NSSortConcurrent usingComparator:^(id o1, id o2){return [[o1 path] localizedStandardCompare:[o2 path]];}];
 	[self didChangeValueForKey:@"pages"];
+	[self preloadPages];
 }
 
 - (void)addFileURL:(NSURL *)url
@@ -160,6 +170,7 @@
 	{
 		[self willChangeValueForKey:@"currentPage"];
 		currentPage += offset;
+		[self preloadPages];
 		[self didChangeValueForKey:@"currentPage"];
 	}
 }
@@ -168,11 +179,69 @@
 {
 	if (number < [pages count])
 	{
-		currentPage = number;
+		if (currentPage != number)
+		{
+			currentPage = number;
+			[self preloadPages];
+		}
 	}
 }
 
 @synthesize currentPage; // Only synthesize getter
+
+- (void)preloadPages
+{
+	NSMutableArray * preloadOps = [NSMutableArray arrayWithCapacity:preloadWindowSize];
+	NSMutableArray * preloadPages = [NSMutableArray arrayWithCapacity:preloadWindowSize];
+	// Determine window position
+	NSUInteger pagesBack = preloadWindowSize/2;
+	if (pagesBack > currentPage) // further back than 0
+	{
+		pagesBack = currentPage; // only go back to 0
+	}
+	NSUInteger pageStart = currentPage-pagesBack;
+	NSUInteger pageEnd = pageStart+preloadWindowSize;
+	if (pageEnd > [pages count]) // goes past pages end
+	{
+		pageEnd = [pages count]; // stop at end
+		// Since the end was shortened, compensate
+		if (pageEnd > preloadWindowSize)
+			pageStart = pageEnd - preloadWindowSize;
+		else
+			pageStart = 0;
+	}
+	// Create load operations
+	for (NSUInteger i = pageStart; i < pageEnd; i++)
+	{
+		CBPageOperation * po = [[CBPreloadOperation alloc] init];
+		CBPage * p = [pages objectAtIndex:i];
+		po.page = p;
+		[preloadPages addObject:p];
+		[preloadOps addObject:po];
+		[po release];
+	}
+	[preloadQueue addOperations:preloadOps waitUntilFinished:NO];
+	// Create barrier op
+	NSOperation * barrierOp = [[NSOperation alloc] init];
+	for (NSOperation * op in preloadOps)
+	{
+		[barrierOp addDependency:op];
+	}
+	[preloadQueue addOperation:barrierOp];
+	// Create unload operations
+	for (CBPage * p in preloadedPages)
+	{
+		CBPageOperation * po = [[CBUnloadOperation alloc] init];
+		po.page = p;
+		[po addDependency:barrierOp];
+		[preloadQueue addOperation:po];
+		[po release];
+	}
+	// Book Keeping
+	[preloadedPages release];
+	preloadedPages = [preloadPages retain];
+	[barrierOp release];
+}
 
 // Misc Accessors
 @synthesize listController;

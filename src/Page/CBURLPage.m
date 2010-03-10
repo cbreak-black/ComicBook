@@ -48,9 +48,18 @@
 {
 	if (!img)
 	{
-		img = [[NSImage alloc] initByReferencingURL:url];
+		img = [[NSImage alloc] initWithContentsOfURL:url];
+		if (!img || ![img isValid])
+		{
+			NSLog(@"Error loading image from URL %@", [url description]);
+			return NO;
+		}
+		else
+		{
+			return YES;
+		}
 	}
-	return img != nil;
+	return img != nil && [img isValid];
 }
 
 - (NSImage *)image
