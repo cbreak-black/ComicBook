@@ -132,4 +132,27 @@
 	pageLayerRight.contents = imgRight;
 }
 
+// Full Screen
+- (IBAction)toggleFullscreen:(id)sender
+{
+	if ([self isInFullScreenMode])
+		[self exitFullScreen];
+	else
+		[self enterFullScreen];
+}
+
+- (BOOL)enterFullScreen
+{
+	NSNumber * flags = [NSNumber numberWithUnsignedInteger:(NSApplicationPresentationHideDock | NSApplicationPresentationAutoHideMenuBar)];
+	NSDictionary * d = [NSDictionary dictionaryWithObject:flags
+												   forKey:NSFullScreenModeApplicationPresentationOptions];
+	return [self enterFullScreenMode:[self.window screen] withOptions:d];
+}
+
+- (void)exitFullScreen
+{
+	[self exitFullScreenModeWithOptions:NULL];
+	[[self window] makeFirstResponder:self];
+}
+
 @end

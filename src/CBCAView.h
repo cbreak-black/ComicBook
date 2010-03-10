@@ -36,4 +36,9 @@
 - (void)setImage:(NSImage*)img;
 - (void)setImageLeft:(NSImage*)imgLeft right:(NSImage*)imgRight;
 
+// Full Screen
+- (IBAction)toggleFullscreen:(id)sender;
+- (BOOL)enterFullScreen;
+- (void)exitFullScreen;
+
 @end
