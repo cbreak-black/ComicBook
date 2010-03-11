@@ -9,7 +9,6 @@
 #import "CBPageController.h"
 
 #import "CBDocument.h"
-#import "CBPage.h"
 #import "CBCAView.h"
 
 @implementation CBPageController
@@ -51,9 +50,7 @@
 
 - (void)pageChanged
 {
-	CBDocument * doc = [self document];
-	NSImage * img = [[doc pageAtIndex:[doc currentPage]] image];
-	[caView setImage:img];
+	[caView pageChanged];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -71,6 +68,16 @@
 - (void)advancePage:(NSInteger)offset
 {
 	[[self document] advancePage:offset];
+}
+
+- (CBPage *)pageAtIndex:(NSUInteger)number
+{
+	return [[self document] pageAtIndex:number];
+}
+
+- (NSUInteger)currentPage
+{
+	return [[self document] currentPage];
 }
 
 @end

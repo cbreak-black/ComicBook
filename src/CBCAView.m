@@ -10,6 +10,8 @@
 
 #import "CBInputDelegate.h"
 
+#import "CBPage.h"
+
 @implementation CBCAView
 
 - (id)initWithFrame:(NSRect)frame
@@ -17,6 +19,7 @@
     self = [super initWithFrame:frame];
     if (self)
 	{
+		pageDisplayCount = 0;
 	}
     return self;
 }
@@ -43,12 +46,20 @@
 
 - (void)moveUp:(id)sender
 {
-	[delegate advancePage:-1];
+	// TODO: Consider user settings
+	// Decide if displaying one or two pages is better
+	NSUInteger cp = [delegate currentPage];
+	CBPage * page1 = [delegate pageAtIndex:cp-1];
+	CBPage * page2 = [delegate pageAtIndex:cp-2];
+	if (page1 && page2 && page1.aspect < 1 && page2.aspect < 1)
+		[delegate advancePage:-2];
+	else
+		[delegate advancePage:-1];
 }
 
 - (void)moveDown:(id)sender
 {
-	[delegate advancePage:+1];
+	[delegate advancePage:pageDisplayCount];
 }
 
 @synthesize delegate;
@@ -118,11 +129,29 @@
 	[backgroundLayer release];
 }
 
+- (void)pageChanged
+{
+	// TODO: Rewrite to consider user settings
+	NSUInteger cp = [delegate currentPage];
+	CBPage * page1 = [delegate pageAtIndex:cp];
+	if (page1.aspect < 1) // Two Page
+	{
+		CBPage * page2 = [delegate pageAtIndex:(cp+1)];
+		if (page2 && page2.aspect < 1)
+		{
+			[self setImageLeft:page1.image right:page2.image];
+			return;
+		}
+	}
+	[self setImage:page1.image];
+}
+
 - (void)setImage:(NSImage*)img
 {
 	pageLayerLeft.contents = nil;
 	pageLayerRight.contents = nil;
 	containerLayer.contents = img;
+	pageDisplayCount = 1;
 }
 
 - (void)setImageLeft:(NSImage*)imgLeft right:(NSImage*)imgRight
@@ -130,6 +159,7 @@
 	containerLayer.contents = nil;
 	pageLayerLeft.contents = imgLeft;
 	pageLayerRight.contents = imgRight;
+	pageDisplayCount = 2;
 }
 
 // Full Screen

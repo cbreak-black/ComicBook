@@ -17,6 +17,8 @@
 	CALayer * pageLayerLeft;
 	CALayer * pageLayerRight;
 
+	NSUInteger pageDisplayCount;
+
 	id<CBInputDelegate> delegate;
 }
 
@@ -33,6 +35,7 @@
 - (void)configureLayers;
 
 // Image display
+- (void)pageChanged;
 - (void)setImage:(NSImage*)img;
 - (void)setImageLeft:(NSImage*)imgLeft right:(NSImage*)imgRight;
 

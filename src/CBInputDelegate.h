@@ -8,9 +8,15 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class CBPage;
 
 @protocol CBInputDelegate
 
+// For Input
 - (void)advancePage:(NSInteger)offset;
+
+// For Output
+- (CBPage *)pageAtIndex:(NSUInteger)number;
+- (NSUInteger)currentPage;
 
 @end
