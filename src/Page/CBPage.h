@@ -18,6 +18,10 @@
 @property (retain, readonly) NSImage * image;
 @property (retain, readonly) NSString * path;
 
+// To query properties
+@property (readonly, assign) CGFloat aspect;
+@property (readonly, assign) NSSize size;
+
 // NSDiscardableContent
 - (BOOL)beginContentAccess;
 - (void)endContentAccess;

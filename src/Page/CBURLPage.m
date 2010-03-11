@@ -51,6 +51,7 @@
 		img = [[NSImage alloc] initWithContentsOfURL:url];
 		if (!img || ![img isValid])
 		{
+			// TODO: Set img to error image
 			NSLog(@"Error loading image from URL %@", [url description]);
 			return NO;
 		}

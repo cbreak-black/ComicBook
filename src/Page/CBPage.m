@@ -11,6 +11,8 @@
 
 @implementation CBPage
 
+// To query image
+
 - (NSImage *)image
 {
 	return nil;
@@ -21,8 +23,25 @@
 	return nil;
 }
 
+// To query properties
+
+- (CGFloat)aspect
+{
+	NSSize s = [self size];
+	return s.width/s.height;
+}
+
+- (NSSize)size
+{
+	NSImage * img = [self image];
+	if (img)
+		return [img size];
+	else
+		return NSMakeSize(0, -1); // Invalid
+}
 
 // NSDiscardableContent
+
 - (BOOL)beginContentAccess
 {
 	return NO;
