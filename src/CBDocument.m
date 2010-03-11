@@ -166,10 +166,15 @@ const NSUInteger preloadWindowSize = 11;
 // Accessors currentPage
 - (void)advancePage:(NSInteger)offset
 {
-	if (currentPage + offset < [pages count] && offset != 0)
+	if (offset != 0)
 	{
 		[self willChangeValueForKey:@"currentPage"];
-		currentPage += offset;
+		if (offset < 0 && currentPage < -offset)
+			currentPage = 0;
+		else if (currentPage + offset >= [pages count])
+			currentPage = [pages count] - 1;
+		else
+			currentPage += offset;
 		[self preloadPages];
 		[self didChangeValueForKey:@"currentPage"];
 	}
@@ -177,14 +182,11 @@ const NSUInteger preloadWindowSize = 11;
 
 - (void)setCurrentPage:(NSUInteger)number
 {
-	if (number < [pages count])
-	{
-		if (currentPage != number)
-		{
-			currentPage = number;
-			[self preloadPages];
-		}
-	}
+	if (number >= [pages count])
+		currentPage = [pages count] - 1;
+	else
+		currentPage = number;
+	[self preloadPages];
 }
 
 @synthesize currentPage; // Only synthesize getter

@@ -25,6 +25,7 @@
 
 // View Delegate
 - (void)advancePage:(NSInteger)offset;
+- (void)setCurrentPage:(NSUInteger)number;
 - (CBPage *)pageAtIndex:(NSUInteger)number;
 - (NSUInteger)currentPage;
 

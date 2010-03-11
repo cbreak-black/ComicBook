@@ -70,6 +70,11 @@
 	[[self document] advancePage:offset];
 }
 
+- (void)setCurrentPage:(NSUInteger)number
+{
+	[[self document] setCurrentPage:number];
+}
+
 - (CBPage *)pageAtIndex:(NSUInteger)number
 {
 	return [[self document] pageAtIndex:number];

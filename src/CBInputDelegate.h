@@ -14,6 +14,7 @@
 
 // For Input
 - (void)advancePage:(NSInteger)offset;
+- (void)setCurrentPage:(NSUInteger)number;
 
 // For Output
 - (CBPage *)pageAtIndex:(NSUInteger)number;

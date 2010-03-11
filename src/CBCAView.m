@@ -46,6 +46,22 @@
 
 - (void)moveUp:(id)sender
 {
+}
+
+- (void)moveDown:(id)sender
+{
+}
+
+- (void)moveLeft:(id)sender
+{
+}
+
+- (void)moveRight:(id)sender
+{
+}
+
+- (void)pageUp:(id)sender
+{
 	// TODO: Consider user settings
 	// Decide if displaying one or two pages is better
 	NSUInteger cp = [delegate currentPage];
@@ -57,9 +73,29 @@
 		[delegate advancePage:-1];
 }
 
-- (void)moveDown:(id)sender
+- (void)pageDown:(id)sender
 {
 	[delegate advancePage:pageDisplayCount];
+}
+
+- (BOOL)performKeyEquivalent:(NSEvent *)theEvent
+{
+	NSString * eventKey = [theEvent charactersIgnoringModifiers];
+	NSUInteger modifiers = [theEvent modifierFlags];
+	unichar c = [eventKey characterAtIndex:0];
+	switch (c)
+	{
+		case 0xF729:
+			[delegate setCurrentPage:0];
+			break;
+		case 0xF72B:
+			[delegate setCurrentPage:NSUIntegerMax];
+			break;
+		default:
+			return [super performKeyEquivalent:theEvent];
+			break;
+	}
+	return YES;
 }
 
 @synthesize delegate;
