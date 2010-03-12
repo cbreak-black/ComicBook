@@ -238,8 +238,11 @@
 - (BOOL)enterFullScreen
 {
 	NSNumber * flags = [NSNumber numberWithUnsignedInteger:(NSApplicationPresentationHideDock | NSApplicationPresentationAutoHideMenuBar)];
-	NSDictionary * d = [NSDictionary dictionaryWithObject:flags
-												   forKey:NSFullScreenModeApplicationPresentationOptions];
+	NSMutableDictionary * d = [NSMutableDictionary dictionaryWithCapacity:2];
+	[d setValue:flags
+		 forKey:NSFullScreenModeApplicationPresentationOptions];
+	[d setValue:[NSNumber numberWithBool:NO]
+		 forKey:NSFullScreenModeAllScreens];
 	return [self enterFullScreenMode:[self.window screen] withOptions:d];
 }
 
