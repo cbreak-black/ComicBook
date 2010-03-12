@@ -13,9 +13,12 @@
 
 @interface CBCAView : NSView
 {
+	CAScrollLayer * scrollLayer;
 	CALayer * containerLayer;
 	CALayer * pageLayerLeft;
 	CALayer * pageLayerRight;
+
+	CGPoint scrollPosition;
 
 	NSUInteger pageDisplayCount;
 
@@ -38,6 +41,10 @@
 - (void)pageChanged;
 - (void)setImage:(NSImage*)img;
 - (void)setImageLeft:(NSImage*)imgLeft right:(NSImage*)imgRight;
+
+// Scrolling
+- (void)scrollToPoint:(CGPoint)point;
+- (void)scrollByOffsetX:(float)x Y:(float)y;
 
 // Full Screen
 - (IBAction)toggleFullscreen:(id)sender;

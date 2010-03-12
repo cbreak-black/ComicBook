@@ -20,12 +20,14 @@
     if (self)
 	{
 		pageDisplayCount = 0;
+		scrollPosition = CGPointMake(0, 0);
 	}
     return self;
 }
 
 - (void)dealloc
 {
+	[scrollLayer release];
 	[containerLayer release];
 	[pageLayerLeft release];
 	[pageLayerRight release];
@@ -46,18 +48,22 @@
 
 - (void)moveUp:(id)sender
 {
+	[self scrollByOffsetX:0 Y:+100];
 }
 
 - (void)moveDown:(id)sender
 {
+	[self scrollByOffsetX:0 Y:-100];
 }
 
 - (void)moveLeft:(id)sender
 {
+	[self scrollByOffsetX:-100 Y:0];
 }
 
 - (void)moveRight:(id)sender
 {
+	[self scrollByOffsetX:+100 Y:0];
 }
 
 - (void)pageUp:(id)sender
@@ -111,20 +117,26 @@
 	[self setLayer:backgroundLayer];
 	[self setWantsLayer:YES];
 
+	// Scroll Layer
+	scrollLayer = [[CAScrollLayer alloc] init];
+	scrollLayer.frame = backgroundLayer.frame;
+	scrollLayer.autoresizingMask = (kCALayerWidthSizable | kCALayerHeightSizable);
+	[backgroundLayer addSublayer:scrollLayer];
+
 	// Content layer
 	containerLayer = [[CALayer alloc] init];
 	containerLayer.frame = backgroundLayer.frame;
-	containerLayer.contentsGravity = kCAGravityResizeAspect;
-	containerLayer.autoresizingMask = (kCALayerWidthSizable | kCALayerHeightSizable);
+	containerLayer.contentsGravity = kCAGravityTop;
+	containerLayer.autoresizingMask = (kCALayerMinXMargin | kCALayerMaxXMargin | kCALayerHeightSizable);
 	containerLayer.layoutManager = [CAConstraintLayoutManager layoutManager];
-	[backgroundLayer addSublayer:containerLayer];
+	[scrollLayer addSublayer:containerLayer];
 
 	pageLayerLeft = [[CALayer alloc] init];
 	pageLayerRight = [[CALayer alloc] init];
 	pageLayerLeft.name = @"pageLayerLeft";
 	pageLayerRight.name = @"pageLayerRight";
-	pageLayerLeft.contentsGravity = kCAGravityResizeAspect;
-	pageLayerRight.contentsGravity = kCAGravityResizeAspect;
+	pageLayerLeft.contentsGravity = kCAGravityTopRight;
+	pageLayerRight.contentsGravity = kCAGravityTopLeft;
 	[pageLayerLeft addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMinY
 															relativeTo:@"superlayer"
 															 attribute:kCAConstraintMinY]];
@@ -157,6 +169,7 @@
 	[customActions setObject:[NSNull null] forKey:@"bounds"];
 	[customActions setObject:[NSNull null] forKey:@"position"];
 	[customActions setObject:[NSNull null] forKey:@"frame"];
+	scrollLayer.actions = customActions;
 	containerLayer.actions = customActions;
 	pageLayerLeft.actions = customActions;
 	pageLayerRight.actions = customActions;
@@ -188,6 +201,7 @@
 	pageLayerRight.contents = nil;
 	containerLayer.contents = img;
 	pageDisplayCount = 1;
+	[self scrollToPoint:CGPointMake(0, 0)];
 }
 
 - (void)setImageLeft:(NSImage*)imgLeft right:(NSImage*)imgRight
@@ -196,6 +210,20 @@
 	pageLayerLeft.contents = imgLeft;
 	pageLayerRight.contents = imgRight;
 	pageDisplayCount = 2;
+	[self scrollToPoint:CGPointMake(0, 0)];
+}
+
+- (void)scrollToPoint:(CGPoint)point
+{
+	scrollPosition = point;
+	[scrollLayer scrollToPoint:scrollPosition];
+}
+
+- (void)scrollByOffsetX:(float)x Y:(float)y
+{
+	scrollPosition.x += x;
+	scrollPosition.y += y;
+	[scrollLayer scrollToPoint:scrollPosition];
 }
 
 // Full Screen
