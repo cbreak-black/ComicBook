@@ -50,7 +50,7 @@ const NSUInteger preloadWindowSize = 11;
 	CBPageController * pc = [[CBPageController alloc] init];
 	[self setListController:lc];
 	[self setPageController:pc];
-	[self addWindowController:lc];
+	//[self addWindowController:lc]; // Don't show it
 	[self addWindowController:pc];
 	[lc release];
 	[pc release];
@@ -249,5 +249,20 @@ const NSUInteger preloadWindowSize = 11;
 @synthesize listController;
 @synthesize pageController;
 @synthesize baseURL;
+
+// GUI
+- (IBAction)toggleListWindow:(id)sender
+{
+	if ([[listController window] isVisible])
+	{
+		[listController close];
+		// removes lc from doc's list
+	}
+	else
+	{
+		[self addWindowController:listController];
+		[listController showWindow:sender];
+	}
+}
 
 @end

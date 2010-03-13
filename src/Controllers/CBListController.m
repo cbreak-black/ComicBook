@@ -40,6 +40,24 @@
 	[super setDocument:document];
 	[[self document] addObserver:self forKeyPath:@"currentPage" options:0 context:NULL];
 	[[self document] addObserver:self forKeyPath:@"pages" options:0 context:NULL];
+	[self updateTableData];
+	[self updateTableSelection];
+}
+
+- (void)updateTableData
+{
+	[tableView reloadData];
+}
+
+- (void)updateTableSelection
+{
+	NSIndexSet * selectedRows = [tableView selectedRowIndexes];
+	NSUInteger currentPage = [[self document] currentPage];
+	if (![selectedRows containsIndex:currentPage])
+	{
+		[tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:currentPage] byExtendingSelection:NO];
+		[tableView scrollRowToVisible:currentPage];
+	}
 }
 
 // TableView DataSource
@@ -79,17 +97,12 @@
 {
 	if ([keyPath isEqualToString:@"currentPage"])
 	{
-		NSIndexSet * selectedRows = [tableView selectedRowIndexes];
-		NSUInteger currentPage = [[self document] currentPage];
-		if (![selectedRows containsIndex:currentPage])
-		{
-			[tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:currentPage] byExtendingSelection:NO];
-		}
+		[self updateTableSelection];
 	}
 	else if ([keyPath isEqualToString:@"pages"])
 	{
 		// Can be optimized if needed
-		[tableView reloadData];
+		[self updateTableData];
 	}
 	else
 	{

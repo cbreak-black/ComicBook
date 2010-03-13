@@ -24,4 +24,8 @@
 // Selection
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification;
 
+// Updaters
+- (void)updateTableSelection;
+- (void)updateTableData;
+
 @end

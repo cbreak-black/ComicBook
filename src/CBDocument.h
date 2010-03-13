@@ -45,4 +45,7 @@
 @property (retain) CBPageController * pageController;
 @property (retain, readonly) NSURL * baseURL;
 
+// GUI
+- (IBAction)toggleListWindow:(id)sender;
+
 @end
