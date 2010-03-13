@@ -12,7 +12,30 @@
 
 #import "CBPage.h"
 
+// For User Defaults
+
+// Layout
+NSString * kCBLayoutKey = @"PageLayout";
+NSString * kCBLayoutSingle = @"Single";
+NSString * kCBLayoutLeft = @"LeftToRight";
+NSString * kCBLayoutRight = @"RightToLeft";
+
+// Scale
+NSString * kCBScaleKey = @"Autoscale";
+NSString * kCBScaleOriginal = @"Original";
+NSString * kCBScaleWidth = @"FullWidth";
+NSString * kCBScaleFull = @"FullPage";
+
 @implementation CBCAView
+
++ (void)initialize
+{
+	NSUserDefaults * ud = [NSUserDefaults standardUserDefaults];
+	NSDictionary * viewDefaults = [NSMutableDictionary dictionaryWithCapacity:4];
+	[viewDefaults setValue:kCBLayoutRight forKey:kCBLayoutKey];
+	[viewDefaults setValue:kCBScaleWidth forKey:kCBScaleKey];
+	[ud registerDefaults:viewDefaults];
+}
 
 - (id)initWithFrame:(NSRect)frame
 {
@@ -21,12 +44,18 @@
 	{
 		pageDisplayCount = 0;
 		scrollPosition = CGPointMake(0, 0);
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(defaultsChanged:)
+													 name:NSUserDefaultsDidChangeNotification
+												   object:nil];
+		[self loadDefaults:[NSUserDefaults standardUserDefaults]];
 	}
     return self;
 }
 
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[scrollLayer release];
 	[containerLayer release];
 	[pageLayerLeft release];
@@ -37,6 +66,28 @@
 - (void)awakeFromNib
 {
 	[self configureLayers];
+}
+
+- (void)loadDefaults:(NSUserDefaults *)ud
+{
+	// Layout
+	NSString * l = [ud stringForKey:kCBLayoutKey];
+	if ([l isEqualToString:kCBLayoutSingle])
+		layout = CBLayoutSingle;
+	else if ([l isEqualToString:kCBLayoutLeft])
+		layout = CBLayoutLeft;
+	else
+		layout = CBLayoutRight;
+	// Scale
+	NSString * s = [ud stringForKey:kCBScaleKey];
+	if ([s isEqualToString:kCBScaleOriginal])
+		scale = CBScaleOriginal;
+	else if ([s isEqualToString:kCBScaleFull])
+		scale = CBScaleFull;
+	else
+		scale = CBScaleWidth;
+	// Relayout
+	[self pageChanged];
 }
 
 // Events
@@ -68,20 +119,29 @@
 
 - (void)pageUp:(id)sender
 {
-	// TODO: Consider user settings
 	// Decide if displaying one or two pages is better
-	NSUInteger cp = [delegate currentPage];
-	CBPage * page1 = [delegate pageAtIndex:cp-1];
-	CBPage * page2 = [delegate pageAtIndex:cp-2];
-	if (page1 && page2 && page1.aspect < 1 && page2.aspect < 1)
-		[delegate advancePage:-2];
-	else
+	if (layout == CBLayoutSingle)
+	{
 		[delegate advancePage:-1];
+	}
+	else
+	{
+		NSUInteger cp = [delegate currentPage];
+		CBPage * page1 = [delegate pageAtIndex:cp-1];
+		CBPage * page2 = [delegate pageAtIndex:cp-2];
+		if (page1 && page2 && page1.aspect < 1 && page2.aspect < 1)
+			[delegate advancePage:-2];
+		else
+			[delegate advancePage:-1];
+	}
 }
 
 - (void)pageDown:(id)sender
 {
-	[delegate advancePage:pageDisplayCount];
+	if (layout == CBLayoutSingle)
+		[delegate advancePage:-1];
+	else
+		[delegate advancePage:pageDisplayCount];
 }
 
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent
@@ -105,6 +165,12 @@
 }
 
 @synthesize delegate;
+
+- (void)defaultsChanged:(NSNotification *)notification
+{
+	NSUserDefaults * ud = [notification object];
+	[self loadDefaults:ud];
+}
 
 // UI / Animation
 
@@ -180,15 +246,17 @@
 
 - (void)pageChanged
 {
-	// TODO: Rewrite to consider user settings
 	NSUInteger cp = [delegate currentPage];
 	CBPage * page1 = [delegate pageAtIndex:cp];
-	if (page1.aspect < 1) // Two Page
+	if (layout != CBLayoutSingle && page1.aspect < 1) // Two Page
 	{
 		CBPage * page2 = [delegate pageAtIndex:(cp+1)];
 		if (page2 && page2.aspect < 1)
 		{
-			[self setImageLeft:page1.image right:page2.image];
+			if (layout == CBLayoutLeft)
+				[self setImageLeft:page1.image right:page2.image];
+			else
+				[self setImageLeft:page2.image right:page1.image];
 			return;
 		}
 	}

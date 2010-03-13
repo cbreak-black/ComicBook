@@ -11,12 +11,41 @@
 
 @protocol CBInputDelegate;
 
+// Settings constants
+extern NSString * kCBLayoutKey;
+extern NSString * kCBLayoutSingle;
+extern NSString * kCBLayoutLeft;
+extern NSString * kCBLayoutRight;
+
+// Scale
+extern NSString * kCBScaleKey;
+extern NSString * kCBScaleOriginal;
+extern NSString * kCBScaleWidth;
+extern NSString * kCBScaleFull;
+
+// Layout Enums
+typedef enum {
+	CBLayoutSingle,
+	CBLayoutLeft,
+	CBLayoutRight,
+} CBLayout;
+
+// Scale Enums
+typedef enum {
+	CBScaleOriginal,
+	CBScaleWidth,
+	CBScaleFull,
+} CBScale;
+
 @interface CBCAView : NSView
 {
 	CAScrollLayer * scrollLayer;
 	CALayer * containerLayer;
 	CALayer * pageLayerLeft;
 	CALayer * pageLayerRight;
+
+	CBLayout layout;
+	CBScale scale;
 
 	CGPoint scrollPosition;
 
@@ -29,9 +58,12 @@
 
 // Initialisation
 - (void)awakeFromNib;
+- (void)loadDefaults:(NSUserDefaults *)ud;
 
 // Events
 - (BOOL)acceptsFirstResponder;
+- (BOOL)performKeyEquivalent:(NSEvent *)theEvent;
+- (void)defaultsChanged:(NSNotification *)notification;
 @property (assign) id<CBInputDelegate> delegate;
 
 // UI / Animation
