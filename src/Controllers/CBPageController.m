@@ -27,6 +27,7 @@
 - (void)dealloc
 {
 	[caView setDelegate:nil];
+	[super dealloc];
 }
 
 - (NSString*)windowFrameAutosaveName
@@ -38,7 +39,7 @@
 {
 	[[self document] removeObserver:self forKeyPath:@"currentPage"];
 	[super setDocument:document];
-	[[self document] addObserver:self forKeyPath:@"currentPage" options:NULL context:NULL];
+	[[self document] addObserver:self forKeyPath:@"currentPage" options:0 context:NULL];
 }
 
 - (void)windowDidLoad

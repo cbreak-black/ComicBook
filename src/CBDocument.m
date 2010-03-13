@@ -169,7 +169,7 @@ const NSUInteger preloadWindowSize = 11;
 	if (offset != 0)
 	{
 		[self willChangeValueForKey:@"currentPage"];
-		if (offset < 0 && currentPage < -offset)
+		if (offset < 0 && currentPage < (NSUInteger)-offset)
 			currentPage = 0;
 		else if (currentPage + offset >= [pages count])
 			currentPage = [pages count] - 1;

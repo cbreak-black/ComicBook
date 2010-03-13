@@ -38,8 +38,8 @@
 	[[self document] removeObserver:self forKeyPath:@"currentPage"];
 	[[self document] removeObserver:self forKeyPath:@"pages"];
 	[super setDocument:document];
-	[[self document] addObserver:self forKeyPath:@"currentPage" options:NULL context:NULL];
-	[[self document] addObserver:self forKeyPath:@"pages" options:NULL context:NULL];
+	[[self document] addObserver:self forKeyPath:@"currentPage" options:0 context:NULL];
+	[[self document] addObserver:self forKeyPath:@"pages" options:0 context:NULL];
 }
 
 // TableView DataSource
