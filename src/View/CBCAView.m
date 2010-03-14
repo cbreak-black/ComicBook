@@ -138,10 +138,7 @@ NSString * kCBScaleFull = @"FullPage";
 
 - (void)pageDown:(id)sender
 {
-	if (layout == CBLayoutSingle)
-		[delegate advancePage:-1];
-	else
-		[delegate advancePage:pageDisplayCount];
+	[delegate advancePage:pageDisplayCount];
 }
 
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent
@@ -151,6 +148,12 @@ NSString * kCBScaleFull = @"FullPage";
 	unichar c = [eventKey characterAtIndex:0];
 	switch (c)
 	{
+		case ' ':
+			[self pageDown:self];
+			break;
+		case 'f':
+			[self toggleFullscreen:self];
+			break;
 		case 0xF729:
 			[delegate setCurrentPage:0];
 			break;
