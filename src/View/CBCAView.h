@@ -10,6 +10,7 @@
 #import <QuartzCore/CoreAnimation.h>
 
 @protocol CBInputDelegate;
+@class CBPage;
 
 // Settings constants
 extern NSString * kCBLayoutKey;
@@ -71,8 +72,8 @@ typedef enum {
 
 // Image display
 - (void)pageChanged;
-- (void)setImage:(NSImage*)img;
-- (void)setImageLeft:(NSImage*)imgLeft right:(NSImage*)imgRight;
+- (void)setPage:(CBPage*)page;
+- (void)setPageLeft:(CBPage*)pageLeft right:(CBPage*)pageRight;
 
 // Scrolling
 - (void)scrollToPoint:(CGPoint)point;

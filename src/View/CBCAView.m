@@ -194,7 +194,7 @@ NSString * kCBScaleFull = @"FullPage";
 
 	// Content layer
 	containerLayer = [[CALayer alloc] init];
-	containerLayer.frame = backgroundLayer.frame;
+	containerLayer.anchorPoint = CGPointMake(0.5, 1.0);
 	containerLayer.contentsGravity = kCAGravityTop;
 	containerLayer.autoresizingMask = (kCALayerMinXMargin | kCALayerMaxXMargin | kCALayerHeightSizable);
 	containerLayer.layoutManager = [CAConstraintLayoutManager layoutManager];
@@ -206,29 +206,17 @@ NSString * kCBScaleFull = @"FullPage";
 	pageLayerRight.name = @"pageLayerRight";
 	pageLayerLeft.contentsGravity = kCAGravityTopRight;
 	pageLayerRight.contentsGravity = kCAGravityTopLeft;
-	[pageLayerLeft addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMinY
-															relativeTo:@"superlayer"
-															 attribute:kCAConstraintMinY]];
 	[pageLayerLeft addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMaxY
 															relativeTo:@"superlayer"
 															 attribute:kCAConstraintMaxY]];
 	[pageLayerLeft addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMinX
 															relativeTo:@"superlayer"
 															 attribute:kCAConstraintMinX]];
-	[pageLayerLeft addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMaxX
-															relativeTo:@"superlayer"
-															 attribute:kCAConstraintMidX]];
-	[pageLayerRight addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMinY
-															 relativeTo:@"superlayer"
-															  attribute:kCAConstraintMinY]];
 	[pageLayerRight addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMaxY
 															 relativeTo:@"superlayer"
 															  attribute:kCAConstraintMaxY]];
 	[pageLayerRight addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMinX
 															 relativeTo:@"pageLayerLeft"
-															  attribute:kCAConstraintMaxX]];
-	[pageLayerRight addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMaxX
-															 relativeTo:@"superlayer"
 															  attribute:kCAConstraintMaxX]];
 	[containerLayer addSublayer:pageLayerLeft];
 	[containerLayer addSublayer:pageLayerRight];
@@ -257,29 +245,54 @@ NSString * kCBScaleFull = @"FullPage";
 		if (page2 && page2.aspect < 1)
 		{
 			if (layout == CBLayoutLeft)
-				[self setImageLeft:page1.image right:page2.image];
+				[self setPageLeft:page1 right:page2];
 			else
-				[self setImageLeft:page2.image right:page1.image];
+				[self setPageLeft:page2 right:page1];
 			return;
 		}
 	}
-	[self setImage:page1.image];
+	[self setPage:page1];
 }
 
-- (void)setImage:(NSImage*)img
+- (void)setPage:(CBPage*)page
 {
+	CGRect pageRect = CGRectMake(0, 0, 0, 0);
+	// Container
+	pageRect.size = page.size;
+	containerLayer.bounds = pageRect;
+	containerLayer.contents = page.image;
+	CGSize slSize = scrollLayer.bounds.size;
+	containerLayer.position = CGPointMake(slSize.width/2, slSize.height);
+	// Left & Right
 	pageLayerLeft.contents = nil;
 	pageLayerRight.contents = nil;
-	containerLayer.contents = img;
 	pageDisplayCount = 1;
 	[self scrollToPoint:CGPointMake(0, 0)];
 }
 
-- (void)setImageLeft:(NSImage*)imgLeft right:(NSImage*)imgRight
+- (void)setPageLeft:(CBPage*)pageLeft right:(CBPage*)pageRight
 {
+	CGRect pageRect = CGRectMake(0, 0, 0, 0);
+	float pageWidth = 0;
+	float pageHeight = 0;
+	// Left
+	pageRect.size = pageLeft.size;
+	pageWidth = pageRect.size.width;
+	pageHeight = pageRect.size.height;
+	pageLayerLeft.bounds = pageRect;
+	pageLayerLeft.contents = pageLeft.image;
+	// Right
+	pageRect.size = pageRight.size;
+	pageWidth += pageRect.size.width;
+	if (pageHeight < pageRect.size.height)
+		pageHeight = pageRect.size.height;
+	pageLayerRight.bounds = pageRect;
+	pageLayerRight.contents = pageRight.image;
+	// Container
+	CGSize slSize = scrollLayer.bounds.size;
+	containerLayer.bounds = CGRectMake(0, 0, pageWidth, pageHeight);
+	containerLayer.position = CGPointMake(slSize.width/2, slSize.height);
 	containerLayer.contents = nil;
-	pageLayerLeft.contents = imgLeft;
-	pageLayerRight.contents = imgRight;
 	pageDisplayCount = 2;
 	[self scrollToPoint:CGPointMake(0, 0)];
 }
