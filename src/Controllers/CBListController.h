@@ -12,6 +12,7 @@
 @interface CBListController : NSWindowController <NSTableViewDataSource, NSTableViewDelegate>
 {
 	IBOutlet NSTableView * tableView;
+	NSTimer * closeTimer;
 }
 
 // Designated Initializer
@@ -27,5 +28,10 @@
 // Updaters
 - (void)updateTableSelection;
 - (void)updateTableData;
+
+// Animating
+- (BOOL)isShown;
+- (void)animateShow:(id)sender;
+- (void)animateHide:(id)sender;
 
 @end

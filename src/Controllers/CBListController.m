@@ -110,4 +110,42 @@
 	}
 }
 
+// Animating
+- (void)animateShow:(id)sender
+{
+	if (closeTimer)
+	{
+		// Don't close after all
+		[closeTimer invalidate];
+		[closeTimer release];
+		closeTimer = nil;
+	}
+	[self showWindow:sender];
+	[[self window] setAlphaValue:0.0f];
+	[[[self window] animator] setAlphaValue:1.0f];
+}
+
+- (void)animateHide:(id)sender
+{
+	[[self window] setAlphaValue:1.0f];
+	[[[self window] animator] setAlphaValue:0.0f];
+	closeTimer = [[NSTimer scheduledTimerWithTimeInterval:1.0f
+												   target:self selector:@selector(closeTimed)
+												 userInfo:nil repeats:NO] retain];
+}
+
+- (void)closeTimed
+{
+	[closeTimer release];
+	closeTimer = nil;
+	[self close];
+}
+
+- (BOOL)isShown
+{
+	// Returns NO even if window is still visible when a close timer is running
+	return [[self window] isVisible] && (closeTimer==nil);
+}
+
+
 @end

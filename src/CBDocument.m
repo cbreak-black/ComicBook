@@ -253,15 +253,15 @@ const NSUInteger preloadWindowSize = 11;
 // GUI
 - (IBAction)toggleListWindow:(id)sender
 {
-	if ([[listController window] isVisible])
+	if ([listController isShown])
 	{
-		[listController close];
+		[listController animateHide:self];
 		// removes lc from doc's list
 	}
 	else
 	{
 		[self addWindowController:listController];
-		[listController showWindow:sender];
+		[listController animateShow:self];
 	}
 }
 
