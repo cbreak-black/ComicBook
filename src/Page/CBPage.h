@@ -28,4 +28,9 @@
 - (void)discardContentIfPossible;
 - (BOOL)isContentDiscarded;
 
+// Factories
++ (NSArray*)pagesFromURL:(NSURL*)url;
++ (NSArray*)pagesFromDirectoryURL:(NSURL*)url;
++ (NSArray*)pagesFromFileURL:(NSURL*)url;
+
 @end

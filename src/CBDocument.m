@@ -12,7 +12,6 @@
 #import "Controllers/CBPageController.h"
 
 #import "CBPage.h"
-#import "CBURLPage.h"
 
 #import "CBPageOperation.h"
 
@@ -77,62 +76,20 @@ const NSUInteger preloadWindowSize = 11;
 	[absoluteURL getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL];
 	if ([isDirectory boolValue])
 	{
-		if (baseURL != absoluteURL)
-		{
-			[baseURL release];
-			baseURL = [absoluteURL retain];
-		}
-		[self addDirectoryURL:absoluteURL];
+		[baseURL release];
+		baseURL = [absoluteURL retain];
 	}
 	else
 	{
 		[baseURL release];
 		baseURL = [[absoluteURL URLByDeletingLastPathComponent] retain];
-		[self addFileURL:absoluteURL];
 	}
-    return YES;
-}
-
-// Add files
-- (void)addDirectoryURL:(NSURL *)url
-{
-	NSFileManager * fm = [[NSFileManager alloc] init];
-	NSDirectoryEnumerator * de =
-		[fm enumeratorAtURL:url includingPropertiesForKeys:[NSArray arrayWithObjects:NSURLTypeIdentifierKey,NSURLIsDirectoryKey,nil]
-					options:NSDirectoryEnumerationSkipsHiddenFiles errorHandler:^(NSURL *url, NSError *error)
-	{
-		NSLog(@"addDirectoryURL enumerator error: %@", error);
-		return YES;
-	}];
-	for (NSURL * url in de)
-	{
-		NSNumber * isDirectory;
-		if ([url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL])
-		{
-			if (![isDirectory boolValue]) // Some kind of file
-			{
-				[self addFileURL:url];
-			};
-		};
-	};
-	[fm release];
 	[self willChangeValueForKey:@"pages"];
+	[pages addObjectsFromArray:[CBPage pagesFromURL:absoluteURL]];
 	[pages sortWithOptions:NSSortConcurrent usingComparator:^(id o1, id o2){return [[o1 path] localizedStandardCompare:[o2 path]];}];
 	[self didChangeValueForKey:@"pages"];
 	[self preloadPages];
-}
-
-- (void)addFileURL:(NSURL *)url
-{
-	CBPage * page = [[CBURLPage alloc] initWithURL:url];
-	if (page)
-	{
-		NSIndexSet * insertionIndex = [NSIndexSet indexSetWithIndex:[pages count]];
-		[self willChange:NSKeyValueChangeInsertion valuesAtIndexes:insertionIndex forKey:@"pages"];
-		[pages addObject:page];
-		[self didChange:NSKeyValueChangeInsertion valuesAtIndexes:insertionIndex forKey:@"pages"];
-		[page release];
-	}
+	return YES;
 }
 
 // Accessors pages

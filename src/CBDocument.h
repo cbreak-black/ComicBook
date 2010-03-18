@@ -27,10 +27,6 @@
 	NSOperationQueue * preloadQueue;
 }
 
-// Adds URLs to the pages array
-- (void)addDirectoryURL:(NSURL *)url;
-- (void)addFileURL:(NSURL *)url;
-
 // Page access (KVC Compliant)
 - (NSInteger)countOfPages;
 - (CBPage *)pageAtIndex:(NSUInteger)number;
