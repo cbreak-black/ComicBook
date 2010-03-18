@@ -160,6 +160,12 @@ NSString * kCBScaleFull = @"FullPage";
 		case 0xF72B:
 			[delegate setCurrentPage:NSUIntegerMax];
 			break;
+		case '+':
+			[self zoomIn];
+			break;
+		case '-':
+			[self zoomOut];
+			break;
 		default:
 			return [super performKeyEquivalent:theEvent];
 			break;
@@ -188,6 +194,7 @@ NSString * kCBScaleFull = @"FullPage";
 
 	// Scroll Layer
 	scrollLayer = [[CAScrollLayer alloc] init];
+	scrollLayer.anchorPoint = CGPointMake(0.5, 1.0);
 	scrollLayer.frame = backgroundLayer.frame;
 	scrollLayer.autoresizingMask = (kCALayerWidthSizable | kCALayerHeightSizable);
 	[backgroundLayer addSublayer:scrollLayer];
@@ -204,6 +211,8 @@ NSString * kCBScaleFull = @"FullPage";
 	pageLayerRight = [[CALayer alloc] init];
 	pageLayerLeft.name = @"pageLayerLeft";
 	pageLayerRight.name = @"pageLayerRight";
+	pageLayerLeft.anchorPoint = CGPointMake(1.0, 1.0);
+	pageLayerRight.anchorPoint = CGPointMake(0.0, 1.0);
 	pageLayerLeft.contentsGravity = kCAGravityTopRight;
 	pageLayerRight.contentsGravity = kCAGravityTopLeft;
 	[pageLayerLeft addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMaxY
@@ -226,6 +235,7 @@ NSString * kCBScaleFull = @"FullPage";
 	[customActions setObject:[NSNull null] forKey:@"bounds"];
 	[customActions setObject:[NSNull null] forKey:@"position"];
 	[customActions setObject:[NSNull null] forKey:@"frame"];
+	[customActions setObject:[NSNull null] forKey:@"sublayerTransform"];
 	scrollLayer.actions = customActions;
 	containerLayer.actions = customActions;
 	pageLayerLeft.actions = customActions;
@@ -264,10 +274,12 @@ NSString * kCBScaleFull = @"FullPage";
 	CGSize slSize = scrollLayer.bounds.size;
 	containerLayer.position = CGPointMake(slSize.width/2, slSize.height);
 	// Left & Right
+	pageLayerLeft.bounds = CGRectMake(0, 0, 0, 0);
+	pageLayerRight.bounds = CGRectMake(0, 0, 0, 0);
 	pageLayerLeft.contents = nil;
 	pageLayerRight.contents = nil;
 	pageDisplayCount = 1;
-	[self scrollToPoint:CGPointMake(0, 0)];
+	[self resetView];
 }
 
 - (void)setPageLeft:(CBPage*)pageLeft right:(CBPage*)pageRight
@@ -294,7 +306,14 @@ NSString * kCBScaleFull = @"FullPage";
 	containerLayer.position = CGPointMake(slSize.width/2, slSize.height);
 	containerLayer.contents = nil;
 	pageDisplayCount = 2;
+	[self resetView];
+}
+
+// Scrolling & Zooming
+- (void)resetView
+{
 	[self scrollToPoint:CGPointMake(0, 0)];
+	[self zoomReset];
 }
 
 - (void)scrollToPoint:(CGPoint)point
@@ -308,6 +327,49 @@ NSString * kCBScaleFull = @"FullPage";
 	scrollPosition.x += x;
 	scrollPosition.y += y;
 	[scrollLayer scrollToPoint:scrollPosition];
+}
+
+- (void)zoomIn
+{
+	float scaleFactor = [[scrollLayer valueForKeyPath:@"sublayerTransform.scale"] floatValue];
+	if (scaleFactor < 0.25) scaleFactor *= 0.5;
+	else scaleFactor -= 0.125;
+	[scrollLayer setValue:[NSNumber numberWithFloat:scaleFactor] forKeyPath:@"sublayerTransform.scale"];
+}
+
+- (void)zoomOut
+{
+	float scaleFactor = [[scrollLayer valueForKeyPath:@"sublayerTransform.scale"] floatValue];
+	if (scaleFactor < 0.25) scaleFactor *= 2.0;
+	else scaleFactor += 0.125;
+	[scrollLayer setValue:[NSNumber numberWithFloat:scaleFactor] forKeyPath:@"sublayerTransform.scale"];
+}
+
+- (void)zoomTo:(float)scaleFactor
+{
+	[scrollLayer setValue:[NSNumber numberWithFloat:scaleFactor] forKeyPath:@"sublayerTransform.scale"];
+}
+
+- (void)zoomReset
+{
+	if (scale == CBScaleOriginal)
+	{
+		[self zoomTo:1.0];
+	}
+	else if (scale == CBScaleWidth)
+	{
+		float zoomFactor = scrollLayer.bounds.size.width/containerLayer.bounds.size.width;
+		[self zoomTo:zoomFactor];
+	}
+	else // scale == CBScaleFull
+	{
+		float zoomFactorW = scrollLayer.bounds.size.width/containerLayer.bounds.size.width;
+		float zoomFactorH = scrollLayer.bounds.size.height/containerLayer.bounds.size.height;
+		if (zoomFactorH > zoomFactorW)
+			[self zoomTo:zoomFactorW];
+		else
+			[self zoomTo:zoomFactorH];
+	}
 }
 
 // Full Screen
@@ -327,13 +389,17 @@ NSString * kCBScaleFull = @"FullPage";
 		 forKey:NSFullScreenModeApplicationPresentationOptions];
 	[d setValue:[NSNumber numberWithBool:NO]
 		 forKey:NSFullScreenModeAllScreens];
-	return [self enterFullScreenMode:[self.window screen] withOptions:d];
+	BOOL r = [self enterFullScreenMode:[self.window screen] withOptions:d];
+	if (r)
+		[self zoomReset];
+	return r;
 }
 
 - (void)exitFullScreen
 {
 	[self exitFullScreenModeWithOptions:NULL];
 	[[self window] makeFirstResponder:self];
+	[self zoomReset];
 }
 
 @end

@@ -28,16 +28,19 @@
 - (CGFloat)aspect
 {
 	NSSize s = [self size];
-	return s.width/s.height;
+	if (s.width > 0 && s.height > 0)
+		return s.width/s.height;
+	else
+		return 0;
 }
 
 - (NSSize)size
 {
-	NSImage * img = [self image];
+	NSImageRep * img = [[self image] bestRepresentationForRect:NSMakeRect(0, 0, 0, 0) context:nil hints:nil];
 	if (img)
-		return [img size];
+		return NSMakeSize([img pixelsWide], [img pixelsHigh]);
 	else
-		return NSMakeSize(0, -1); // Invalid
+		return NSMakeSize(0, 0); // Invalid
 }
 
 // NSDiscardableContent

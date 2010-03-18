@@ -75,9 +75,14 @@ typedef enum {
 - (void)setPage:(CBPage*)page;
 - (void)setPageLeft:(CBPage*)pageLeft right:(CBPage*)pageRight;
 
-// Scrolling
+// Scrolling & Zooming
+- (void)resetView;
 - (void)scrollToPoint:(CGPoint)point;
 - (void)scrollByOffsetX:(float)x Y:(float)y;
+- (void)zoomIn;
+- (void)zoomOut;
+- (void)zoomTo:(float)scaleFactor;
+- (void)zoomReset;
 
 // Full Screen
 - (IBAction)toggleFullscreen:(id)sender;
