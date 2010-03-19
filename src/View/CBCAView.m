@@ -263,6 +263,7 @@ NSString * kCBScaleFull = @"FullPage";
 
 	// Cleanup
 	[backgroundLayer release];
+	CGColorRelease(blackColor);
 }
 
 - (void)pageChanged

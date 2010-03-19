@@ -55,7 +55,7 @@
 		if (!img || ![img isValid])
 		{
 			// TODO: Set img to error image
-			NSLog(@"Error loading image from Archive %@ file %@", [archive description], [header description]);
+			NSLog(@"Error loading image from archive, file %@", [self path]);
 			return NO;
 		}
 		else
@@ -79,7 +79,7 @@
 
 - (NSString *)path;
 {
-	return [[archive archivePath] stringByAppendingString:[header filename]];
+	return [[archive archivePath] stringByAppendingPathComponent:[header filename]];
 }
 
 // NSDiscardableContent
@@ -133,6 +133,7 @@
 	ZKDataArchive * zipArchive = [ZKDataArchive archiveWithArchivePath:[zipPath path]];
 	if (zipArchive)
 	{
+		zipArchive.archivePath = [zipPath path];
 		NSMutableArray * pages = [NSMutableArray arrayWithCapacity:1];
 		for (ZKCDHeader * header in zipArchive.centralDirectory)
 		{
