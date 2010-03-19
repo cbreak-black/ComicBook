@@ -72,22 +72,36 @@ NSString * kCBScaleFull = @"FullPage";
 {
 	// Layout
 	NSString * l = [ud stringForKey:kCBLayoutKey];
+	CBLayout lt;
 	if ([l isEqualToString:kCBLayoutSingle])
-		layout = CBLayoutSingle;
+		lt = CBLayoutSingle;
 	else if ([l isEqualToString:kCBLayoutLeft])
-		layout = CBLayoutLeft;
+		lt = CBLayoutLeft;
 	else
-		layout = CBLayoutRight;
+		lt = CBLayoutRight;
 	// Scale
 	NSString * s = [ud stringForKey:kCBScaleKey];
+	CBScale st;
 	if ([s isEqualToString:kCBScaleOriginal])
-		scale = CBScaleOriginal;
+		st = CBScaleOriginal;
 	else if ([s isEqualToString:kCBScaleFull])
-		scale = CBScaleFull;
+		st = CBScaleFull;
 	else
-		scale = CBScaleWidth;
+		st = CBScaleWidth;
 	// Relayout
-	[self pageChanged];
+	BOOL changed = NO;
+	if (layout != lt)
+	{
+		layout = lt;
+		changed = YES;
+	}
+	if (scale != st)
+	{
+		scale = st;
+		changed = YES;
+	}
+	if (changed)
+		[self pageChanged];
 }
 
 // Events
@@ -181,6 +195,13 @@ NSString * kCBScaleFull = @"FullPage";
 	[self loadDefaults:ud];
 }
 
+// Resizing
+- (void)resizeWithOldSuperviewSize:(NSSize)oldBoundsSize
+{
+	[super resizeWithOldSuperviewSize:oldBoundsSize];
+	[self resetView];
+}
+
 // UI / Animation
 
 - (void)configureLayers
@@ -203,7 +224,6 @@ NSString * kCBScaleFull = @"FullPage";
 	containerLayer = [[CALayer alloc] init];
 	containerLayer.anchorPoint = CGPointMake(0.5, 1.0);
 	containerLayer.contentsGravity = kCAGravityTop;
-	containerLayer.autoresizingMask = (kCALayerMinXMargin | kCALayerMaxXMargin | kCALayerHeightSizable);
 	containerLayer.layoutManager = [CAConstraintLayoutManager layoutManager];
 	[scrollLayer addSublayer:containerLayer];
 
@@ -312,6 +332,9 @@ NSString * kCBScaleFull = @"FullPage";
 // Scrolling & Zooming
 - (void)resetView
 {
+	// TODO: Move to layout class
+	CGSize slSize = scrollLayer.bounds.size;
+	containerLayer.position = CGPointMake(slSize.width/2, slSize.height);
 	[self scrollToPoint:CGPointMake(0, 0)];
 	[self zoomReset];
 }
@@ -391,7 +414,7 @@ NSString * kCBScaleFull = @"FullPage";
 		 forKey:NSFullScreenModeAllScreens];
 	BOOL r = [self enterFullScreenMode:[self.window screen] withOptions:d];
 	if (r)
-		[self zoomReset];
+		[self resetView];
 	return r;
 }
 
@@ -399,7 +422,7 @@ NSString * kCBScaleFull = @"FullPage";
 {
 	[self exitFullScreenModeWithOptions:NULL];
 	[[self window] makeFirstResponder:self];
-	[self zoomReset];
+	[self resetView];
 }
 
 @end
