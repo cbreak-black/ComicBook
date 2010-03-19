@@ -13,6 +13,9 @@
 		700700E51146A46C004C7B39 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 700700E41146A46C004C7B39 /* QuartzCore.framework */; };
 		7007033E1147DE26004C7B39 /* CBPageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7007033D1147DE26004C7B39 /* CBPageOperation.m */; };
 		7007069F1149C617004C7B39 /* CBCALayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7007069E1149C617004C7B39 /* CBCALayoutManager.m */; };
+		708C7F5B11539DA60070455D /* ZipKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 708C7F5A11539DA60070455D /* ZipKit.framework */; };
+		708C7F5C11539DB20070455D /* ZipKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 708C7F5A11539DA60070455D /* ZipKit.framework */; };
+		708C7F8B1153A3230070455D /* CBZipPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 708C7F8A1153A3230070455D /* CBZipPage.m */; };
 		70B95E06113D70A50069E257 /* CBList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 70B95E05113D70A50069E257 /* CBList.xib */; };
 		70B95E1A113D75DC0069E257 /* CBListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70B95E19113D75DC0069E257 /* CBListController.m */; };
 		70B95E1D113D75F10069E257 /* CBPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70B95E1C113D75F10069E257 /* CBPageController.m */; };
@@ -25,6 +28,20 @@
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7019AC131153909400434454 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				708C7F5C11539DB20070455D /* ZipKit.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		089C1660FE840EACC02AAC07 /* InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = InfoPlist.strings; path = resources/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -47,6 +64,9 @@
 		7007033D1147DE26004C7B39 /* CBPageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBPageOperation.m; path = src/CBPageOperation.m; sourceTree = "<group>"; };
 		7007069D1149C617004C7B39 /* CBCALayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBCALayoutManager.h; path = src/View/CBCALayoutManager.h; sourceTree = "<group>"; };
 		7007069E1149C617004C7B39 /* CBCALayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBCALayoutManager.m; path = src/View/CBCALayoutManager.m; sourceTree = "<group>"; };
+		708C7F5A11539DA60070455D /* ZipKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZipKit.framework; path = /Users/cbreak/Documents/software/zipkit/build/Release/ZipKit.framework; sourceTree = "<absolute>"; };
+		708C7F891153A3230070455D /* CBZipPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBZipPage.h; path = src/Page/CBZipPage.h; sourceTree = "<group>"; };
+		708C7F8A1153A3230070455D /* CBZipPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBZipPage.m; path = src/Page/CBZipPage.m; sourceTree = "<group>"; };
 		70B95E03113D70940069E257 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = resources/English.lproj/CBList.xib; sourceTree = "<group>"; };
 		70B95E18113D75DC0069E257 /* CBListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBListController.h; path = src/Controllers/CBListController.h; sourceTree = "<group>"; };
 		70B95E19113D75DC0069E257 /* CBListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBListController.m; path = src/Controllers/CBListController.m; sourceTree = "<group>"; };
@@ -69,6 +89,7 @@
 			files = (
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				700700E51146A46C004C7B39 /* QuartzCore.framework in Frameworks */,
+				708C7F5B11539DA60070455D /* ZipKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,6 +101,7 @@
 			children = (
 				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
 				700700E41146A46C004C7B39 /* QuartzCore.framework */,
+				708C7F5A11539DA60070455D /* ZipKit.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -178,6 +200,8 @@
 				70B95F2B113F32E00069E257 /* CBPage.m */,
 				70B95F33113F33410069E257 /* CBURLPage.h */,
 				70B95F34113F33410069E257 /* CBURLPage.m */,
+				708C7F891153A3230070455D /* CBZipPage.h */,
+				708C7F8A1153A3230070455D /* CBZipPage.m */,
 			);
 			name = Page;
 			sourceTree = "<group>";
@@ -203,6 +227,7 @@
 			buildConfigurationList = C05733C708A9546B00998B17 /* Build configuration list for PBXNativeTarget "ComicBook" */;
 			buildPhases = (
 				8D15AC2B0486D014006FF6A4 /* Resources */,
+				7019AC131153909400434454 /* Copy Frameworks */,
 				8D15AC300486D014006FF6A4 /* Sources */,
 				8D15AC330486D014006FF6A4 /* Frameworks */,
 			);
@@ -266,6 +291,7 @@
 				700700DD11469FB7004C7B39 /* CBCAView.m in Sources */,
 				7007033E1147DE26004C7B39 /* CBPageOperation.m in Sources */,
 				7007069F1149C617004C7B39 /* CBCALayoutManager.m in Sources */,
+				708C7F8B1153A3230070455D /* CBZipPage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,6 +346,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../zipkit/build/Release\"",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -339,6 +369,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_IDENTITY = "Code Sign Black";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../zipkit/build/Release\"",
+				);
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = src/ComicBook_Prefix.pch;
@@ -359,6 +393,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
@@ -374,6 +409,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
 			};

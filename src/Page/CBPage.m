@@ -8,7 +8,11 @@
 
 #import "CBPage.h"
 
+#import <ZipKit/ZKDataArchive.h>
+#import <ZipKit/ZKCDHeader.h>
+
 #import "CBURLPage.h"
+#import "CBZipPage.h"
 
 @implementation CBPage
 
@@ -113,10 +117,11 @@
 		[page autorelease];
 		return [NSArray arrayWithObject:page];
 	}
-	else
+	else if ([ZKArchive validArchiveAtPath:[url path]])
 	{
-		// Not an image file, check archive file
+		return [CBZipPage pagesFromZipFile:url];
 	}
+	// Not readable yet, return empty
 	return [NSArray array];
 }
 
