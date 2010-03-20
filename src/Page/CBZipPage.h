@@ -25,6 +25,8 @@
 - (id)initWithArchive:(ZKDataArchive *)fileArchive header:(ZKCDHeader*)fileHeader;
 
 // Creation
+// File based uses mmaped IO, so it's faster and uses less memory
 + (NSArray*)pagesFromZipFile:(NSURL*)zipPath;
++ (NSArray*)pagesFromZipData:(NSMutableData*)zipData withPath:(NSString*)zipPath;
 
 @end

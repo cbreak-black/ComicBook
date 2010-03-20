@@ -130,10 +130,16 @@
 
 + (NSArray*)pagesFromZipFile:(NSURL*)zipPath
 {
-	ZKDataArchive * zipArchive = [ZKDataArchive archiveWithArchivePath:[zipPath path]];
+	NSMutableData * zipData = [[NSMutableData alloc] initWithContentsOfURL:zipPath options:NSDataReadingMapped error:NULL];
+	return [self pagesFromZipData:zipData withPath:[zipPath path]];
+}
+
++ (NSArray*)pagesFromZipData:(NSMutableData*)zipData withPath:(NSString*)zipPath
+{
+	ZKDataArchive * zipArchive = [ZKDataArchive archiveWithArchiveData:zipData];
 	if (zipArchive)
 	{
-		zipArchive.archivePath = [zipPath path];
+		zipArchive.archivePath = zipPath;
 		NSMutableArray * pages = [NSMutableArray arrayWithCapacity:1];
 		for (ZKCDHeader * header in zipArchive.centralDirectory)
 		{
