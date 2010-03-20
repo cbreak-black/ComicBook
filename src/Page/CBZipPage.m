@@ -154,7 +154,7 @@
 				[pages addObject:page];
 				[page release];
 			}
-			else
+			else if (header.uncompressedSize > 0)
 			{
 				// Try to use data
 				NSDictionary * fileAttributes;

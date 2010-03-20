@@ -85,8 +85,16 @@ const NSUInteger preloadWindowSize = 11;
 		baseURL = [[absoluteURL URLByDeletingLastPathComponent] retain];
 	}
 	[self willChangeValueForKey:@"pages"];
-	[pages addObjectsFromArray:[CBPage pagesFromURL:absoluteURL]];
-	[pages sortWithOptions:NSSortConcurrent usingComparator:^(id o1, id o2){return [[o1 path] localizedStandardCompare:[o2 path]];}];
+	@try
+	{
+		[pages addObjectsFromArray:[CBPage pagesFromURL:absoluteURL]];
+		[pages sortWithOptions:NSSortConcurrent
+			   usingComparator:^(id o1, id o2){return [[o1 path] localizedStandardCompare:[o2 path]];}];
+	}
+	@catch (NSException * e)
+	{
+		NSLog(@"Error opening URL %@: Error %@", [absoluteURL description], [e description]);
+	}
 	[self didChangeValueForKey:@"pages"];
 	[self preloadPages];
 	return YES;
