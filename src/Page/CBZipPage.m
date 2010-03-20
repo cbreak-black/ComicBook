@@ -18,9 +18,14 @@
 	self = [super init];
 	if (self)
 	{
-		if (![fileHeader isDirectory] && ![fileHeader isSymLink] && ![fileHeader isResourceFork])
+		NSArray * imageTypes = [NSImage imageFileTypes];
+		NSString * fileExtension = [fileHeader.filename pathExtension];
+		if (![fileHeader isDirectory] &&
+			![fileHeader isSymLink] &&
+			![fileHeader isResourceFork] &&
+			[imageTypes containsObject:fileExtension])
 		{
-			// Seems to be a file
+			// Seems to be an image file
 			archive = [fileArchive retain];
 			header = [fileHeader retain];
 			img = nil;
@@ -148,6 +153,14 @@
 			{
 				[pages addObject:page];
 				[page release];
+			}
+			else
+			{
+				// Try to use data
+				NSDictionary * fileAttributes;
+				NSString * path = [[zipArchive archivePath] stringByAppendingPathComponent:[header filename]];
+				NSData * data = [zipArchive inflateFile:header attributes:&fileAttributes];
+				[pages addObjectsFromArray:[CBPage pagesFromData:data withPath:path]];
 			}
 		}
 		return pages;

@@ -13,6 +13,7 @@
 
 #import "CBURLPage.h"
 #import "CBZipPage.h"
+#import "CBDataPage.h"
 
 @implementation CBPage
 
@@ -120,6 +121,25 @@
 	else if ([ZKArchive validArchiveAtPath:[url path]])
 	{
 		return [CBZipPage pagesFromZipFile:url];
+	}
+	// Not readable yet, return empty
+	return [NSArray array];
+}
+
++ (NSArray*)pagesFromData:(NSData*)data withPath:(NSString*)path
+{
+	NSArray * imageTypes = [NSImage imageFileTypes];
+	NSString * fileExtension = [path pathExtension];
+	if ([imageTypes containsObject:fileExtension])
+	{
+		return [CBDataPage pagesFromImageData:data withPath:path];
+	}
+	else if ([fileExtension isEqualToString:@"zip"] ||
+			 [fileExtension isEqualToString:@"cbz"])
+	{
+		// Maybe some zip archive data
+		NSMutableData * mutableData = [[data mutableCopyWithZone:nil] autorelease];
+		return [CBZipPage pagesFromZipData:mutableData withPath:path];
 	}
 	// Not readable yet, return empty
 	return [NSArray array];

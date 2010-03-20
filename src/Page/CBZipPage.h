@@ -13,6 +13,8 @@
 @class ZKDataArchive;
 @class ZKCDHeader;
 
+// A page backed from a ZipKit archive, discardable and reloads from the zip file
+
 @interface CBZipPage : CBPage
 {
 	ZKDataArchive * archive;

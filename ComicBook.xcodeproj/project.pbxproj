@@ -16,6 +16,7 @@
 		708C7F5B11539DA60070455D /* ZipKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 708C7F5A11539DA60070455D /* ZipKit.framework */; };
 		708C7F5C11539DB20070455D /* ZipKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 708C7F5A11539DA60070455D /* ZipKit.framework */; };
 		708C7F8B1153A3230070455D /* CBZipPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 708C7F8A1153A3230070455D /* CBZipPage.m */; };
+		708C814E11551A220070455D /* CBDataPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 708C814D11551A220070455D /* CBDataPage.m */; };
 		70B95E06113D70A50069E257 /* CBList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 70B95E05113D70A50069E257 /* CBList.xib */; };
 		70B95E1A113D75DC0069E257 /* CBListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70B95E19113D75DC0069E257 /* CBListController.m */; };
 		70B95E1D113D75F10069E257 /* CBPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70B95E1C113D75F10069E257 /* CBPageController.m */; };
@@ -67,6 +68,8 @@
 		708C7F5A11539DA60070455D /* ZipKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZipKit.framework; path = /Users/cbreak/Documents/software/zipkit/build/Release/ZipKit.framework; sourceTree = "<absolute>"; };
 		708C7F891153A3230070455D /* CBZipPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBZipPage.h; path = src/Page/CBZipPage.h; sourceTree = "<group>"; };
 		708C7F8A1153A3230070455D /* CBZipPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBZipPage.m; path = src/Page/CBZipPage.m; sourceTree = "<group>"; };
+		708C814C11551A220070455D /* CBDataPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBDataPage.h; path = src/Page/CBDataPage.h; sourceTree = "<group>"; };
+		708C814D11551A220070455D /* CBDataPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBDataPage.m; path = src/Page/CBDataPage.m; sourceTree = "<group>"; };
 		70B95E03113D70940069E257 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = resources/English.lproj/CBList.xib; sourceTree = "<group>"; };
 		70B95E18113D75DC0069E257 /* CBListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBListController.h; path = src/Controllers/CBListController.h; sourceTree = "<group>"; };
 		70B95E19113D75DC0069E257 /* CBListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBListController.m; path = src/Controllers/CBListController.m; sourceTree = "<group>"; };
@@ -202,6 +205,8 @@
 				70B95F34113F33410069E257 /* CBURLPage.m */,
 				708C7F891153A3230070455D /* CBZipPage.h */,
 				708C7F8A1153A3230070455D /* CBZipPage.m */,
+				708C814C11551A220070455D /* CBDataPage.h */,
+				708C814D11551A220070455D /* CBDataPage.m */,
 			);
 			name = Page;
 			sourceTree = "<group>";
@@ -292,6 +297,7 @@
 				7007033E1147DE26004C7B39 /* CBPageOperation.m in Sources */,
 				7007069F1149C617004C7B39 /* CBCALayoutManager.m in Sources */,
 				708C7F8B1153A3230070455D /* CBZipPage.m in Sources */,
+				708C814E11551A220070455D /* CBDataPage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

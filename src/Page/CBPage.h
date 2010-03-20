@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+// An abstract page, a single image of a comic
 
 @interface CBPage : NSObject <NSDiscardableContent>
 {
@@ -28,9 +29,10 @@
 - (void)discardContentIfPossible;
 - (BOOL)isContentDiscarded;
 
-// Factories
-+ (NSArray*)pagesFromURL:(NSURL*)url;
-+ (NSArray*)pagesFromDirectoryURL:(NSURL*)url;
-+ (NSArray*)pagesFromFileURL:(NSURL*)url;
+// Factories (Return arrays of instances of subclasses)
++ (NSArray*)pagesFromURL:(NSURL*)url; // Dispatcher
++ (NSArray*)pagesFromDirectoryURL:(NSURL*)url; // File system tree
++ (NSArray*)pagesFromFileURL:(NSURL*)url; // Single file/archive
++ (NSArray*)pagesFromData:(NSData*)data withPath:(NSString*)path; // For archives
 
 @end

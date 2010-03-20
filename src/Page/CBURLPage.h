@@ -10,6 +10,8 @@
 
 #import "CBPage.h"
 
+// A page backed from an URL, discardable and reloads from URL
+
 @interface CBURLPage : CBPage
 {
 	NSURL * url;
