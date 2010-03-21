@@ -26,6 +26,34 @@ NSString * kCBScaleOriginal = @"Original";
 NSString * kCBScaleWidth = @"FullWidth";
 NSString * kCBScaleFull = @"FullPage";
 
+// Helpers
+CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
+{
+	CGFloat minX = r.origin.x;
+	CGFloat maxX = CGRectGetMaxX(r);
+	CGFloat minY = r.origin.y;
+	CGFloat maxY = CGRectGetMaxY(r);
+	p.x = minX > p.x ? minX : p.x;
+	p.x = maxX < p.x ? maxX : p.x;
+	p.y = minY > p.y ? minY : p.y;
+	p.y = maxY < p.y ? maxY : p.y;
+	return p;
+}
+
+// Scales a rectangle r by factor f with anchor a.
+// a is expected to be normalized to [0,1]
+//CG_INLINE CGRect CBScaleRectWithAnchorByFactor(CGRect r, CGPoint a, CGFloat f)
+//{
+//	CGSize change;
+//	change.width = r.size.width*f - r.size.width;
+//	change.height = r.size.height*f - r.size.height;
+//	r.origin.x -= a.x*change.width;
+//	r.size.width += (1-a.x)*change.width;
+//	r.origin.y -= a.y*change.height;
+//	r.size.height += (1-a.y)*change.height;
+//	return r;
+//}
+
 @implementation CBCAView
 
 + (void)initialize
@@ -113,22 +141,26 @@ NSString * kCBScaleFull = @"FullPage";
 
 - (void)moveUp:(id)sender
 {
-	[self scrollByOffsetX:0 Y:+100];
+	CGSize windowSize = scrollLayer.bounds.size;
+	[self scrollByOffsetX:0 Y:+windowSize.height*0.5];
 }
 
 - (void)moveDown:(id)sender
 {
-	[self scrollByOffsetX:0 Y:-100];
+	CGSize windowSize = scrollLayer.bounds.size;
+	[self scrollByOffsetX:0 Y:-windowSize.height*0.5];
 }
 
 - (void)moveLeft:(id)sender
 {
-	[self scrollByOffsetX:-100 Y:0];
+	CGSize windowSize = scrollLayer.bounds.size;
+	[self scrollByOffsetX:-windowSize.width*0.5 Y:0];
 }
 
 - (void)moveRight:(id)sender
 {
-	[self scrollByOffsetX:+100 Y:0];
+	CGSize windowSize = scrollLayer.bounds.size;
+	[self scrollByOffsetX:+windowSize.width*0.5 Y:0];
 }
 
 - (void)pageUp:(id)sender
@@ -256,20 +288,24 @@ NSString * kCBScaleFull = @"FullPage";
 	[containerLayer addSublayer:pageLayerLeft];
 	[containerLayer addSublayer:pageLayerRight];
 
-	// Disable animation for size changes
-	NSMutableDictionary * customActions = [NSMutableDictionary dictionary];
-	[customActions setObject:[NSNull null] forKey:@"bounds"];
-	[customActions setObject:[NSNull null] forKey:@"position"];
-	[customActions setObject:[NSNull null] forKey:@"frame"];
-	[customActions setObject:[NSNull null] forKey:@"sublayerTransform"];
-	scrollLayer.actions = customActions;
-	containerLayer.actions = customActions;
-	pageLayerLeft.actions = customActions;
-	pageLayerRight.actions = customActions;
+	scrollLayer.delegate = self;
+	containerLayer.delegate = self;
+	pageLayerLeft.delegate = self;
+	pageLayerRight.delegate = self;
 
 	// Cleanup
 	[backgroundLayer release];
 	CGColorRelease(blackColor);
+}
+
+- (id < CAAction >)actionForLayer:(CALayer*)layer forKey:(NSString*)event
+{
+	// No animations when resizing
+	if ([self inLiveResize])
+	{
+		return [CAAnimation animation];
+	}
+	return nil;
 }
 
 - (void)pageChanged
@@ -293,6 +329,9 @@ NSString * kCBScaleFull = @"FullPage";
 
 - (void)setPage:(CBPage*)page
 {
+	[CATransaction begin];
+	[CATransaction setValue:(id)kCFBooleanTrue
+					 forKey:kCATransactionDisableActions];
 	CGRect pageRect = CGRectMake(0, 0, 0, 0);
 	// Container
 	pageRect.size = page.size;
@@ -307,10 +346,14 @@ NSString * kCBScaleFull = @"FullPage";
 	pageLayerRight.contents = nil;
 	pageDisplayCount = 1;
 	[self resetView];
+	[CATransaction commit];
 }
 
 - (void)setPageLeft:(CBPage*)pageLeft right:(CBPage*)pageRight
 {
+	[CATransaction begin];
+	[CATransaction setValue:(id)kCFBooleanTrue
+					 forKey:kCATransactionDisableActions];
 	CGRect pageRect = CGRectMake(0, 0, 0, 0);
 	float pageWidth = 0;
 	float pageHeight = 0;
@@ -334,6 +377,7 @@ NSString * kCBScaleFull = @"FullPage";
 	containerLayer.contents = nil;
 	pageDisplayCount = 2;
 	[self resetView];
+	[CATransaction commit];
 }
 
 // Scrolling & Zooming
@@ -342,42 +386,77 @@ NSString * kCBScaleFull = @"FullPage";
 	// TODO: Move to layout class
 	CGSize slSize = scrollLayer.bounds.size;
 	containerLayer.position = CGPointMake(slSize.width/2, slSize.height);
-	[self scrollToPoint:CGPointMake(0, 0)];
+	if (layout == CBLayoutLeft)
+		[self scrollToPoint:CGPointMake(-CGFLOAT_MAX, 0)];
+	else
+		[self scrollToPoint:CGPointMake(+CGFLOAT_MAX, 0)];
 	[self zoomReset];
 }
 
 - (void)scrollToPoint:(CGPoint)point
 {
-	scrollPosition = point;
+	// Assumes container maxY to be at maxY of scrollLayer
+	// Assumes container midX to be at midX of scrollLayer
+	CGSize scrollSize = scrollLayer.bounds.size;
+	CGSize containerSize = containerLayer.bounds.size;
+	containerSize.width *= zoomFactor;
+	containerSize.height *= zoomFactor;
+	CGRect scrollBounds;
+	if (containerSize.width < scrollSize.width)
+	{
+		// No scrolling horizontally
+		scrollBounds.size.width = 0;
+		scrollBounds.origin.x = 0;
+	}
+	else
+	{
+		scrollBounds.size.width = containerSize.width - scrollSize.width;
+		scrollBounds.origin.x = -scrollBounds.size.width/2;
+	}
+	if (containerSize.height < scrollSize.height)
+	{
+		// No scrolling vertically
+		scrollBounds.size.height = 0;
+		scrollBounds.origin.y = 0;
+	}
+	else
+	{
+		scrollBounds.size.height = containerSize.height - scrollSize.height;
+		scrollBounds.origin.y = -scrollBounds.size.height;
+	}
+	scrollPosition = CBClampPointToRect(point, scrollBounds);
 	[scrollLayer scrollToPoint:scrollPosition];
 }
 
 - (void)scrollByOffsetX:(float)x Y:(float)y
 {
-	scrollPosition.x += x;
-	scrollPosition.y += y;
-	[scrollLayer scrollToPoint:scrollPosition];
+	CGPoint p = scrollPosition;
+	p.x += x;
+	p.y += y;
+	[self scrollToPoint:p];
 }
 
 - (void)zoomIn
 {
-	float scaleFactor = [[scrollLayer valueForKeyPath:@"sublayerTransform.scale"] floatValue];
-	if (scaleFactor < 0.25) scaleFactor *= 0.5;
-	else scaleFactor -= 0.125;
-	[scrollLayer setValue:[NSNumber numberWithFloat:scaleFactor] forKeyPath:@"sublayerTransform.scale"];
+	CGFloat newZoomFactor;
+	if (zoomFactor < 0.25) newZoomFactor = zoomFactor*2.0;
+	else newZoomFactor = zoomFactor + 0.125;
+	[self zoomTo:newZoomFactor];
 }
 
 - (void)zoomOut
 {
-	float scaleFactor = [[scrollLayer valueForKeyPath:@"sublayerTransform.scale"] floatValue];
-	if (scaleFactor < 0.25) scaleFactor *= 2.0;
-	else scaleFactor += 0.125;
-	[scrollLayer setValue:[NSNumber numberWithFloat:scaleFactor] forKeyPath:@"sublayerTransform.scale"];
+	CGFloat newZoomFactor;
+	if (zoomFactor < 0.25) newZoomFactor = zoomFactor*0.5;
+	else newZoomFactor = zoomFactor - 0.125;
+	[self zoomTo:newZoomFactor];
 }
 
 - (void)zoomTo:(float)scaleFactor
 {
-	[scrollLayer setValue:[NSNumber numberWithFloat:scaleFactor] forKeyPath:@"sublayerTransform.scale"];
+	zoomFactor = scaleFactor;
+	[containerLayer setValue:[NSNumber numberWithFloat:zoomFactor] forKeyPath:@"transform.scale"];
+	[self scrollByOffsetX:0 Y:0];
 }
 
 - (void)zoomReset
@@ -388,27 +467,31 @@ NSString * kCBScaleFull = @"FullPage";
 	}
 	else if (scale == CBScaleWidth)
 	{
-		float zoomFactor = scrollLayer.bounds.size.width/containerLayer.bounds.size.width;
-		[self zoomTo:zoomFactor];
+		float factor = scrollLayer.bounds.size.width/containerLayer.bounds.size.width;
+		[self zoomTo:factor];
 	}
 	else // scale == CBScaleFull
 	{
-		float zoomFactorW = scrollLayer.bounds.size.width/containerLayer.bounds.size.width;
-		float zoomFactorH = scrollLayer.bounds.size.height/containerLayer.bounds.size.height;
-		if (zoomFactorH > zoomFactorW)
-			[self zoomTo:zoomFactorW];
+		float factorW = scrollLayer.bounds.size.width/containerLayer.bounds.size.width;
+		float factorH = scrollLayer.bounds.size.height/containerLayer.bounds.size.height;
+		if (factorH > factorW)
+			[self zoomTo:factorW];
 		else
-			[self zoomTo:zoomFactorH];
+			[self zoomTo:factorH];
 	}
 }
 
 // Full Screen
 - (IBAction)toggleFullscreen:(id)sender
 {
+	[CATransaction begin];
+	[CATransaction setValue:(id)kCFBooleanTrue
+					 forKey:kCATransactionDisableActions];
 	if ([self isInFullScreenMode])
 		[self exitFullScreen];
 	else
 		[self enterFullScreen];
+	[CATransaction commit];
 }
 
 - (BOOL)enterFullScreen

@@ -49,6 +49,7 @@ typedef enum {
 	CBScale scale;
 
 	CGPoint scrollPosition;
+	CGFloat zoomFactor;
 
 	NSUInteger pageDisplayCount;
 
