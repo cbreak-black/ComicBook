@@ -158,33 +158,39 @@ NSString * kCBScaleFull = @"FullPage";
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent
 {
 	NSString * eventKey = [theEvent charactersIgnoringModifiers];
-	NSUInteger modifiers = [theEvent modifierFlags];
-	unichar c = [eventKey characterAtIndex:0];
-	switch (c)
+	// Only care about certain modifiers
+	NSUInteger modifierMask = NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask;
+	NSUInteger modifiers = [theEvent modifierFlags] & modifierMask;
+	if (modifiers == 0)
 	{
-		case ' ':
-			[self pageDown:self];
-			break;
-		case 'f':
-			[self toggleFullscreen:self];
-			break;
-		case 0xF729:
-			[delegate setCurrentPage:0];
-			break;
-		case 0xF72B:
-			[delegate setCurrentPage:NSUIntegerMax];
-			break;
-		case '+':
-			[self zoomIn];
-			break;
-		case '-':
-			[self zoomOut];
-			break;
-		default:
-			return [super performKeyEquivalent:theEvent];
-			break;
+		unichar c = [eventKey characterAtIndex:0];
+		switch (c)
+		{
+			case ' ':
+				[self pageDown:self];
+				break;
+			case 'f':
+				[self toggleFullscreen:self];
+				break;
+			case 0xF729:
+				[delegate setCurrentPage:0];
+				break;
+			case 0xF72B:
+				[delegate setCurrentPage:NSUIntegerMax];
+				break;
+			case '+':
+				[self zoomIn];
+				break;
+			case '-':
+				[self zoomOut];
+				break;
+			default:
+				return [super performKeyEquivalent:theEvent];
+				break;
+		}
+		return YES;
 	}
-	return YES;
+	return [super performKeyEquivalent:theEvent];
 }
 
 @synthesize delegate;
