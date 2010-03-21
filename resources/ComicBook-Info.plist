@@ -78,6 +78,18 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeName</key>
+			<string>IMG-ALL</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.image</string>
+			</array>
+			<key>NSDocumentClass</key>
+			<string>CBDocument</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
 			<string>ARCHIVE-ZIP</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -87,6 +99,42 @@
 			</array>
 			<key>NSDocumentClass</key>
 			<string>CBDocument</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>ARCHIVE-CBZ</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>net.the-color-black.comicbook.zip</string>
+			</array>
+			<key>NSDocumentClass</key>
+			<string>CBDocument</string>
+		</dict>
+	</array>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeDescription</key>
+			<string>ZIP Comic Book</string>
+			<key>UTTypeIconFile</key>
+			<string></string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://en.wikipedia.org/wiki/Comic_Book_Archive_file</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.pkware.zip-archive</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>net.the-color-black.comicbook.zip</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.mime-type</key>
+				<string>application/x-cbz</string>
+				<key>public.filename-extension</key>
+				<string>cbz</string>
+			</dict>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
