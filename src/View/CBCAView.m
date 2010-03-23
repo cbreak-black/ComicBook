@@ -54,6 +54,16 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 //	return r;
 //}
 
+@interface CBCAView (CBInternal)
+
+// Setup
+- (void)configureLayers;
+- (void)configurePageLayers:(CBCAViewLayerSet *)index;
+- (void)loadDefaults:(NSUserDefaults *)ud;
+
+@end
+
+
 @implementation CBCAView
 
 + (void)initialize
@@ -70,30 +80,102 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
     self = [super initWithFrame:frame];
     if (self)
 	{
-		pageDisplayCount = 0;
 		scrollPosition = CGPointMake(0, 0);
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(defaultsChanged:)
 													 name:NSUserDefaultsDidChangeNotification
 												   object:nil];
 		[self loadDefaults:[NSUserDefaults standardUserDefaults]];
+		for (unsigned int i = 0; i < 3; i++)
+		{
+			layers[i].container = nil;
+			layers[i].left = nil;
+			layers[i].right = nil;
+			layers[i].pageCount = 0;
+		}
+		currentLayerSet = 0;
 	}
-    return self;
+	return self;
 }
 
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[scrollLayer release];
-	[containerLayer release];
-	[pageLayerLeft release];
-	[pageLayerRight release];
+	for (unsigned int i = 0; i < 3; i++)
+	{
+		[layers[i].right release];
+		[layers[i].left release];
+		[layers[i].container release];
+	}
 	[super dealloc];
 }
 
 - (void)awakeFromNib
 {
 	[self configureLayers];
+}
+
+// UI
+- (void)configureLayers
+{
+	// Background layer
+	CALayer * backgroundLayer = [[CALayer alloc] init];
+	CGColorRef blackColor=CGColorCreateGenericRGB(0.0, 0.0, 0.0, 1.0);
+	backgroundLayer.backgroundColor = blackColor;
+	[self setLayer:backgroundLayer];
+	[self setWantsLayer:YES];
+
+	// Scroll Layer
+	scrollLayer = [[CAScrollLayer alloc] init];
+	scrollLayer.anchorPoint = CGPointMake(0.5, 1.0);
+	scrollLayer.frame = backgroundLayer.frame;
+	scrollLayer.autoresizingMask = (kCALayerWidthSizable | kCALayerHeightSizable);
+	scrollLayer.delegate = self;
+	[backgroundLayer addSublayer:scrollLayer];
+
+	for (unsigned int i = 0; i < 3; i++)
+		[self configurePageLayers:&layers[i]];
+
+	// Cleanup
+	[backgroundLayer release];
+	CGColorRelease(blackColor);
+}
+
+- (void)configurePageLayers:(CBCAViewLayerSet *)cls
+{
+	// Content layer
+	cls->container = [[CALayer alloc] init];
+	cls->container.anchorPoint = CGPointMake(0.5, 1.0);
+	cls->container.contentsGravity = kCAGravityTop;
+	cls->container.layoutManager = [CAConstraintLayoutManager layoutManager];
+	cls->container.delegate = self;
+	[scrollLayer addSublayer:cls->container];
+
+	cls->left = [[CALayer alloc] init];
+	cls->right = [[CALayer alloc] init];
+	cls->left.name = @"pageLayerLeft";
+	cls->right.name = @"pageLayerRight";
+	cls->left.anchorPoint = CGPointMake(1.0, 1.0);
+	cls->right.anchorPoint = CGPointMake(0.0, 1.0);
+	cls->left.contentsGravity = kCAGravityTopRight;
+	cls->right.contentsGravity = kCAGravityTopLeft;
+	[cls->left addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMaxY
+														relativeTo:@"superlayer"
+												attribute:kCAConstraintMaxY]];
+	[cls->left addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMinX
+														relativeTo:@"superlayer"
+														 attribute:kCAConstraintMinX]];
+	[cls->right addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMaxY
+														 relativeTo:@"superlayer"
+														  attribute:kCAConstraintMaxY]];
+	[cls->right addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMinX
+														 relativeTo:@"pageLayerLeft"
+														  attribute:kCAConstraintMaxX]];
+	[cls->container addSublayer:cls->left];
+	[cls->container addSublayer:cls->right];
+	cls->left.delegate = self;
+	cls->right.delegate = self;
 }
 
 - (void)loadDefaults:(NSUserDefaults *)ud
@@ -184,7 +266,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 
 - (void)pageDown:(id)sender
 {
-	[delegate advancePage:pageDisplayCount];
+	[delegate advancePage:layers[currentLayerSet].pageCount];
 }
 
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent
@@ -234,70 +316,21 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 }
 
 // Resizing
+- (void)resized
+{
+	// Consider using a layout manager instead
+	CGSize slSize = scrollLayer.bounds.size;
+	layers[currentLayerSet].container.position = CGPointMake(slSize.width/2, slSize.height);
+	[self zoomReset];
+}
+
 - (void)resizeWithOldSuperviewSize:(NSSize)oldBoundsSize
 {
 	[super resizeWithOldSuperviewSize:oldBoundsSize];
-	[self resetView];
+	[self resized];
 }
 
-// UI / Animation
-
-- (void)configureLayers
-{
-	// Background layer
-	CALayer * backgroundLayer = [[CALayer alloc] init];
-	CGColorRef blackColor=CGColorCreateGenericRGB(0.0, 0.0, 0.0, 1.0);
-	backgroundLayer.backgroundColor = blackColor;
-	[self setLayer:backgroundLayer];
-	[self setWantsLayer:YES];
-
-	// Scroll Layer
-	scrollLayer = [[CAScrollLayer alloc] init];
-	scrollLayer.anchorPoint = CGPointMake(0.5, 1.0);
-	scrollLayer.frame = backgroundLayer.frame;
-	scrollLayer.autoresizingMask = (kCALayerWidthSizable | kCALayerHeightSizable);
-	[backgroundLayer addSublayer:scrollLayer];
-
-	// Content layer
-	containerLayer = [[CALayer alloc] init];
-	containerLayer.anchorPoint = CGPointMake(0.5, 1.0);
-	containerLayer.contentsGravity = kCAGravityTop;
-	containerLayer.layoutManager = [CAConstraintLayoutManager layoutManager];
-	[scrollLayer addSublayer:containerLayer];
-
-	pageLayerLeft = [[CALayer alloc] init];
-	pageLayerRight = [[CALayer alloc] init];
-	pageLayerLeft.name = @"pageLayerLeft";
-	pageLayerRight.name = @"pageLayerRight";
-	pageLayerLeft.anchorPoint = CGPointMake(1.0, 1.0);
-	pageLayerRight.anchorPoint = CGPointMake(0.0, 1.0);
-	pageLayerLeft.contentsGravity = kCAGravityTopRight;
-	pageLayerRight.contentsGravity = kCAGravityTopLeft;
-	[pageLayerLeft addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMaxY
-															relativeTo:@"superlayer"
-															 attribute:kCAConstraintMaxY]];
-	[pageLayerLeft addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMinX
-															relativeTo:@"superlayer"
-															 attribute:kCAConstraintMinX]];
-	[pageLayerRight addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMaxY
-															 relativeTo:@"superlayer"
-															  attribute:kCAConstraintMaxY]];
-	[pageLayerRight addConstraint:[CAConstraint constraintWithAttribute:kCAConstraintMinX
-															 relativeTo:@"pageLayerLeft"
-															  attribute:kCAConstraintMaxX]];
-	[containerLayer addSublayer:pageLayerLeft];
-	[containerLayer addSublayer:pageLayerRight];
-
-	scrollLayer.delegate = self;
-	containerLayer.delegate = self;
-	pageLayerLeft.delegate = self;
-	pageLayerRight.delegate = self;
-
-	// Cleanup
-	[backgroundLayer release];
-	CGColorRelease(blackColor);
-}
-
+// Animation
 - (id < CAAction >)actionForLayer:(CALayer*)layer forKey:(NSString*)event
 {
 	// No animations when resizing
@@ -332,19 +365,20 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	[CATransaction begin];
 	[CATransaction setValue:(id)kCFBooleanTrue
 					 forKey:kCATransactionDisableActions];
+	CBCAViewLayerSet * cls = &layers[currentLayerSet];
 	CGRect pageRect = CGRectMake(0, 0, 0, 0);
 	// Container
 	pageRect.size = page.size;
-	containerLayer.bounds = pageRect;
-	containerLayer.contents = page.image;
+	cls->container.bounds = pageRect;
+	cls->container.contents = page.image;
 	CGSize slSize = scrollLayer.bounds.size;
-	containerLayer.position = CGPointMake(slSize.width/2, slSize.height);
+	cls->container.position = CGPointMake(slSize.width/2, slSize.height);
 	// Left & Right
-	pageLayerLeft.bounds = CGRectMake(0, 0, 0, 0);
-	pageLayerRight.bounds = CGRectMake(0, 0, 0, 0);
-	pageLayerLeft.contents = nil;
-	pageLayerRight.contents = nil;
-	pageDisplayCount = 1;
+	cls->left.bounds = CGRectMake(0, 0, 0, 0);
+	cls->right.bounds = CGRectMake(0, 0, 0, 0);
+	cls->left.contents = nil;
+	cls->right.contents = nil;
+	cls->pageCount = 1;
 	[self resetView];
 	[CATransaction commit];
 }
@@ -354,6 +388,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	[CATransaction begin];
 	[CATransaction setValue:(id)kCFBooleanTrue
 					 forKey:kCATransactionDisableActions];
+	CBCAViewLayerSet * cls = &layers[currentLayerSet];
 	CGRect pageRect = CGRectMake(0, 0, 0, 0);
 	float pageWidth = 0;
 	float pageHeight = 0;
@@ -361,21 +396,21 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	pageRect.size = pageLeft.size;
 	pageWidth = pageRect.size.width;
 	pageHeight = pageRect.size.height;
-	pageLayerLeft.bounds = pageRect;
-	pageLayerLeft.contents = pageLeft.image;
+	cls->left.bounds = pageRect;
+	cls->left.contents = pageLeft.image;
 	// Right
 	pageRect.size = pageRight.size;
 	pageWidth += pageRect.size.width;
 	if (pageHeight < pageRect.size.height)
 		pageHeight = pageRect.size.height;
-	pageLayerRight.bounds = pageRect;
-	pageLayerRight.contents = pageRight.image;
+	cls->right.bounds = pageRect;
+	cls->right.contents = pageRight.image;
 	// Container
 	CGSize slSize = scrollLayer.bounds.size;
-	containerLayer.bounds = CGRectMake(0, 0, pageWidth, pageHeight);
-	containerLayer.position = CGPointMake(slSize.width/2, slSize.height);
-	containerLayer.contents = nil;
-	pageDisplayCount = 2;
+	cls->container.bounds = CGRectMake(0, 0, pageWidth, pageHeight);
+	cls->container.position = CGPointMake(slSize.width/2, slSize.height);
+	cls->container.contents = nil;
+	cls->pageCount = 2;
 	[self resetView];
 	[CATransaction commit];
 }
@@ -383,9 +418,6 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 // Scrolling & Zooming
 - (void)resetView
 {
-	// TODO: Move to layout class
-	CGSize slSize = scrollLayer.bounds.size;
-	containerLayer.position = CGPointMake(slSize.width/2, slSize.height);
 	if (layout == CBLayoutLeft)
 		[self scrollToPoint:CGPointMake(-CGFLOAT_MAX, 0)];
 	else
@@ -398,7 +430,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	// Assumes container maxY to be at maxY of scrollLayer
 	// Assumes container midX to be at midX of scrollLayer
 	CGSize scrollSize = scrollLayer.bounds.size;
-	CGSize containerSize = containerLayer.bounds.size;
+	CGSize containerSize = layers[currentLayerSet].container.bounds.size;
 	containerSize.width *= zoomFactor;
 	containerSize.height *= zoomFactor;
 	CGRect scrollBounds;
@@ -455,7 +487,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 - (void)zoomTo:(float)scaleFactor
 {
 	zoomFactor = scaleFactor;
-	[containerLayer setValue:[NSNumber numberWithFloat:zoomFactor] forKeyPath:@"transform.scale"];
+	[layers[currentLayerSet].container setValue:[NSNumber numberWithFloat:zoomFactor] forKeyPath:@"transform.scale"];
 	[self scrollByOffsetX:0 Y:0];
 }
 
@@ -467,13 +499,13 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	}
 	else if (scale == CBScaleWidth)
 	{
-		float factor = scrollLayer.bounds.size.width/containerLayer.bounds.size.width;
+		float factor = scrollLayer.bounds.size.width/layers[currentLayerSet].container.bounds.size.width;
 		[self zoomTo:factor];
 	}
 	else // scale == CBScaleFull
 	{
-		float factorW = scrollLayer.bounds.size.width/containerLayer.bounds.size.width;
-		float factorH = scrollLayer.bounds.size.height/containerLayer.bounds.size.height;
+		float factorW = scrollLayer.bounds.size.width/layers[currentLayerSet].container.bounds.size.width;
+		float factorH = scrollLayer.bounds.size.height/layers[currentLayerSet].container.bounds.size.height;
 		if (factorH > factorW)
 			[self zoomTo:factorW];
 		else
@@ -503,8 +535,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	[d setValue:[NSNumber numberWithBool:NO]
 		 forKey:NSFullScreenModeAllScreens];
 	BOOL r = [self enterFullScreenMode:[self.window screen] withOptions:d];
-	if (r)
-		[self resetView];
+	[self resized];
 	return r;
 }
 
@@ -512,7 +543,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 {
 	[self exitFullScreenModeWithOptions:NULL];
 	[[self window] makeFirstResponder:self];
-	[self resetView];
+	[self resized];
 }
 
 @end

@@ -38,20 +38,26 @@ typedef enum {
 	CBScaleFull,
 } CBScale;
 
+typedef struct
+{
+	CALayer * container;
+	CALayer * left;
+	CALayer * right;
+	unsigned int pageCount;
+}
+CBCAViewLayerSet;
+
 @interface CBCAView : NSView
 {
 	CAScrollLayer * scrollLayer;
-	CALayer * containerLayer;
-	CALayer * pageLayerLeft;
-	CALayer * pageLayerRight;
+	CBCAViewLayerSet layers[3];
+	unsigned int currentLayerSet;
 
 	CBLayout layout;
 	CBScale scale;
 
 	CGPoint scrollPosition;
 	CGFloat zoomFactor;
-
-	NSUInteger pageDisplayCount;
 
 	id<CBInputDelegate> delegate;
 }
@@ -60,16 +66,12 @@ typedef enum {
 
 // Initialisation
 - (void)awakeFromNib;
-- (void)loadDefaults:(NSUserDefaults *)ud;
 
 // Events
 - (BOOL)acceptsFirstResponder;
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent;
 - (void)defaultsChanged:(NSNotification *)notification;
 @property (assign) id<CBInputDelegate> delegate;
-
-// UI / Animation
-- (void)configureLayers;
 
 // Image display
 - (void)pageChanged;
