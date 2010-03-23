@@ -107,6 +107,8 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	[scrollLayer release];
 	for (unsigned int i = 0; i < 3; i++)
 	{
+		[layers[i].page1 release];
+		[layers[i].page2 release];
 		[layers[i].right release];
 		[layers[i].left release];
 		[layers[i].container release];
@@ -435,7 +437,9 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	cls->left.contents = nil;
 	cls->right.contents = nil;
 	// Pages
-	cls->page1 = page;
+	[cls->page1 release];
+	[cls->page2 release];
+	cls->page1 = [page retain];
 	cls->page2 = nil;
 	[self zoomReset];
 	[CATransaction commit];
@@ -487,8 +491,10 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	cls->container.position = CGPointMake(slSize.width/2, slSize.height);
 	cls->container.contents = nil;
 	// Pages
-	cls->page1 = page1;
-	cls->page2 = page2;
+	[cls->page1 release];
+	[cls->page2 release];
+	cls->page1 = [page1 retain];
+	cls->page2 = [page2 retain];
 	[self zoomReset];
 	[CATransaction commit];
 }
