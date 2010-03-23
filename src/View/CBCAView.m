@@ -204,19 +204,16 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	else
 		st = CBScaleWidth;
 	// Relayout
-	BOOL changed = NO;
 	if (layout != lt)
 	{
 		layout = lt;
-		changed = YES;
+		[self pageChanged];
 	}
 	if (scale != st)
 	{
 		scale = st;
-		changed = YES;
+		[self zoomReset];
 	}
-	if (changed)
-		[self pageChanged];
 }
 
 // Events
@@ -281,9 +278,9 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	// Only care about certain modifiers
 	NSUInteger modifierMask = NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask;
 	NSUInteger modifiers = [theEvent modifierFlags] & modifierMask;
+	unichar c = [eventKey characterAtIndex:0];
 	if (modifiers == 0)
 	{
-		unichar c = [eventKey characterAtIndex:0];
 		switch (c)
 		{
 			case ' ':
@@ -298,11 +295,33 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 			case 0xF72B:
 				[delegate setCurrentPage:NSUIntegerMax];
 				break;
+			case 0xF72C:
+				[self pageUp:self];
+				break;
+			case 0xF72D:
+				[self pageDown:self];
+				break;
 			case '+':
 				[self zoomIn];
 				break;
 			case '-':
 				[self zoomOut];
+				break;
+			default:
+				return [super performKeyEquivalent:theEvent];
+				break;
+		}
+		return YES;
+	}
+	else if (modifiers == NSShiftKeyMask)
+	{
+		switch (c)
+		{
+			case 0xF72C:
+				[delegate advancePage:-1];
+				break;
+			case 0xF72D:
+				[delegate advancePage:+1];
 				break;
 			default:
 				return [super performKeyEquivalent:theEvent];
@@ -352,6 +371,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	if (!delegate) return;
 	// Prepare for page change animation
 	CGFloat lastZoomFactor = zoomFactor;
+	CGPoint lastScrollPosition = scrollPosition;
 	unsigned char lastLayerSet = currentLayerSet;
 	currentLayerSet = (currentLayerSet+1)%3;
 	unsigned char nextLayerSet = (currentLayerSet+1)%3;
@@ -388,13 +408,13 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	{
 		// Scroll down
 		layers[lastLayerSet].container.position = CGPointMake(slSize.width/2, slSize.height + hLast);
-		[scrollLayer scrollToPoint:CGPointMake(scrollPosition.x, scrollPosition.y+hLast)];
+		[scrollLayer scrollToPoint:CGPointMake(lastScrollPosition.x, lastScrollPosition.y+hLast)];
 	}
 	else
 	{
 		// Scroll up
 		layers[lastLayerSet].container.position = CGPointMake(slSize.width/2, slSize.height - hNow);
-		[scrollLayer scrollToPoint:CGPointMake(scrollPosition.x, scrollPosition.y-hNow)];
+		[scrollLayer scrollToPoint:CGPointMake(lastScrollPosition.x, lastScrollPosition.y-hNow)];
 	}
 	layers[currentLayerSet].container.zPosition = 0.0;
 	layers[currentLayerSet].container.hidden = NO;
@@ -405,6 +425,14 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	layers[lastLayerSet].container.zPosition = -1.0;
 	[CATransaction setValue:[NSNumber numberWithFloat:1.0]
 					 forKey:kCATransactionAnimationDuration];
+	// For cleanup
+	[CATransaction setCompletionBlock:^{
+		[CATransaction begin];
+		[CATransaction setDisableActions:YES];
+		layers[lastLayerSet].container.hidden = YES;
+		[CATransaction commit];
+	}
+	 ];
 	if (layout == CBLayoutLeft)
 		[self scrollToPoint:CGPointMake(-CGFLOAT_MAX, 0)];
 	else
@@ -426,7 +454,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	CBCAViewLayerSet * cls = &layers[index];
 	CGRect pageRect = CGRectMake(0, 0, 0, 0);
 	// Container
-	pageRect.size = page.size;
+	pageRect.size = NSSizeToCGSize(page.size);
 	cls->container.bounds = pageRect;
 	cls->container.contents = page.image;
 	CGSize slSize = scrollLayer.bounds.size;
@@ -473,13 +501,13 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	float pageWidth = 0;
 	float pageHeight = 0;
 	// Left
-	pageRect.size = pageLeft.size;
+	pageRect.size = NSSizeToCGSize(pageLeft.size);
 	pageWidth = pageRect.size.width;
 	pageHeight = pageRect.size.height;
 	cls->left.bounds = pageRect;
 	cls->left.contents = pageLeft.image;
 	// Right
-	pageRect.size = pageRight.size;
+	pageRect.size = NSSizeToCGSize(pageRight.size);
 	pageWidth += pageRect.size.width;
 	if (pageHeight < pageRect.size.height)
 		pageHeight = pageRect.size.height;

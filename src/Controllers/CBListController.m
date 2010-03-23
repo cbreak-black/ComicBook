@@ -51,10 +51,10 @@
 
 - (void)updateTableSelection
 {
-	NSIndexSet * selectedRows = [tableView selectedRowIndexes];
 	NSUInteger currentPage = [[self document] currentPage];
-	if (![selectedRows containsIndex:currentPage])
+	if (currentPage != selectedRow)
 	{
+		selectedRow = currentPage;
 		[tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:currentPage] byExtendingSelection:NO];
 		[tableView scrollRowToVisible:currentPage];
 	}
@@ -85,9 +85,10 @@
 // Changed from the GUI
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
-	NSInteger selectedRow = [tableView selectedRow];
-	if (selectedRow >= 0)
+	NSUInteger newSelectedRow = [tableView selectedRow];
+	if (newSelectedRow != selectedRow && newSelectedRow >= 0)
 	{
+		selectedRow = newSelectedRow;
 		[[self document] setCurrentPage:selectedRow];
 	}
 }

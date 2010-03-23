@@ -15,7 +15,7 @@
 
 #import "CBPageOperation.h"
 
-const NSUInteger preloadWindowSize = 11;
+const NSUInteger preloadWindowSize = 15;
 
 @implementation CBDocument
 

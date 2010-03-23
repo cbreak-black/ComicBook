@@ -13,6 +13,7 @@
 {
 	IBOutlet NSTableView * tableView;
 	NSTimer * closeTimer;
+	NSUInteger selectedRow;
 }
 
 // Designated Initializer
