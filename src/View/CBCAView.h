@@ -40,10 +40,11 @@ typedef enum {
 
 typedef struct
 {
+	CBPage * page1;
+	CBPage * page2;
 	CALayer * container;
 	CALayer * left;
 	CALayer * right;
-	unsigned int pageCount;
 }
 CBCAViewLayerSet;
 
@@ -76,10 +77,11 @@ CBCAViewLayerSet;
 // Image display
 - (void)pageChanged;
 - (void)setPage:(CBPage*)page;
-- (void)setPageLeft:(CBPage*)pageLeft right:(CBPage*)pageRight;
+- (void)setPage:(CBPage*)page inSet:(unsigned char)index;
+- (void)setPageOne:(CBPage*)page1 two:(CBPage*)page2;
+- (void)setPageOne:(CBPage*)page1 two:(CBPage*)page2 inSet:(unsigned char)index;
 
 // Scrolling & Zooming
-- (void)resetView;
 - (void)scrollToPoint:(CGPoint)point;
 - (void)scrollByOffsetX:(float)x Y:(float)y;
 - (void)zoomIn;

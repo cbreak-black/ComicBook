@@ -81,19 +81,22 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
     if (self)
 	{
 		scrollPosition = CGPointMake(0, 0);
+		zoomFactor = 1.0;
+		for (unsigned int i = 0; i < 3; i++)
+		{
+			layers[i].page1 = nil;
+			layers[i].page2 = nil;
+			layers[i].container = nil;
+			layers[i].left = nil;
+			layers[i].right = nil;
+		}
+		currentLayerSet = 0;
+		delegate = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(defaultsChanged:)
 													 name:NSUserDefaultsDidChangeNotification
 												   object:nil];
 		[self loadDefaults:[NSUserDefaults standardUserDefaults]];
-		for (unsigned int i = 0; i < 3; i++)
-		{
-			layers[i].container = nil;
-			layers[i].left = nil;
-			layers[i].right = nil;
-			layers[i].pageCount = 0;
-		}
-		currentLayerSet = 0;
 	}
 	return self;
 }
@@ -266,7 +269,8 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 
 - (void)pageDown:(id)sender
 {
-	[delegate advancePage:layers[currentLayerSet].pageCount];
+	unsigned char offset = layers[currentLayerSet].page2 == nil ? 1 : 2;
+	[delegate advancePage:offset];
 }
 
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent
@@ -343,29 +347,81 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 
 - (void)pageChanged
 {
+	if (!delegate) return;
+	// Prepare for page change animation
+	CGFloat lastZoomFactor = zoomFactor;
+	unsigned char lastLayerSet = currentLayerSet;
+	currentLayerSet = (currentLayerSet+1)%3;
+	unsigned char nextLayerSet = (currentLayerSet+1)%3;
+	// Change page
 	NSUInteger cp = [delegate currentPage];
+	NSUInteger lp = layers[lastLayerSet].page1.number;
 	CBPage * page1 = [delegate pageAtIndex:cp];
 	if (layout != CBLayoutSingle && page1.aspect < 1) // Two Page
 	{
 		CBPage * page2 = [delegate pageAtIndex:(cp+1)];
 		if (page2 && page2.aspect < 1)
 		{
-			if (layout == CBLayoutLeft)
-				[self setPageLeft:page1 right:page2];
-			else
-				[self setPageLeft:page2 right:page1];
-			return;
+			[self setPageOne:page1 two:page2];
+		}
+		else
+		{
+			[self setPage:page1];
 		}
 	}
-	[self setPage:page1];
+	else
+	{
+		[self setPage:page1];
+	}
+	// Animate (Start)
+	[CATransaction begin];
+	[CATransaction setValue:(id)kCFBooleanTrue
+					 forKey:kCATransactionDisableActions];
+	CGSize slSize = scrollLayer.bounds.size;
+	CGFloat hLast = layers[lastLayerSet].container.bounds.size.height*lastZoomFactor;
+	if (hLast < slSize.height) hLast = slSize.height;
+	CGFloat hNow = layers[currentLayerSet].container.bounds.size.height*zoomFactor;
+	if (hNow < slSize.height) hNow = slSize.height;
+	if (lp < cp)
+	{
+		// Scroll down
+		layers[lastLayerSet].container.position = CGPointMake(slSize.width/2, slSize.height + hLast);
+		[scrollLayer scrollToPoint:CGPointMake(scrollPosition.x, scrollPosition.y+hLast)];
+	}
+	else
+	{
+		// Scroll up
+		layers[lastLayerSet].container.position = CGPointMake(slSize.width/2, slSize.height - hNow);
+		[scrollLayer scrollToPoint:CGPointMake(scrollPosition.x, scrollPosition.y-hNow)];
+	}
+	layers[currentLayerSet].container.zPosition = 0.0;
+	layers[currentLayerSet].container.hidden = NO;
+	layers[nextLayerSet].container.hidden = YES;
+	[CATransaction commit];
+	// Animate (End)
+	[CATransaction begin];
+	layers[lastLayerSet].container.zPosition = -1.0;
+	[CATransaction setValue:[NSNumber numberWithFloat:1.0]
+					 forKey:kCATransactionAnimationDuration];
+	if (layout == CBLayoutLeft)
+		[self scrollToPoint:CGPointMake(-CGFLOAT_MAX, 0)];
+	else
+		[self scrollToPoint:CGPointMake(+CGFLOAT_MAX, 0)];
+	[CATransaction commit];
 }
 
 - (void)setPage:(CBPage*)page
 {
+	[self setPage:page inSet:currentLayerSet];
+}
+
+- (void)setPage:(CBPage*)page inSet:(unsigned char)index
+{
+	if (index > 2) return;
 	[CATransaction begin];
 	[CATransaction setValue:(id)kCFBooleanTrue
 					 forKey:kCATransactionDisableActions];
-	CBCAViewLayerSet * cls = &layers[currentLayerSet];
+	CBCAViewLayerSet * cls = &layers[index];
 	CGRect pageRect = CGRectMake(0, 0, 0, 0);
 	// Container
 	pageRect.size = page.size;
@@ -378,17 +434,37 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	cls->right.bounds = CGRectMake(0, 0, 0, 0);
 	cls->left.contents = nil;
 	cls->right.contents = nil;
-	cls->pageCount = 1;
-	[self resetView];
+	// Pages
+	cls->page1 = page;
+	cls->page2 = nil;
+	[self zoomReset];
 	[CATransaction commit];
 }
 
-- (void)setPageLeft:(CBPage*)pageLeft right:(CBPage*)pageRight
+- (void)setPageOne:(CBPage*)page1 two:(CBPage*)page2
 {
+	[self setPageOne:page1 two:page2 inSet:currentLayerSet];
+}
+
+- (void)setPageOne:(CBPage*)page1 two:(CBPage*)page2 inSet:(unsigned char)index
+{
+	if (index > 2) return;
+	CBPage * pageLeft;
+	CBPage * pageRight;
+	if (layout == CBLayoutLeft)
+	{
+		pageLeft = page1;
+		pageRight = page2;
+	}
+	else
+	{
+		pageLeft = page2;
+		pageRight = page1;
+	}
 	[CATransaction begin];
 	[CATransaction setValue:(id)kCFBooleanTrue
 					 forKey:kCATransactionDisableActions];
-	CBCAViewLayerSet * cls = &layers[currentLayerSet];
+	CBCAViewLayerSet * cls = &layers[index];
 	CGRect pageRect = CGRectMake(0, 0, 0, 0);
 	float pageWidth = 0;
 	float pageHeight = 0;
@@ -410,21 +486,14 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	cls->container.bounds = CGRectMake(0, 0, pageWidth, pageHeight);
 	cls->container.position = CGPointMake(slSize.width/2, slSize.height);
 	cls->container.contents = nil;
-	cls->pageCount = 2;
-	[self resetView];
+	// Pages
+	cls->page1 = page1;
+	cls->page2 = page2;
+	[self zoomReset];
 	[CATransaction commit];
 }
 
 // Scrolling & Zooming
-- (void)resetView
-{
-	if (layout == CBLayoutLeft)
-		[self scrollToPoint:CGPointMake(-CGFLOAT_MAX, 0)];
-	else
-		[self scrollToPoint:CGPointMake(+CGFLOAT_MAX, 0)];
-	[self zoomReset];
-}
-
 - (void)scrollToPoint:(CGPoint)point
 {
 	// Assumes container maxY to be at maxY of scrollLayer

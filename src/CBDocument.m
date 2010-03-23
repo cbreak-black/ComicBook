@@ -90,6 +90,12 @@ const NSUInteger preloadWindowSize = 11;
 		[pages addObjectsFromArray:[CBPage pagesFromURL:absoluteURL]];
 		[pages sortWithOptions:NSSortConcurrent
 			   usingComparator:^(id o1, id o2){return [[o1 path] localizedStandardCompare:[o2 path]];}];
+		NSUInteger pageNumber = 0;
+		for (CBPage * page in pages)
+		{
+			page.number = pageNumber;
+			pageNumber++;
+		}
 	}
 	@catch (NSException * e)
 	{

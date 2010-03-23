@@ -49,6 +49,8 @@
 		return NSMakeSize(0, 0); // Invalid
 }
 
+@synthesize number;
+
 // NSDiscardableContent
 
 - (BOOL)beginContentAccess

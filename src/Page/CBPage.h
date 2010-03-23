@@ -12,7 +12,7 @@
 
 @interface CBPage : NSObject <NSDiscardableContent>
 {
-
+	NSUInteger number;
 }
 
 // To query image
@@ -22,6 +22,7 @@
 // To query properties
 @property (readonly, assign) CGFloat aspect;
 @property (readonly, assign) NSSize size;
+@property (assign) NSUInteger number;
 
 // NSDiscardableContent
 - (BOOL)beginContentAccess;
