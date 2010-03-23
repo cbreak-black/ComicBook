@@ -410,7 +410,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 		layers[lastLayerSet].container.position = CGPointMake(slSize.width/2, slSize.height + hLast);
 		[scrollLayer scrollToPoint:CGPointMake(lastScrollPosition.x, lastScrollPosition.y+hLast)];
 	}
-	else
+	else if (lp > cp)
 	{
 		// Scroll up
 		layers[lastLayerSet].container.position = CGPointMake(slSize.width/2, slSize.height - hNow);
@@ -438,6 +438,35 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	else
 		[self scrollToPoint:CGPointMake(+CGFLOAT_MAX, 0)];
 	[CATransaction commit];
+	// Resize window
+	if (![self isInFullScreenMode])
+	{
+		CGSize currentSize = layers[currentLayerSet].container.bounds.size;
+		NSWindow * window = self.window;
+		NSRect contentRect = [window contentRectForFrameRect:[window frame]];
+		if (scale == CBScaleFull)
+		{
+			CGFloat newHeight = contentRect.size.width*currentSize.height/currentSize.width;
+			contentRect.origin.y = contentRect.origin.y + contentRect.size.height - newHeight;
+			contentRect.size.height = newHeight;
+			[window setContentAspectRatio:NSSizeFromCGSize(currentSize)];
+			[window setFrame:[window frameRectForContentRect:contentRect] display:YES animate:NO];
+		}
+		else if (scale == CBScaleOriginal)
+		{
+			NSRect screenRect = [window.screen visibleFrame];
+			contentRect.origin.y = contentRect.origin.y + contentRect.size.height - currentSize.height;
+			contentRect.size = NSSizeFromCGSize(currentSize);
+			NSRect windowRect = [window frameRectForContentRect:contentRect];
+			windowRect = NSIntersectionRect(screenRect, windowRect);
+			[window setResizeIncrements:NSMakeSize(1.0,1.0)];
+			[window setFrame:windowRect display:YES animate:NO];
+		}
+		else
+		{
+			[window setResizeIncrements:NSMakeSize(1.0,1.0)];
+		}
+	}
 }
 
 - (void)setPage:(CBPage*)page
