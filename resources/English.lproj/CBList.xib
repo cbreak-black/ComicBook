@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="823"/>
+			<integer value="812"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -113,12 +113,8 @@
 													</object>
 													<object class="NSImageCell" key="NSDataCell" id="466528738">
 														<int key="NSCellFlags">67239424</int>
-														<int key="NSCellFlags2">33554432</int>
-														<object class="NSFont" key="NSSupport" id="679369456">
-															<string key="NSName">LucidaGrande</string>
-															<double key="NSSize">13</double>
-															<int key="NSfFlags">1044</int>
-														</object>
+														<int key="NSCellFlags2">33685504</int>
+														<reference key="NSSupport" ref="26"/>
 														<int key="NSAlign">0</int>
 														<int key="NSScale">0</int>
 														<int key="NSStyle">0</int>
@@ -132,7 +128,7 @@
 													<string key="NSIdentifier">path</string>
 													<double key="NSWidth">238</double>
 													<double key="NSMinWidth">40</double>
-													<double key="NSMaxWidth">1000</double>
+													<double key="NSMaxWidth">4096</double>
 													<object class="NSTableHeaderCell" key="NSHeaderCell">
 														<int key="NSCellFlags">75628096</int>
 														<int key="NSCellFlags2">2048</int>
@@ -143,9 +139,9 @@
 													</object>
 													<object class="NSTextFieldCell" key="NSDataCell" id="1062494086">
 														<int key="NSCellFlags">69336641</int>
-														<int key="NSCellFlags2">2048</int>
+														<int key="NSCellFlags2">133632</int>
 														<string key="NSContents">Text Cell</string>
-														<reference key="NSSupport" ref="679369456"/>
+														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="14215448"/>
 														<object class="NSColor" key="NSBackgroundColor" id="542376376">
 															<int key="NSColorSpace">6</int>
@@ -181,7 +177,7 @@
 													<bytes key="NSWhite">MC41AA</bytes>
 												</object>
 											</object>
-											<double key="NSRowHeight">17</double>
+											<double key="NSRowHeight">14</double>
 											<int key="NSTvFlags">1379926016</int>
 											<reference key="NSDelegate"/>
 											<reference key="NSDataSource"/>
@@ -246,7 +242,7 @@
 							<reference key="NSContentView" ref="1461687"/>
 							<reference key="NSHeaderClipView" ref="612224394"/>
 							<reference key="NSCornerView" ref="155754034"/>
-							<bytes key="NSScrollAmts">QSAAAEEgAABBmAAAQZgAAA</bytes>
+							<bytes key="NSScrollAmts">QSAAAEEgAABBgAAAQYAAAA</bytes>
 						</object>
 					</object>
 					<string key="NSFrameSize">{276, 378}</string>
@@ -467,8 +463,17 @@
 					<string key="className">CBListController</string>
 					<string key="superclassName">NSWindowController</string>
 					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">toggleListWindow:</string>
-						<string key="NS.object.0">id</string>
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>animateHide:</string>
+							<string>animateShow:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<string key="NS.key.0">tableView</string>

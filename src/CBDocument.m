@@ -72,18 +72,6 @@ const NSUInteger preloadWindowSize = 15;
 
 - (BOOL)readFromURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError
 {
-	NSNumber * isDirectory;
-	[absoluteURL getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL];
-	if ([isDirectory boolValue])
-	{
-		[baseURL release];
-		baseURL = [absoluteURL retain];
-	}
-	else
-	{
-		[baseURL release];
-		baseURL = [[absoluteURL URLByDeletingLastPathComponent] retain];
-	}
 	[self willChangeValueForKey:@"pages"];
 	@try
 	{
@@ -103,6 +91,16 @@ const NSUInteger preloadWindowSize = 15;
 	}
 	[self didChangeValueForKey:@"pages"];
 	[self preloadPages];
+	if ([pages count] > 1)
+	{
+		[baseURL release];
+		baseURL = [absoluteURL retain];
+	}
+	else
+	{
+		[baseURL release];
+		baseURL = [[absoluteURL URLByDeletingLastPathComponent] retain];
+	}
 	return YES;
 }
 
