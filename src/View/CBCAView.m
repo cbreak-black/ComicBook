@@ -340,6 +340,56 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	[self loadDefaults:ud];
 }
 
+// Mouse
+static const CGFloat scrollWheelFactor = 10.0;
+
+- (void)scrollWheel:(NSEvent *)event
+{
+	[CATransaction begin];
+	[CATransaction setValue:(id)kCFBooleanTrue
+					 forKey:kCATransactionDisableActions];
+	[self scrollByOffsetX:-event.deltaX*scrollWheelFactor Y:event.deltaY*scrollWheelFactor];
+	[CATransaction commit];
+}
+
+// Touch
+static const CGFloat magnifyFactor = 0.5;
+
+- (void)magnifyWithEvent:(NSEvent *)event
+{
+	[CATransaction begin];
+	[CATransaction setValue:(id)kCFBooleanTrue
+					 forKey:kCATransactionDisableActions];
+	[self zoomTo:zoomFactor*(1.0+event.magnification*magnifyFactor)];
+	[CATransaction commit];
+}
+
+- (void)rotateWithEvent:(NSEvent *)event
+{
+	NSLog(@"Rotate by %f", event.rotation);
+	// Maybe rotation gets implemented later
+}
+
+- (void)swipeWithEvent:(NSEvent *)event
+{
+	char direction = 0; // 0: back, 1: forward
+	// Vertical
+	if (event.deltaY > 0) // Up
+		direction = 0;
+	else if (event.deltaY < 0) // Down
+		direction = 1;
+	// Horizontal
+	if (event.deltaX > 0) // Left
+		direction = layout == CBLayoutRight ? 1 : 0;
+	else if (event.deltaX < 0) // Right
+		direction = layout == CBLayoutRight ? 0 : 1;
+	// Change page
+	if (direction == 0)
+		[self pageUp:self];
+	else
+		[self pageDown:self];
+}
+
 // Resizing
 - (void)resized
 {

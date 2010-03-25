@@ -74,6 +74,14 @@ CBCAViewLayerSet;
 - (void)defaultsChanged:(NSNotification *)notification;
 @property (assign) id<CBInputDelegate> delegate;
 
+// Mouse
+- (void)scrollWheel:(NSEvent *)event;
+
+// Touch
+- (void)magnifyWithEvent:(NSEvent *)event;
+- (void)rotateWithEvent:(NSEvent *)event;
+- (void)swipeWithEvent:(NSEvent *)event;
+
 // Image display
 - (void)pageChanged;
 - (void)setPage:(CBPage*)page;
