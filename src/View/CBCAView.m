@@ -125,7 +125,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 - (void)configureLayers
 {
 	// Background layer
-	CALayer * backgroundLayer = [[CALayer alloc] init];
+	backgroundLayer = [[CALayer alloc] init];
 	CGColorRef blackColor=CGColorCreateGenericRGB(0.0, 0.0, 0.0, 1.0);
 	backgroundLayer.backgroundColor = blackColor;
 	[self setLayer:backgroundLayer];
@@ -136,6 +136,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 	scrollLayer.anchorPoint = CGPointMake(0.5, 1.0);
 	scrollLayer.frame = backgroundLayer.frame;
 	scrollLayer.autoresizingMask = (kCALayerWidthSizable | kCALayerHeightSizable);
+	scrollLayer.masksToBounds = NO;
 	scrollLayer.delegate = self;
 	[backgroundLayer addSublayer:scrollLayer];
 
@@ -352,6 +353,71 @@ static const CGFloat scrollWheelFactor = 10.0;
 	[CATransaction commit];
 }
 
+- (void)mouseDown:(NSEvent *)event
+{
+	[super mouseDown:event];
+}
+
+- (void)mouseDragged:(NSEvent *)event
+{
+	[CATransaction begin];
+	[CATransaction setValue:(id)kCFBooleanTrue
+					 forKey:kCATransactionDisableActions];
+	[self scrollByOffsetX:-event.deltaX Y:event.deltaY];
+	[CATransaction commit];
+}
+
+- (void)mouseUp:(NSEvent *)event
+{
+	if (event.clickCount == 1)
+	{
+		[CATransaction begin];
+		[CATransaction setValue:(id)kCFBooleanTrue
+						 forKey:kCATransactionDisableActions];
+		// Click in view coordinates
+		CGPoint clickPoint = NSPointToCGPoint([self convertPoint:[event locationInWindow] fromView:nil]);
+		//CGPoint scrollPoint = [scrollLayer convertPoint:NSPointToCGPoint(clickPoint) fromLayer:backgroundLayer];
+		CALayer * hitLayer = [backgroundLayer hitTest:clickPoint];
+		[CATransaction commit];
+		char direction = 1; // 0: back, 1: forward
+		if (hitLayer == layers[currentLayerSet].left) // Left
+			direction = layout == CBLayoutRight ? 1 : 0;
+		else if (hitLayer == layers[currentLayerSet].right) // Right
+			direction = layout == CBLayoutRight ? 0 : 1;
+		// Change page
+		if (direction == 0)
+			[self pageUp:self];
+		else
+			[self pageDown:self];
+	}
+	else
+	{
+		[super mouseUp:event];
+	}
+}
+
+- (void)rightMouseDown:(NSEvent *)event
+{
+	[super rightMouseDown:event];
+}
+
+static const CGFloat dragScaleFactor = 0.0025;
+
+- (void)rightMouseDragged:(NSEvent *)event
+{
+	[CATransaction begin];
+	[CATransaction setValue:(id)kCFBooleanTrue
+					 forKey:kCATransactionDisableActions];
+	CGFloat maganification = (event.deltaX+event.deltaY)*dragScaleFactor;
+	[self zoomTo:zoomFactor*(1.0+maganification)];
+	[CATransaction commit];
+}
+
+- (void)rightMouseUp:(NSEvent *)event
+{
+	[super rightMouseUp:event];
+}
+
 // Touch
 static const CGFloat magnifyFactor = 0.5;
 
@@ -491,6 +557,9 @@ static const CGFloat magnifyFactor = 0.5;
 	// Resize window
 	if (![self isInFullScreenMode])
 	{
+		[CATransaction begin];
+		[CATransaction setValue:(id)kCFBooleanTrue
+						 forKey:kCATransactionDisableActions];
 		CGSize currentSize = layers[currentLayerSet].container.bounds.size;
 		NSWindow * window = self.window;
 		NSRect contentRect = [window contentRectForFrameRect:[window frame]];
@@ -516,6 +585,7 @@ static const CGFloat magnifyFactor = 0.5;
 		{
 			[window setResizeIncrements:NSMakeSize(1.0,1.0)];
 		}
+		[CATransaction commit];
 	}
 }
 
@@ -539,8 +609,9 @@ static const CGFloat magnifyFactor = 0.5;
 	CGSize slSize = scrollLayer.bounds.size;
 	cls->container.position = CGPointMake(slSize.width/2, slSize.height);
 	// Left & Right
-	cls->left.bounds = CGRectMake(0, 0, 0, 0);
-	cls->right.bounds = CGRectMake(0, 0, 0, 0);
+	CGFloat width = pageRect.size.width/2;
+	cls->left.bounds = CGRectMake(0, 0, width, pageRect.size.height);
+	cls->right.bounds = CGRectMake(0, 0, width, pageRect.size.height);
 	cls->left.contents = nil;
 	cls->right.contents = nil;
 	// Pages

@@ -50,6 +50,7 @@ CBCAViewLayerSet;
 
 @interface CBCAView : NSView
 {
+	CALayer * backgroundLayer;
 	CAScrollLayer * scrollLayer;
 	CBCAViewLayerSet layers[3];
 	unsigned int currentLayerSet;
@@ -76,6 +77,12 @@ CBCAViewLayerSet;
 
 // Mouse
 - (void)scrollWheel:(NSEvent *)event;
+- (void)mouseDown:(NSEvent *)event;
+- (void)mouseDragged:(NSEvent *)event;
+- (void)mouseUp:(NSEvent *)event;
+- (void)rightMouseDown:(NSEvent *)event;
+- (void)rightMouseDragged:(NSEvent *)event;
+- (void)rightMouseUp:(NSEvent *)event;
 
 // Touch
 - (void)magnifyWithEvent:(NSEvent *)event;
