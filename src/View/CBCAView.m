@@ -260,7 +260,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 		NSUInteger cp = [delegate currentPage];
 		CBPage * page1 = [delegate pageAtIndex:cp-1];
 		CBPage * page2 = [delegate pageAtIndex:cp-2];
-		if (page1 && page2 && page1.aspect < 1 && page2.aspect < 1)
+		if (page1 && page2 && page1.portrait && page2.portrait)
 			[delegate advancePage:-2];
 		else
 			[delegate advancePage:-1];
@@ -495,10 +495,10 @@ static const CGFloat magnifyFactor = 0.5;
 	NSUInteger cp = [delegate currentPage];
 	NSUInteger lp = layers[lastLayerSet].page1.number;
 	CBPage * page1 = [delegate pageAtIndex:cp];
-	if (layout != CBLayoutSingle && page1.aspect < 1) // Two Page
+	if (layout != CBLayoutSingle && page1.portrait) // Two Page
 	{
 		CBPage * page2 = [delegate pageAtIndex:(cp+1)];
-		if (page2 && page2.aspect < 1)
+		if (page2 && page2.portrait)
 		{
 			[self setPageOne:page1 two:page2];
 		}

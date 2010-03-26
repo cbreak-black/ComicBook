@@ -30,6 +30,15 @@
 }
 
 // To query properties
+- (BOOL)isPortrait
+{
+	return [self aspect] < 1;
+}
+
+- (BOOL)isLandscape
+{
+	return [self aspect] >= 1;
+}
 
 - (CGFloat)aspect
 {

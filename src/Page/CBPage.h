@@ -20,6 +20,8 @@
 @property (retain, readonly) NSString * path;
 
 // To query properties
+@property (readonly, assign, getter=isPortrait) BOOL portrait;
+@property (readonly, assign, getter=isLandscape) BOOL landscape;
 @property (readonly, assign) CGFloat aspect;
 @property (readonly, assign) NSSize size;
 @property (assign) NSUInteger number;
