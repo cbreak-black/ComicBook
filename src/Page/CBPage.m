@@ -11,8 +11,12 @@
 #import <ZipKit/ZKDataArchive.h>
 #import <ZipKit/ZKCDHeader.h>
 
+#import <XADMaster/XADArchiveParser.h>
+#import <XADMaster/CSFileHandle.h>
+
 #import "CBURLPage.h"
 #import "CBZipPage.h"
+#import "CBXADPage.h"
 #import "CBDataPage.h"
 
 @implementation CBPage
@@ -132,6 +136,11 @@
 	else if ([ZKArchive validArchiveAtPath:[url path]])
 	{
 		return [CBZipPage pagesFromZipFile:url];
+	}
+	else if ([XADArchiveParser archiveParserClassForHandle:[CSFileHandle fileHandleForReadingAtPath:[url path]]
+													  name:[url path]])
+	{
+		return [CBXADPage pagesFromArchiveURL:url];
 	}
 	// Not readable yet, return empty
 	return [NSArray array];
