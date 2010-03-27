@@ -17,6 +17,8 @@
 		708C7F5C11539DB20070455D /* ZipKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 708C7F5A11539DA60070455D /* ZipKit.framework */; };
 		708C7F8B1153A3230070455D /* CBZipPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 708C7F8A1153A3230070455D /* CBZipPage.m */; };
 		708C814E11551A220070455D /* CBDataPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 708C814D11551A220070455D /* CBDataPage.m */; };
+		708C8BC0115D9DAA0070455D /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 708C8BBF115D9DAA0070455D /* RegexKitLite.m */; };
+		708C8BC8115D9F580070455D /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 708C8BC7115D9F580070455D /* libicucore.dylib */; };
 		70B95E06113D70A50069E257 /* CBList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 70B95E05113D70A50069E257 /* CBList.xib */; };
 		70B95E1A113D75DC0069E257 /* CBListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70B95E19113D75DC0069E257 /* CBListController.m */; };
 		70B95E1D113D75F10069E257 /* CBPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70B95E1C113D75F10069E257 /* CBPageController.m */; };
@@ -70,6 +72,9 @@
 		708C7F8A1153A3230070455D /* CBZipPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBZipPage.m; path = src/Page/CBZipPage.m; sourceTree = "<group>"; };
 		708C814C11551A220070455D /* CBDataPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBDataPage.h; path = src/Page/CBDataPage.h; sourceTree = "<group>"; };
 		708C814D11551A220070455D /* CBDataPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBDataPage.m; path = src/Page/CBDataPage.m; sourceTree = "<group>"; };
+		708C8BBE115D9DAA0070455D /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexKitLite.h; path = src/RegexKitLite/RegexKitLite.h; sourceTree = "<group>"; };
+		708C8BBF115D9DAA0070455D /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegexKitLite.m; path = src/RegexKitLite/RegexKitLite.m; sourceTree = "<group>"; };
+		708C8BC7115D9F580070455D /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		70B95E03113D70940069E257 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = resources/English.lproj/CBList.xib; sourceTree = "<group>"; };
 		70B95E18113D75DC0069E257 /* CBListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBListController.h; path = src/Controllers/CBListController.h; sourceTree = "<group>"; };
 		70B95E19113D75DC0069E257 /* CBListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBListController.m; path = src/Controllers/CBListController.m; sourceTree = "<group>"; };
@@ -93,6 +98,7 @@
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				700700E51146A46C004C7B39 /* QuartzCore.framework in Frameworks */,
 				708C7F5B11539DA60070455D /* ZipKit.framework in Frameworks */,
+				708C8BC8115D9F580070455D /* libicucore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +111,7 @@
 				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
 				700700E41146A46C004C7B39 /* QuartzCore.framework */,
 				708C7F5A11539DA60070455D /* ZipKit.framework */,
+				708C8BC7115D9F580070455D /* libicucore.dylib */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -142,6 +149,7 @@
 		2A37F4ABFDCFA73011CA2CEA /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				708C8BB1115D9D850070455D /* RegexKitLite */,
 				70B95E00113C3F810069E257 /* Page */,
 				70B95E17113D756D0069E257 /* Controllers */,
 				700706931149C56F004C7B39 /* View */,
@@ -194,6 +202,15 @@
 				7007069E1149C617004C7B39 /* CBCALayoutManager.m */,
 			);
 			name = View;
+			sourceTree = "<group>";
+		};
+		708C8BB1115D9D850070455D /* RegexKitLite */ = {
+			isa = PBXGroup;
+			children = (
+				708C8BBE115D9DAA0070455D /* RegexKitLite.h */,
+				708C8BBF115D9DAA0070455D /* RegexKitLite.m */,
+			);
+			name = RegexKitLite;
 			sourceTree = "<group>";
 		};
 		70B95E00113C3F810069E257 /* Page */ = {
@@ -298,6 +315,7 @@
 				7007069F1149C617004C7B39 /* CBCALayoutManager.m in Sources */,
 				708C7F8B1153A3230070455D /* CBZipPage.m in Sources */,
 				708C814E11551A220070455D /* CBDataPage.m in Sources */,
+				708C8BC0115D9DAA0070455D /* RegexKitLite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
