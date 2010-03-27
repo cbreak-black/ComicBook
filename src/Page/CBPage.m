@@ -161,6 +161,12 @@
 		NSMutableData * mutableData = [[data mutableCopyWithZone:nil] autorelease];
 		return [CBZipPage pagesFromZipData:mutableData withPath:path];
 	}
+	else if ([fileExtension isEqualToString:@"rar"] ||
+			 [fileExtension isEqualToString:@"cbr"])
+	{
+		// Maybe some rar archive data
+		return [CBXADPage pagesFromArchiveData:data withPath:path];
+	}
 	// Not readable yet, return empty
 	return [NSArray array];
 }

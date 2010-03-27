@@ -189,6 +189,12 @@
 		[pages addObject:page];
 		[page release];
 	}
+	else
+	{
+		NSString * path = [[parser filename] stringByAppendingPathComponent:[[dict objectForKey:XADFileNameKey] string]];
+		NSData * data = [[parser handleForEntryWithDictionary:dict wantChecksum:NO] remainingFileContents];;
+		[pages addObjectsFromArray:[CBPage pagesFromData:data withPath:path]];
+	}
 }
 
 - (BOOL)archiveParsingShouldStop:(XADArchiveParser *)parser

@@ -71,7 +71,7 @@
 		7007033D1147DE26004C7B39 /* CBPageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBPageOperation.m; path = src/CBPageOperation.m; sourceTree = "<group>"; };
 		7007069D1149C617004C7B39 /* CBCALayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBCALayoutManager.h; path = src/View/CBCALayoutManager.h; sourceTree = "<group>"; };
 		7007069E1149C617004C7B39 /* CBCALayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBCALayoutManager.m; path = src/View/CBCALayoutManager.m; sourceTree = "<group>"; };
-		708C7F5A11539DA60070455D /* ZipKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZipKit.framework; path = /Users/cbreak/Documents/software/zipkit/build/Release/ZipKit.framework; sourceTree = "<absolute>"; };
+		708C7F5A11539DA60070455D /* ZipKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZipKit.framework; path = ../zipkit/build/Release/ZipKit.framework; sourceTree = SOURCE_ROOT; };
 		708C7F891153A3230070455D /* CBZipPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBZipPage.h; path = src/Page/CBZipPage.h; sourceTree = "<group>"; };
 		708C7F8A1153A3230070455D /* CBZipPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBZipPage.m; path = src/Page/CBZipPage.m; sourceTree = "<group>"; };
 		708C814C11551A220070455D /* CBDataPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBDataPage.h; path = src/Page/CBDataPage.h; sourceTree = "<group>"; };
@@ -79,7 +79,7 @@
 		708C8BBE115D9DAA0070455D /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexKitLite.h; path = src/RegexKitLite/RegexKitLite.h; sourceTree = "<group>"; };
 		708C8BBF115D9DAA0070455D /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegexKitLite.m; path = src/RegexKitLite/RegexKitLite.m; sourceTree = "<group>"; };
 		708C8BC7115D9F580070455D /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
-		708C8C34115E46BA0070455D /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = /Users/cbreak/Documents/software/theunarchiver/trunk/XADMaster/build/Release/XADMaster.framework; sourceTree = "<absolute>"; };
+		708C8C34115E46BA0070455D /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = ../theunarchiver/trunk/XADMaster/build/Release/XADMaster.framework; sourceTree = SOURCE_ROOT; };
 		708C8C77115E513B0070455D /* CBXADPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBXADPage.h; path = src/Page/CBXADPage.h; sourceTree = "<group>"; };
 		708C8C78115E513B0070455D /* CBXADPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBXADPage.m; path = src/Page/CBXADPage.m; sourceTree = "<group>"; };
 		70B95E03113D70940069E257 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = resources/English.lproj/CBList.xib; sourceTree = "<group>"; };
