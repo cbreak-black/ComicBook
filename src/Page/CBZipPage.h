@@ -19,9 +19,6 @@
 {
 	ZKDataArchive * archive;
 	ZKCDHeader * header;
-	NSImage * img;
-
-	NSUInteger accessCounter;
 }
 
 - (id)initWithArchive:(ZKDataArchive *)fileArchive header:(ZKCDHeader*)fileHeader;

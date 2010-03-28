@@ -114,7 +114,7 @@ const NSUInteger preloadWindowSize = 15;
 {
 	if (number < [pages count])
 	{
-		return (CBPage *)[pages objectAtIndex:number];
+		return [pages objectAtIndex:number];
 	}
 	else
 	{

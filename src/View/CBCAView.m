@@ -250,6 +250,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 
 - (void)pageUp:(id)sender
 {
+	if (!delegate) return;
 	// Decide if displaying one or two pages is better
 	if (layout == CBLayoutSingle)
 	{
@@ -260,15 +261,20 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 		NSUInteger cp = [delegate currentPage];
 		CBPage * page1 = [delegate pageAtIndex:cp-1];
 		CBPage * page2 = [delegate pageAtIndex:cp-2];
+		[page1 beginContentAccess];
+		[page2 beginContentAccess];
 		if (page1 && page2 && page1.portrait && page2.portrait)
 			[delegate advancePage:-2];
 		else
 			[delegate advancePage:-1];
+		[page1 endContentAccess];
+		[page2 endContentAccess];
 	}
 }
 
 - (void)pageDown:(id)sender
 {
+	if (!delegate) return;
 	unsigned char offset = layers[currentLayerSet].page2 == nil ? 1 : 2;
 	[delegate advancePage:offset];
 }
@@ -495,9 +501,11 @@ static const CGFloat magnifyFactor = 0.5;
 	NSUInteger cp = [delegate currentPage];
 	NSUInteger lp = layers[lastLayerSet].page1.number;
 	CBPage * page1 = [delegate pageAtIndex:cp];
+	[page1 beginContentAccess];
 	if (layout != CBLayoutSingle && page1.portrait) // Two Page
 	{
 		CBPage * page2 = [delegate pageAtIndex:(cp+1)];
+		[page2 beginContentAccess];
 		if (page2 && page2.portrait)
 		{
 			[self setPageOne:page1 two:page2];
@@ -506,11 +514,13 @@ static const CGFloat magnifyFactor = 0.5;
 		{
 			[self setPage:page1];
 		}
+		[page2 endContentAccess];
 	}
 	else
 	{
 		[self setPage:page1];
 	}
+	[page1 endContentAccess];
 	// Animate (Start)
 	[CATransaction begin];
 	[CATransaction setValue:(id)kCFBooleanTrue
@@ -597,6 +607,7 @@ static const CGFloat magnifyFactor = 0.5;
 - (void)setPage:(CBPage*)page inSet:(unsigned char)index
 {
 	if (index > 2) return;
+	[page beginContentAccess];
 	[CATransaction begin];
 	[CATransaction setValue:(id)kCFBooleanTrue
 					 forKey:kCATransactionDisableActions];
@@ -615,6 +626,8 @@ static const CGFloat magnifyFactor = 0.5;
 	cls->left.contents = nil;
 	cls->right.contents = nil;
 	// Pages
+	[cls->page1 endContentAccess];
+	[cls->page2 endContentAccess];
 	[cls->page1 release];
 	[cls->page2 release];
 	cls->page1 = [page retain];
@@ -631,6 +644,8 @@ static const CGFloat magnifyFactor = 0.5;
 - (void)setPageOne:(CBPage*)page1 two:(CBPage*)page2 inSet:(unsigned char)index
 {
 	if (index > 2) return;
+	[page1 beginContentAccess];
+	[page2 beginContentAccess];
 	CBPage * pageLeft;
 	CBPage * pageRight;
 	if (layout == CBLayoutLeft)
@@ -669,6 +684,8 @@ static const CGFloat magnifyFactor = 0.5;
 	cls->container.position = CGPointMake(slSize.width/2, slSize.height);
 	cls->container.contents = nil;
 	// Pages
+	[cls->page1 endContentAccess];
+	[cls->page2 endContentAccess];
 	[cls->page1 release];
 	[cls->page2 release];
 	cls->page1 = [page1 retain];

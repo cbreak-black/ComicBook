@@ -26,8 +26,6 @@
 			// Seems to be an image file
 			archive = [parser retain];
 			header = [dict retain];
-			img = nil;
-			accessCounter = 0; // Should be 1, but this class lazily loads the Data
 		}
 		else
 		{
@@ -43,13 +41,13 @@
 {
 	[archive release];
 	[header release];
-	[img release];
 	[super dealloc];
 }
 
 // Loads the Image lazily (internal)
 - (BOOL)loadImage
 {
+	NSImage * img = self.image;
 	if (!img)
 	{
 		NSData * imgData;
@@ -59,78 +57,25 @@
 			imgData = [[archive handleForEntryWithDictionary:header wantChecksum:NO] remainingFileContents];
 		}
 		img = [[NSImage alloc] initWithData:imgData];
-		if (!img || ![img isValid])
+		if (img && [img isValid])
 		{
-			// TODO: Set img to error image
-			NSLog(@"Error loading image from archive, file %@", [self path]);
-			return NO;
+			self.image = img;
+			[img release];
 		}
 		else
 		{
-			return YES;
+			// TODO: Set img to error image
+			[img release];
+			img = nil;
+			NSLog(@"Error loading image from archive, file %@", [self path]);
 		}
 	}
-	return img != nil && [img isValid];
-}
-
-- (NSImage *)image
-{
-	NSImage * rImg;
-	@synchronized (self)
-	{
-		[self loadImage];
-		rImg = [img retain];
-	}
-	return [rImg autorelease];
+	return img != nil;
 }
 
 - (NSString *)path;
 {
 	return [[archive filename] stringByAppendingPathComponent:[[header objectForKey:XADFileNameKey] string]];
-}
-
-// NSDiscardableContent
-- (BOOL)beginContentAccess
-{
-	BOOL r = NO;
-	@synchronized (self)
-	{
-		if ([self loadImage])
-		{
-			accessCounter++;
-			r = YES;
-		}
-		else
-		{
-			r = NO;
-		}
-	}
-	return r;
-}
-
-- (void)endContentAccess
-{
-	@synchronized (self)
-	{
-		accessCounter--;
-	}
-}
-
-- (void)discardContentIfPossible
-{
-	@synchronized (self)
-	{
-		if (accessCounter <= 0)
-		{
-			[img release];
-			img = nil;
-		}
-	}
-}
-
-- (BOOL)isContentDiscarded
-{
-	return img == nil;
 }
 
 // Creation

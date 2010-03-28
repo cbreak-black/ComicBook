@@ -21,16 +21,36 @@
 
 @implementation CBPage
 
+- (id)init
+{
+	self = [super init];
+	if (self)
+	{
+		number = 0;
+		accessCounter = 0; // Should be 1, but this class lazily loads the Data
+		image = nil;
+	}
+	return self;
+}
+
+- (void)dealloc
+{
+	[image release];
+	[super dealloc];
+}
+
 // To query image
 
-- (NSImage *)image
-{
-	return nil;
-}
+@synthesize image;
 
 - (NSString *)path;
 {
 	return nil;
+}
+
+- (BOOL)loadImage
+{
+	return NO;
 }
 
 // To query properties
@@ -65,23 +85,47 @@
 @synthesize number;
 
 // NSDiscardableContent
-
 - (BOOL)beginContentAccess
 {
-	return NO;
+	BOOL r = NO;
+	@synchronized (self)
+	{
+		if ([self loadImage])
+		{
+			accessCounter++;
+			r = YES;
+		}
+		else
+		{
+			r = NO;
+		}
+	}
+	return r;
 }
 
 - (void)endContentAccess
 {
+	@synchronized (self)
+	{
+		accessCounter--;
+	}
 }
 
 - (void)discardContentIfPossible
 {
+	@synchronized (self)
+	{
+		if (accessCounter <= 0)
+		{
+			[image release];
+			image = nil;
+		}
+	}
 }
 
 - (BOOL)isContentDiscarded
 {
-	return YES;
+	return image == nil;
 }
 
 // Factories

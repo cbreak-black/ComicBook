@@ -17,9 +17,6 @@
 {
 	XADArchiveParser * archive;
 	NSDictionary * header;
-	NSImage * img;
-
-	NSUInteger accessCounter;
 }
 
 - (id)initWithArchiveParser:(XADArchiveParser *)parser dictionary:(NSDictionary *)dict;

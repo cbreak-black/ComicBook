@@ -13,11 +13,16 @@
 @interface CBPage : NSObject <NSDiscardableContent>
 {
 	NSUInteger number;
+	NSUInteger accessCounter;
+	NSImage * image;
 }
 
 // To query image
-@property (retain, readonly) NSImage * image;
-@property (retain, readonly) NSString * path;
+@property (retain) NSImage * image;
+
+// To be implemented by subclasses
+@property (retain, readonly) NSString * path; // Return the image path
+- (BOOL)loadImage; // Load the image, called from image getter and beginContentAccess
 
 // To query properties
 @property (readonly, assign, getter=isPortrait) BOOL portrait;

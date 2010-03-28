@@ -15,9 +15,6 @@
 @interface CBURLPage : CBPage
 {
 	NSURL * url;
-	NSImage * img;
-
-	NSUInteger accessCounter;
 }
 
 - (id)initWithURL:(NSURL *)imgURL;

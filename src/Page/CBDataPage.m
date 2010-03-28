@@ -16,11 +16,12 @@
 	self = [super init];
 	if (self)
 	{
-		img = [[NSImage alloc] initWithData:imgData];
+		NSImage * img = [[NSImage alloc] initWithData:imgData];
 		if (img && [img isValid])
 		{
 			// Seems to be an image file
 			path = [imgPath retain];
+			self.image = img;
 		}
 		else
 		{
@@ -28,6 +29,7 @@
 			[self release];
 			self = nil;
 		}
+		[img release];
 	}
 	return self;
 }
@@ -35,22 +37,29 @@
 - (void)dealloc
 {
 	[path release];
-	[img release];
 	[super dealloc];
 }
 
-@synthesize image = img;
 @synthesize path;
 
 // NSDiscardableContent
+
 - (BOOL)beginContentAccess
 {
-	return img != nil;
+	return YES;
+}
+
+- (void)endContentAccess
+{
+}
+
+- (void)discardContentIfPossible
+{
 }
 
 - (BOOL)isContentDiscarded
 {
-	return img == nil;
+	return NO;
 }
 
 // Factories

@@ -15,12 +15,17 @@
 @interface CBDataPage : CBPage
 {
 	NSString * path;
-	NSImage * img;
 }
 
 - (id)initWithImageData:(NSData*)imgData withPath:(NSString*)imgPath;
 
 // Creation (Returns an array with one or zero pages)
 + (NSArray*)pagesFromImageData:(NSData*)imgData withPath:(NSString*)imgPath;
+
+// NSDiscardableContent (fake)
+- (BOOL)beginContentAccess;
+- (void)endContentAccess;
+- (void)discardContentIfPossible;
+- (BOOL)isContentDiscarded;
 
 @end
