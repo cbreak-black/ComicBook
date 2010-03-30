@@ -87,6 +87,8 @@ under the BSD license.
 
 RegexKitLite License
 
+Licensed under the following BSD-style license:
+
     ================================================================
 	Copyright © 2008-2009, John Engelhart
 	All rights reserved.
@@ -116,3 +118,8 @@ RegexKitLite License
 	NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     ================================================================
+
+XADM License
+
+XADM is licensed under the LGPL 2.1
+See licenses/lgpl-2.1.txt
