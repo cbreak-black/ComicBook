@@ -61,6 +61,8 @@ CBCAViewLayerSet;
 	CGPoint scrollPosition;
 	CGFloat zoomFactor;
 
+	NSMutableArray * autoScrollPoints;
+
 	id<CBInputDelegate> delegate;
 }
 
@@ -97,12 +99,15 @@ CBCAViewLayerSet;
 - (void)setPageOne:(CBPage*)page1 two:(CBPage*)page2 inSet:(unsigned char)index;
 
 // Scrolling & Zooming
+- (CGRect)scrollBounds;
 - (void)scrollToPoint:(CGPoint)point;
 - (void)scrollByOffsetX:(float)x Y:(float)y;
 - (void)zoomIn;
 - (void)zoomOut;
 - (void)zoomTo:(float)scaleFactor;
 - (void)zoomReset;
+- (void)autoScrollRebuild;
+- (void)autoScrollNext;
 
 // Full Screen
 - (IBAction)toggleFullscreen:(id)sender;

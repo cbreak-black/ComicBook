@@ -80,6 +80,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
     self = [super initWithFrame:frame];
     if (self)
 	{
+		autoScrollPoints = [[NSMutableArray alloc] initWithCapacity:2];
 		scrollPosition = CGPointMake(0, 0);
 		zoomFactor = 1.0;
 		for (unsigned int i = 0; i < 3; i++)
@@ -113,6 +114,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 		[layers[i].left release];
 		[layers[i].container release];
 	}
+	[autoScrollPoints release];
 	[super dealloc];
 }
 
@@ -291,7 +293,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 		switch (c)
 		{
 			case ' ':
-				[self pageDown:self];
+				[self autoScrollNext];
 				break;
 			case 'f':
 				[self toggleFullscreen:self];
@@ -695,7 +697,7 @@ static const CGFloat magnifyFactor = 0.5;
 }
 
 // Scrolling & Zooming
-- (void)scrollToPoint:(CGPoint)point
+- (CGRect)scrollBounds
 {
 	// Assumes container maxY to be at maxY of scrollLayer
 	// Assumes container midX to be at midX of scrollLayer
@@ -726,7 +728,12 @@ static const CGFloat magnifyFactor = 0.5;
 		scrollBounds.size.height = containerSize.height - scrollSize.height;
 		scrollBounds.origin.y = -scrollBounds.size.height;
 	}
-	scrollPosition = CBClampPointToRect(point, scrollBounds);
+	return scrollBounds;
+}
+
+- (void)scrollToPoint:(CGPoint)point
+{
+	scrollPosition = CBClampPointToRect(point, [self scrollBounds]);
 	[scrollLayer scrollToPoint:scrollPosition];
 }
 
@@ -759,6 +766,7 @@ static const CGFloat magnifyFactor = 0.5;
 	zoomFactor = scaleFactor;
 	[layers[currentLayerSet].container setValue:[NSNumber numberWithFloat:zoomFactor] forKeyPath:@"transform.scale"];
 	[self scrollByOffsetX:0 Y:0];
+	[self autoScrollRebuild];
 }
 
 - (void)zoomReset
@@ -780,6 +788,93 @@ static const CGFloat magnifyFactor = 0.5;
 			[self zoomTo:factorW];
 		else
 			[self zoomTo:factorH];
+	}
+}
+
+static const CGFloat autoScrollFactor = 0.75;
+
+- (void)autoScrollRebuild
+{
+	CGRect scrollBounds = [self scrollBounds];
+	CGSize scrollSize = scrollLayer.bounds.size;
+	NSUInteger width, height;
+	CGFloat stepWidth, stepHeight;
+	// Find out how many steps in each direction
+	if (scrollBounds.size.width <= 0)
+	{
+		width = 1;
+		stepWidth = 0;
+	}
+	else
+	{
+		width = 1+ceil(scrollBounds.size.width/(scrollSize.width*autoScrollFactor));
+		stepWidth = scrollBounds.size.width/(width-1);
+	}
+	if (scrollBounds.size.height <= 0)
+	{
+		height = 1;
+		stepHeight = 0;
+	}
+	else
+	{
+		height = 1+ceil(scrollBounds.size.height/(scrollSize.height*autoScrollFactor));
+		stepHeight = scrollBounds.size.height/(height-1);
+	}
+	// Build the autoScrollPoints array
+	[autoScrollPoints removeAllObjects];
+	if (layout == CBLayoutRight)
+	{
+		// right-to-left with minor top-to-bottom
+		for (NSInteger i = width-1; i >= 0; i--)
+		{
+			for (NSInteger j = height-1; j >= 0; j--)
+			{
+				NSPoint p = NSMakePoint(scrollBounds.origin.x+stepWidth*i,
+										scrollBounds.origin.y+stepHeight*j);
+				[autoScrollPoints addObject:[NSValue valueWithPoint:p]];
+			}
+		}
+	}
+	else
+	{
+		// left-to-right with minor top-to-bottom
+		for (NSInteger i = 0; i < width; i++)
+		{
+			for (NSInteger j = height-1; j >= 0; j--)
+			{
+				NSPoint p = NSMakePoint(scrollBounds.origin.x+stepWidth*i,
+										scrollBounds.origin.y+stepHeight*j);
+				[autoScrollPoints addObject:[NSValue valueWithPoint:p]];
+			}
+		}
+	}
+}
+
+- (void)autoScrollNext
+{
+	CGFloat dist = CGFLOAT_MAX;
+	NSUInteger idx = 0;
+	NSPoint point = NSMakePoint(0, 0);
+	for (NSUInteger i = 0; i < [autoScrollPoints count]; i++)
+	{
+		NSPoint p = [[autoScrollPoints objectAtIndex:i] pointValue];
+		CGFloat d = sqrt(pow(p.x-scrollPosition.x, 2) + pow(p.y-scrollPosition.y, 2));
+		if (d < dist)
+		{
+			dist = d;
+			idx = i;
+		}
+	}
+	if (idx >= [autoScrollPoints count]-1)
+	{
+		// Next page
+		[self pageDown:self];
+	}
+	else
+	{
+		// Next point
+		NSPoint p = [[autoScrollPoints objectAtIndex:(idx+1)] pointValue];
+		[self scrollToPoint:NSPointToCGPoint(p)];
 	}
 }
 
