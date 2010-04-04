@@ -62,6 +62,7 @@ CBCAViewLayerSet;
 	CGFloat zoomFactor;
 
 	NSMutableArray * autoScrollPoints;
+	NSUInteger autoScrollIndex;
 
 	id<CBInputDelegate> delegate;
 }

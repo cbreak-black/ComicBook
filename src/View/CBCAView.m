@@ -81,6 +81,7 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
     if (self)
 	{
 		autoScrollPoints = [[NSMutableArray alloc] initWithCapacity:2];
+		autoScrollIndex = 0;
 		scrollPosition = CGPointMake(0, 0);
 		zoomFactor = 1.0;
 		for (unsigned int i = 0; i < 3; i++)
@@ -229,25 +230,25 @@ CG_INLINE CGPoint CBClampPointToRect(CGPoint p, CGRect r)
 - (void)moveUp:(id)sender
 {
 	CGSize windowSize = scrollLayer.bounds.size;
-	[self scrollByOffsetX:0 Y:+windowSize.height*0.5];
+	[self scrollByOffsetX:0 Y:+windowSize.height*0.8];
 }
 
 - (void)moveDown:(id)sender
 {
 	CGSize windowSize = scrollLayer.bounds.size;
-	[self scrollByOffsetX:0 Y:-windowSize.height*0.5];
+	[self scrollByOffsetX:0 Y:-windowSize.height*0.8];
 }
 
 - (void)moveLeft:(id)sender
 {
 	CGSize windowSize = scrollLayer.bounds.size;
-	[self scrollByOffsetX:-windowSize.width*0.5 Y:0];
+	[self scrollByOffsetX:-windowSize.width*0.8 Y:0];
 }
 
 - (void)moveRight:(id)sender
 {
 	CGSize windowSize = scrollLayer.bounds.size;
-	[self scrollByOffsetX:+windowSize.width*0.5 Y:0];
+	[self scrollByOffsetX:+windowSize.width*0.8 Y:0];
 }
 
 - (void)pageUp:(id)sender
@@ -791,7 +792,7 @@ static const CGFloat magnifyFactor = 0.5;
 	}
 }
 
-static const CGFloat autoScrollFactor = 0.75;
+static const CGFloat autoScrollFactor = 0.8;
 
 - (void)autoScrollRebuild
 {
@@ -800,16 +801,6 @@ static const CGFloat autoScrollFactor = 0.75;
 	NSUInteger width, height;
 	CGFloat stepWidth, stepHeight;
 	// Find out how many steps in each direction
-	if (scrollBounds.size.width <= 0)
-	{
-		width = 1;
-		stepWidth = 0;
-	}
-	else
-	{
-		width = 1+ceil(scrollBounds.size.width/(scrollSize.width*autoScrollFactor));
-		stepWidth = scrollBounds.size.width/(width-1);
-	}
 	if (scrollBounds.size.height <= 0)
 	{
 		height = 1;
@@ -819,6 +810,21 @@ static const CGFloat autoScrollFactor = 0.75;
 	{
 		height = 1+ceil(scrollBounds.size.height/(scrollSize.height*autoScrollFactor));
 		stepHeight = scrollBounds.size.height/(height-1);
+	}
+	if (scrollBounds.size.width <= 0)
+	{
+		// Two column content should scroll from top to bottom twice if scrolling
+		// is even needed
+		if (layout != CBLayoutSingle && height > 1)
+			width = 2;
+		else
+			width = 1;
+		stepWidth = 0;
+	}
+	else
+	{
+		width = 1+ceil(scrollBounds.size.width/(scrollSize.width*autoScrollFactor));
+		stepWidth = scrollBounds.size.width/(width-1);
 	}
 	// Build the autoScrollPoints array
 	[autoScrollPoints removeAllObjects];
@@ -848,24 +854,28 @@ static const CGFloat autoScrollFactor = 0.75;
 			}
 		}
 	}
+	autoScrollIndex = 0;
 }
 
 - (void)autoScrollNext
 {
-	CGFloat dist = CGFLOAT_MAX;
-	NSUInteger idx = 0;
-	NSPoint point = NSMakePoint(0, 0);
-	for (NSUInteger i = 0; i < [autoScrollPoints count]; i++)
+	NSUInteger idx = autoScrollIndex;
+	NSPoint point = [[autoScrollPoints objectAtIndex:idx] pointValue];
+	CGFloat dist = sqrt(pow(point.x-scrollPosition.x, 2) + pow(point.y-scrollPosition.y, 2));
+	if (dist > 1) // idx invalid, search new one
 	{
-		NSPoint p = [[autoScrollPoints objectAtIndex:i] pointValue];
-		CGFloat d = sqrt(pow(p.x-scrollPosition.x, 2) + pow(p.y-scrollPosition.y, 2));
-		if (d < dist)
+		for (NSUInteger i = 0; i < [autoScrollPoints count]; i++)
 		{
-			dist = d;
-			idx = i;
+			NSPoint p = [[autoScrollPoints objectAtIndex:i] pointValue];
+			CGFloat d = sqrt(pow(p.x-scrollPosition.x, 2) + pow(p.y-scrollPosition.y, 2));
+			if (d < dist)
+			{
+				dist = d;
+				idx = i;
+			}
 		}
 	}
-	if (idx >= [autoScrollPoints count]-1)
+	if (idx+1 >= [autoScrollPoints count])
 	{
 		// Next page
 		[self pageDown:self];
@@ -873,7 +883,8 @@ static const CGFloat autoScrollFactor = 0.75;
 	else
 	{
 		// Next point
-		NSPoint p = [[autoScrollPoints objectAtIndex:(idx+1)] pointValue];
+		autoScrollIndex = idx+1;
+		NSPoint p = [[autoScrollPoints objectAtIndex:autoScrollIndex] pointValue];
 		[self scrollToPoint:NSPointToCGPoint(p)];
 	}
 }
