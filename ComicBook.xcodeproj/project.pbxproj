@@ -22,6 +22,8 @@
 		708C8C35115E46BA0070455D /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 708C8C34115E46BA0070455D /* XADMaster.framework */; };
 		708C8C3B115E47270070455D /* XADMaster.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 708C8C34115E46BA0070455D /* XADMaster.framework */; };
 		708C8C79115E513B0070455D /* CBXADPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 708C8C78115E513B0070455D /* CBXADPage.m */; };
+		70A6796812BE0F2E00526749 /* CBPDFPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 70A6796712BE0F2E00526749 /* CBPDFPage.m */; };
+		70A67A4112BE1F7200526749 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70A67A4012BE1F7200526749 /* Quartz.framework */; };
 		70B95E06113D70A50069E257 /* CBList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 70B95E05113D70A50069E257 /* CBList.xib */; };
 		70B95E1A113D75DC0069E257 /* CBListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70B95E19113D75DC0069E257 /* CBListController.m */; };
 		70B95E1D113D75F10069E257 /* CBPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70B95E1C113D75F10069E257 /* CBPageController.m */; };
@@ -82,6 +84,9 @@
 		708C8C34115E46BA0070455D /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = ../theunarchiver/trunk/XADMaster/build/Release/XADMaster.framework; sourceTree = SOURCE_ROOT; };
 		708C8C77115E513B0070455D /* CBXADPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBXADPage.h; path = src/Page/CBXADPage.h; sourceTree = "<group>"; };
 		708C8C78115E513B0070455D /* CBXADPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBXADPage.m; path = src/Page/CBXADPage.m; sourceTree = "<group>"; };
+		70A6796612BE0F2E00526749 /* CBPDFPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBPDFPage.h; path = src/Page/CBPDFPage.h; sourceTree = "<group>"; };
+		70A6796712BE0F2E00526749 /* CBPDFPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBPDFPage.m; path = src/Page/CBPDFPage.m; sourceTree = "<group>"; };
+		70A67A4012BE1F7200526749 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		70B95E03113D70940069E257 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = resources/English.lproj/CBList.xib; sourceTree = "<group>"; };
 		70B95E18113D75DC0069E257 /* CBListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBListController.h; path = src/Controllers/CBListController.h; sourceTree = "<group>"; };
 		70B95E19113D75DC0069E257 /* CBListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBListController.m; path = src/Controllers/CBListController.m; sourceTree = "<group>"; };
@@ -107,6 +112,7 @@
 				708C7F5B11539DA60070455D /* ZipKit.framework in Frameworks */,
 				708C8BC8115D9F580070455D /* libicucore.dylib in Frameworks */,
 				708C8C35115E46BA0070455D /* XADMaster.framework in Frameworks */,
+				70A67A4112BE1F7200526749 /* Quartz.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,6 +127,7 @@
 				708C7F5A11539DA60070455D /* ZipKit.framework */,
 				708C8BC7115D9F580070455D /* libicucore.dylib */,
 				708C8C34115E46BA0070455D /* XADMaster.framework */,
+				70A67A4012BE1F7200526749 /* Quartz.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -229,6 +236,8 @@
 				70B95F2B113F32E00069E257 /* CBPage.m */,
 				70B95F33113F33410069E257 /* CBURLPage.h */,
 				70B95F34113F33410069E257 /* CBURLPage.m */,
+				70A6796612BE0F2E00526749 /* CBPDFPage.h */,
+				70A6796712BE0F2E00526749 /* CBPDFPage.m */,
 				708C7F891153A3230070455D /* CBZipPage.h */,
 				708C7F8A1153A3230070455D /* CBZipPage.m */,
 				708C8C77115E513B0070455D /* CBXADPage.h */,
@@ -335,6 +344,7 @@
 				708C814E11551A220070455D /* CBDataPage.m in Sources */,
 				708C8BC0115D9DAA0070455D /* RegexKitLite.m in Sources */,
 				708C8C79115E513B0070455D /* CBXADPage.m in Sources */,
+				70A6796812BE0F2E00526749 /* CBPDFPage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

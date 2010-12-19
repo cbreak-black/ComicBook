@@ -15,6 +15,7 @@
 #import <XADMaster/CSFileHandle.h>
 
 #import "CBURLPage.h"
+#import "CBPDFPage.h"
 #import "CBZipPage.h"
 #import "CBXADPage.h"
 #import "CBDataPage.h"
@@ -171,11 +172,9 @@
 
 + (NSArray*)pagesFromFileURL:(NSURL*)url
 {
-	CBPage * page = [[CBURLPage alloc] initWithURL:url];
-	if (page)
+	if ([CBPDFPage validPdfAtURL:url])
 	{
-		[page autorelease];
-		return [NSArray arrayWithObject:page];
+		return [CBPDFPage pagesFromPdfFile:url];
 	}
 	else if ([ZKArchive validArchiveAtPath:[url path]])
 	{
@@ -186,17 +185,25 @@
 	{
 		return [CBXADPage pagesFromArchiveURL:url];
 	}
+	else
+	{
+		CBPage * page = [[CBURLPage alloc] initWithURL:url];
+		if (page)
+		{
+			[page autorelease];
+			return [NSArray arrayWithObject:page];
+		}
+	}
 	// Not readable yet, return empty
 	return [NSArray array];
 }
 
 + (NSArray*)pagesFromData:(NSData*)data withPath:(NSString*)path
 {
-	NSArray * imageTypes = [NSImage imageFileTypes];
 	NSString * fileExtension = [path pathExtension];
-	if ([imageTypes containsObject:fileExtension])
+	if ([fileExtension isEqualToString:@"pdf"])
 	{
-		return [CBDataPage pagesFromImageData:data withPath:path];
+		return [CBPDFPage pagesFromPdfData:data withPath:path];
 	}
 	else if ([fileExtension isEqualToString:@"zip"] ||
 			 [fileExtension isEqualToString:@"cbz"])
@@ -210,6 +217,10 @@
 	{
 		// Maybe some rar archive data
 		return [CBXADPage pagesFromArchiveData:data withPath:path];
+	}
+	else if ([CBDataPage supportsExtension:fileExtension])
+	{
+		return [CBDataPage pagesFromImageData:data withPath:path];
 	}
 	// Not readable yet, return empty
 	return [NSArray array];

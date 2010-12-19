@@ -90,6 +90,20 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeName</key>
+			<string>ARCHIVE-PDF</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adobe.pdf</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSDocumentClass</key>
+			<string>CBDocument</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
 			<string>ARCHIVE-RAR</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>

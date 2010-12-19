@@ -18,7 +18,8 @@
 	self = [super init];
 	if (self)
 	{
-		NSArray * imageTypes = [NSImage imageFileTypes];
+		NSMutableArray * imageTypes = [[NSImage imageFileTypes] mutableCopy];
+		[imageTypes removeObject:@"pdf"];
 		NSString * fileExtension = [fileHeader.filename pathExtension];
 		if (![fileHeader isDirectory] &&
 			![fileHeader isSymLink] &&
@@ -35,6 +36,7 @@
 			[self release];
 			self = nil;
 		}
+		[imageTypes release];
 	}
 	return self;
 }

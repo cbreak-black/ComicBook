@@ -707,7 +707,7 @@ static const CGFloat magnifyFactor = 0.5;
 	containerSize.width *= zoomFactor;
 	containerSize.height *= zoomFactor;
 	CGRect scrollBounds;
-	if (containerSize.width < scrollSize.width)
+	if (containerSize.width < scrollSize.width + 0.5f)
 	{
 		// No scrolling horizontally
 		scrollBounds.size.width = 0;
@@ -718,7 +718,7 @@ static const CGFloat magnifyFactor = 0.5;
 		scrollBounds.size.width = containerSize.width - scrollSize.width;
 		scrollBounds.origin.x = -scrollBounds.size.width/2;
 	}
-	if (containerSize.height < scrollSize.height)
+	if (containerSize.height < scrollSize.height + 0.5f)
 	{
 		// No scrolling vertically
 		scrollBounds.size.height = 0;
