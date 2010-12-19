@@ -51,7 +51,7 @@
 
 - (void)updateTableSelection
 {
-	NSUInteger currentPage = [[self document] currentPage];
+	NSInteger currentPage = [[self document] currentPage];
 	if (currentPage != selectedRow)
 	{
 		selectedRow = currentPage;
@@ -85,7 +85,7 @@
 // Changed from the GUI
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
-	NSUInteger newSelectedRow = [tableView selectedRow];
+	NSInteger newSelectedRow = [tableView selectedRow];
 	if (newSelectedRow != selectedRow && newSelectedRow >= 0)
 	{
 		selectedRow = newSelectedRow;

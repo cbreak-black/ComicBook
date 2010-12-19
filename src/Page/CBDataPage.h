@@ -20,6 +20,7 @@
 - (id)initWithImageData:(NSData*)imgData withPath:(NSString*)imgPath;
 
 // Creation (Returns an array with one or zero pages)
++ (BOOL)supportsExtension:(NSString*)fileExtension;
 + (NSArray*)pagesFromImageData:(NSData*)imgData withPath:(NSString*)imgPath;
 
 // NSDiscardableContent (fake)

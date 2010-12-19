@@ -772,6 +772,8 @@ static const CGFloat magnifyFactor = 0.5;
 
 - (void)zoomReset
 {
+	if (!scrollLayer)
+		return;
 	if (scale == CBScaleOriginal)
 	{
 		[self zoomTo:1.0];
@@ -798,7 +800,7 @@ static const CGFloat autoScrollFactor = 0.8;
 {
 	CGRect scrollBounds = [self scrollBounds];
 	CGSize scrollSize = scrollLayer.bounds.size;
-	NSUInteger width, height;
+	NSInteger width, height;
 	CGFloat stepWidth, stepHeight;
 	// Find out how many steps in each direction
 	if (scrollBounds.size.height <= 0)

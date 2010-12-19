@@ -89,18 +89,22 @@ const NSUInteger preloadWindowSize = 15;
 	{
 		NSLog(@"Error opening URL %@: Error %@", [absoluteURL description], [e description]);
 	}
-	[self didChangeValueForKey:@"pages"];
-	[self preloadPages];
+	[baseURL release];
 	if ([pages count] > 1)
 	{
-		[baseURL release];
 		baseURL = [absoluteURL retain];
+	}
+	else if ([pages count] == 1)
+	{
+		baseURL = [[absoluteURL URLByDeletingLastPathComponent] retain];
 	}
 	else
 	{
-		[baseURL release];
-		baseURL = [[absoluteURL URLByDeletingLastPathComponent] retain];
+		*outError = [NSError errorWithDomain:@"Application" code:1 userInfo:nil];
+		return NO;
 	}
+	[self didChangeValueForKey:@"pages"];
+	[self preloadPages];
 	return YES;
 }
 
@@ -158,7 +162,10 @@ const NSUInteger preloadWindowSize = 15;
 	[self preloadPages];
 }
 
-@synthesize currentPage; // Only synthesize getter
+- (NSUInteger)currentPage
+{
+	return currentPage;
+}
 
 - (void)preloadPages
 {

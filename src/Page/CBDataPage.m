@@ -34,6 +34,12 @@
 	return self;
 }
 
++ (BOOL)supportsExtension:(NSString*)fileExtension
+{
+	NSArray * imageTypes = [NSImage imageFileTypes];
+	return [imageTypes containsObject:fileExtension];
+}
+
 - (void)dealloc
 {
 	[path release];
