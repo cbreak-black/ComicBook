@@ -1,3 +1,6 @@
 /build
+/DerivedData
 *.xcodeproj/*.mode1v3
 *.xcodeproj/*.pbxuser
+*.xcodeproj/*.xcworkspace
+*.xcodeproj/xcuserdata/

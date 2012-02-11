@@ -163,6 +163,79 @@
 			<string>CBDocument</string>
 		</dict>
 	</array>
+	<key>CFBundleExecutable</key>
+	<string>${EXECUTABLE_NAME}</string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>net.the-color-black.${PRODUCT_NAME:rfc1034identifier}</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>${PRODUCT_NAME}</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.entertainment</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>NSSupportsSuddenTermination</key>
+	<true/>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.pkware.zip-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>ZIP Comic Book</string>
+			<key>UTTypeIconFile</key>
+			<string></string>
+			<key>UTTypeIdentifier</key>
+			<string>net.the-color-black.comicbook.zip</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://en.wikipedia.org/wiki/Comic_Book_Archive_file</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>cbz</string>
+				<key>public.mime-type</key>
+				<string>application/x-cbz</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.rarlab.rar-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>RAR Comic Book</string>
+			<key>UTTypeIconFile</key>
+			<string></string>
+			<key>UTTypeIdentifier</key>
+			<string>net.the-color-black.comicbook.rar</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://en.wikipedia.org/wiki/Comic_Book_Archive_file</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>cbr</string>
+				<key>public.mime-type</key>
+				<string>application/x-cbr</string>
+			</dict>
+		</dict>
+	</array>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -521,76 +594,5 @@
 			</dict>
 		</dict>
 	</array>
-	<key>UTExportedTypeDeclarations</key>
-	<array>
-		<dict>
-			<key>UTTypeDescription</key>
-			<string>ZIP Comic Book</string>
-			<key>UTTypeIconFile</key>
-			<string></string>
-			<key>UTTypeReferenceURL</key>
-			<string>http://en.wikipedia.org/wiki/Comic_Book_Archive_file</string>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>com.pkware.zip-archive</string>
-			</array>
-			<key>UTTypeIdentifier</key>
-			<string>net.the-color-black.comicbook.zip</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.mime-type</key>
-				<string>application/x-cbz</string>
-				<key>public.filename-extension</key>
-				<string>cbz</string>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeDescription</key>
-			<string>RAR Comic Book</string>
-			<key>UTTypeIconFile</key>
-			<string></string>
-			<key>UTTypeReferenceURL</key>
-			<string>http://en.wikipedia.org/wiki/Comic_Book_Archive_file</string>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>com.rarlab.rar-archive</string>
-			</array>
-			<key>UTTypeIdentifier</key>
-			<string>net.the-color-black.comicbook.rar</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.mime-type</key>
-				<string>application/x-cbr</string>
-				<key>public.filename-extension</key>
-				<string>cbr</string>
-			</dict>
-		</dict>
-	</array>
-	<key>CFBundleExecutable</key>
-	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>net.the-color-black.${PRODUCT_NAME:rfc1034identifier}</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>${PRODUCT_NAME}</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1</string>
-	<key>LSMinimumSystemVersion</key>
-	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
-	<key>NSSupportsSuddenTermination</key>
-	<true/>
 </dict>
 </plist>
