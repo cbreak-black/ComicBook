@@ -180,8 +180,7 @@
 	{
 		return [CBZipPage pagesFromZipFile:url];
 	}
-	else if ([XADArchiveParser archiveParserClassForHandle:[CSFileHandle fileHandleForReadingAtPath:[url path]]
-													  name:[url path]])
+	else if ([XADArchiveParser archiveParserForPath:[url path]])
 	{
 		return [CBXADPage pagesFromArchiveURL:url];
 	}

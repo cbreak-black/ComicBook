@@ -13,14 +13,14 @@
 		700700E51146A46C004C7B39 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 700700E41146A46C004C7B39 /* QuartzCore.framework */; };
 		7007033E1147DE26004C7B39 /* CBPageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7007033D1147DE26004C7B39 /* CBPageOperation.m */; };
 		7007069F1149C617004C7B39 /* CBCALayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7007069E1149C617004C7B39 /* CBCALayoutManager.m */; };
+		706FF20B16203CD600D82C05 /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 706FF20A16203CD600D82C05 /* XADMaster.framework */; };
+		706FF20C16203DC500D82C05 /* XADMaster.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 706FF20A16203CD600D82C05 /* XADMaster.framework */; };
+		706FF2161620476800D82C05 /* ZipKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 708C7F5A11539DA60070455D /* ZipKit.framework */; };
 		708C7F5B11539DA60070455D /* ZipKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 708C7F5A11539DA60070455D /* ZipKit.framework */; };
-		708C7F5C11539DB20070455D /* ZipKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 708C7F5A11539DA60070455D /* ZipKit.framework */; };
 		708C7F8B1153A3230070455D /* CBZipPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 708C7F8A1153A3230070455D /* CBZipPage.m */; };
 		708C814E11551A220070455D /* CBDataPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 708C814D11551A220070455D /* CBDataPage.m */; };
 		708C8BC0115D9DAA0070455D /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 708C8BBF115D9DAA0070455D /* RegexKitLite.m */; };
 		708C8BC8115D9F580070455D /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 708C8BC7115D9F580070455D /* libicucore.dylib */; };
-		708C8C35115E46BA0070455D /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 708C8C34115E46BA0070455D /* XADMaster.framework */; };
-		708C8C3B115E47270070455D /* XADMaster.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 708C8C34115E46BA0070455D /* XADMaster.framework */; };
 		708C8C79115E513B0070455D /* CBXADPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 708C8C78115E513B0070455D /* CBXADPage.m */; };
 		70A6796812BE0F2E00526749 /* CBPDFPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 70A6796712BE0F2E00526749 /* CBPDFPage.m */; };
 		70A67A4112BE1F7200526749 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70A67A4012BE1F7200526749 /* Quartz.framework */; };
@@ -44,8 +44,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				708C8C3B115E47270070455D /* XADMaster.framework in Copy Frameworks */,
-				708C7F5C11539DB20070455D /* ZipKit.framework in Copy Frameworks */,
+				706FF20C16203DC500D82C05 /* XADMaster.framework in Copy Frameworks */,
+				706FF2161620476800D82C05 /* ZipKit.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -73,6 +73,7 @@
 		7007033D1147DE26004C7B39 /* CBPageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBPageOperation.m; path = src/CBPageOperation.m; sourceTree = "<group>"; };
 		7007069D1149C617004C7B39 /* CBCALayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBCALayoutManager.h; path = src/View/CBCALayoutManager.h; sourceTree = "<group>"; };
 		7007069E1149C617004C7B39 /* CBCALayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBCALayoutManager.m; path = src/View/CBCALayoutManager.m; sourceTree = "<group>"; };
+		706FF20A16203CD600D82C05 /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = ../theunarchiver/XADMaster/DerivedData/XADMaster/Build/Products/Release/XADMaster.framework; sourceTree = SOURCE_ROOT; };
 		708C7F5A11539DA60070455D /* ZipKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZipKit.framework; path = ../zipkit/build/Release/ZipKit.framework; sourceTree = SOURCE_ROOT; };
 		708C7F891153A3230070455D /* CBZipPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBZipPage.h; path = src/Page/CBZipPage.h; sourceTree = "<group>"; };
 		708C7F8A1153A3230070455D /* CBZipPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBZipPage.m; path = src/Page/CBZipPage.m; sourceTree = "<group>"; };
@@ -81,7 +82,6 @@
 		708C8BBE115D9DAA0070455D /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexKitLite.h; path = src/RegexKitLite/RegexKitLite.h; sourceTree = "<group>"; };
 		708C8BBF115D9DAA0070455D /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegexKitLite.m; path = src/RegexKitLite/RegexKitLite.m; sourceTree = "<group>"; };
 		708C8BC7115D9F580070455D /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
-		708C8C34115E46BA0070455D /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = ../theunarchiver/trunk/XADMaster/build/Release/XADMaster.framework; sourceTree = SOURCE_ROOT; };
 		708C8C77115E513B0070455D /* CBXADPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBXADPage.h; path = src/Page/CBXADPage.h; sourceTree = "<group>"; };
 		708C8C78115E513B0070455D /* CBXADPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBXADPage.m; path = src/Page/CBXADPage.m; sourceTree = "<group>"; };
 		70A6796612BE0F2E00526749 /* CBPDFPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBPDFPage.h; path = src/Page/CBPDFPage.h; sourceTree = "<group>"; };
@@ -107,11 +107,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				706FF20B16203CD600D82C05 /* XADMaster.framework in Frameworks */,
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				700700E51146A46C004C7B39 /* QuartzCore.framework in Frameworks */,
 				708C7F5B11539DA60070455D /* ZipKit.framework in Frameworks */,
 				708C8BC8115D9F580070455D /* libicucore.dylib in Frameworks */,
-				708C8C35115E46BA0070455D /* XADMaster.framework in Frameworks */,
 				70A67A4112BE1F7200526749 /* Quartz.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -126,7 +126,7 @@
 				700700E41146A46C004C7B39 /* QuartzCore.framework */,
 				708C7F5A11539DA60070455D /* ZipKit.framework */,
 				708C8BC7115D9F580070455D /* libicucore.dylib */,
-				708C8C34115E46BA0070455D /* XADMaster.framework */,
+				706FF20A16203CD600D82C05 /* XADMaster.framework */,
 				70A67A4012BE1F7200526749 /* Quartz.framework */,
 			);
 			name = "Linked Frameworks";
@@ -404,12 +404,13 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../zipkit/build/Release\"",
-					"\"$(SRCROOT)/../theunarchiver/trunk/XADMaster/build/Release\"",
+					"\"$(SRCROOT)/../theunarchiver/XADMaster/DerivedData/XADMaster/Build/Products/Release\"",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = src/ComicBook_Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "resources/ComicBook-Info.plist";
 				PRODUCT_NAME = ComicBook;
 			};
@@ -426,10 +427,11 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../zipkit/build/Release\"",
-					"\"$(SRCROOT)/../theunarchiver/trunk/XADMaster/build/Release\"",
+					"\"$(SRCROOT)/../theunarchiver/XADMaster/DerivedData/XADMaster/Build/Products/Release\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = src/ComicBook_Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "resources/ComicBook-Info.plist";
 				PRODUCT_NAME = ComicBook;
 			};
@@ -446,7 +448,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -459,7 +460,6 @@
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				SDKROOT = macosx;
 			};
 			name = Release;
 		};

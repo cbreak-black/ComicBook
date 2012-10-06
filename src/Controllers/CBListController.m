@@ -9,6 +9,7 @@
 #import "CBListController.h"
 
 #import "CBDocument.h"
+#import "CBPage.h"
 
 
 @implementation CBListController

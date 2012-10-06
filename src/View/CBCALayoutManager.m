@@ -13,6 +13,7 @@
 
 - (CGSize)preferredSizeOfLayer:(CALayer *)layer
 {
+	return CGSizeMake(0, 0);
 }
 
 - (void)invalidateLayoutOfLayer:(CALayer *)layer
