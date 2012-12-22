@@ -32,6 +32,8 @@
 		7060C097168642B1008A9E92 /* CBPDFFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C096168642B1008A9E92 /* CBPDFFrame.m */; };
 		7060C09D168660CA008A9E92 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C09C168660CA008A9E92 /* Quartz.framework */; };
 		7060C0A4168669AC008A9E92 /* CBDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C0A3168669AC008A9E92 /* CBDocumentController.m */; };
+		7060C07F1685DF4A008A9E92 /* UniversalDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C07D1685DF4A008A9E92 /* UniversalDetector.framework */; };
+		7060C0801685DF4A008A9E92 /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C07E1685DF4A008A9E92 /* XADMaster.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +95,8 @@
 		7060C09C168660CA008A9E92 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		7060C0A2168669AC008A9E92 /* CBDocumentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBDocumentController.h; path = Controller/CBDocumentController.h; sourceTree = "<group>"; };
 		7060C0A3168669AC008A9E92 /* CBDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBDocumentController.m; path = Controller/CBDocumentController.m; sourceTree = "<group>"; };
+		7060C07D1685DF4A008A9E92 /* UniversalDetector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniversalDetector.framework; path = ../../../Library/Frameworks/UniversalDetector.framework; sourceTree = "<group>"; };
+		7060C07E1685DF4A008A9E92 /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = ../../../Library/Frameworks/XADMaster.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +104,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7060C07F1685DF4A008A9E92 /* UniversalDetector.framework in Frameworks */,
+				7060C0801685DF4A008A9E92 /* XADMaster.framework in Frameworks */,
 				7060C021167CAA14008A9E92 /* Cocoa.framework in Frameworks */,
 				7060C09D168660CA008A9E92 /* Quartz.framework in Frameworks */,
 			);
@@ -172,6 +178,8 @@
 		7060C01F167CAA14008A9E92 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7060C07D1685DF4A008A9E92 /* UniversalDetector.framework */,
+				7060C07E1685DF4A008A9E92 /* XADMaster.framework */,
 				7060C020167CAA14008A9E92 /* Cocoa.framework */,
 				7060C041167CAA14008A9E92 /* SenTestingKit.framework */,
 				7060C022167CAA14008A9E92 /* Other Frameworks */,
@@ -521,6 +529,10 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ComicBook/ComicBook.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"~/Library/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ComicBook/ComicBook-Prefix.pch";
 				INFOPLIST_FILE = "ComicBook/ComicBook-Info.plist";
@@ -534,6 +546,10 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ComicBook/ComicBook.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"~/Library/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ComicBook/ComicBook-Prefix.pch";
 				INFOPLIST_FILE = "ComicBook/ComicBook-Info.plist";
