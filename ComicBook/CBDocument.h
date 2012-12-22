@@ -9,5 +9,8 @@
 #import <Cocoa/Cocoa.h>
 
 @interface CBDocument : NSDocument
+{
+	NSArray * frames;
+}
 
 @end

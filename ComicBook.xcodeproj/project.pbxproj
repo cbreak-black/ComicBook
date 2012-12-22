@@ -18,6 +18,11 @@
 		7060C043167CAA14008A9E92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C020167CAA14008A9E92 /* Cocoa.framework */; };
 		7060C04B167CAA14008A9E92 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7060C049167CAA14008A9E92 /* InfoPlist.strings */; };
 		7060C04E167CAA14008A9E92 /* ComicBookTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C04D167CAA14008A9E92 /* ComicBookTests.m */; };
+		7060C08916861319008A9E92 /* CBFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C08816861319008A9E92 /* CBFrame.m */; };
+		7060C08C168618DD008A9E92 /* CBImageFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C08B168618DD008A9E92 /* CBImageFrame.m */; };
+		7060C09316863914008A9E92 /* CBFrameFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C09216863914008A9E92 /* CBFrameFactory.m */; };
+		7060C097168642B1008A9E92 /* CBPDFFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C096168642B1008A9E92 /* CBPDFFrame.m */; };
+		7060C09D168660CA008A9E92 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C09C168660CA008A9E92 /* Quartz.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +57,15 @@
 		7060C04C167CAA14008A9E92 /* ComicBookTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ComicBookTests.h; sourceTree = "<group>"; };
 		7060C04D167CAA14008A9E92 /* ComicBookTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ComicBookTests.m; sourceTree = "<group>"; };
 		7060C057167CB325008A9E92 /* ComicBook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ComicBook.entitlements; sourceTree = "<group>"; };
+		7060C08716861319008A9E92 /* CBFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBFrame.h; path = Frame/CBFrame.h; sourceTree = "<group>"; };
+		7060C08816861319008A9E92 /* CBFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBFrame.m; path = Frame/CBFrame.m; sourceTree = "<group>"; };
+		7060C08A168618DD008A9E92 /* CBImageFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBImageFrame.h; path = Frame/CBImageFrame.h; sourceTree = "<group>"; };
+		7060C08B168618DD008A9E92 /* CBImageFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBImageFrame.m; path = Frame/CBImageFrame.m; sourceTree = "<group>"; };
+		7060C09116863914008A9E92 /* CBFrameFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBFrameFactory.h; path = Frame/CBFrameFactory.h; sourceTree = "<group>"; };
+		7060C09216863914008A9E92 /* CBFrameFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBFrameFactory.m; path = Frame/CBFrameFactory.m; sourceTree = "<group>"; };
+		7060C095168642B1008A9E92 /* CBPDFFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBPDFFrame.h; path = Frame/CBPDFFrame.h; sourceTree = "<group>"; };
+		7060C096168642B1008A9E92 /* CBPDFFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBPDFFrame.m; path = Frame/CBPDFFrame.m; sourceTree = "<group>"; };
+		7060C09C168660CA008A9E92 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +74,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7060C021167CAA14008A9E92 /* Cocoa.framework in Frameworks */,
+				7060C09D168660CA008A9E92 /* Quartz.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,6 +125,7 @@
 				7060C023167CAA14008A9E92 /* AppKit.framework */,
 				7060C024167CAA14008A9E92 /* CoreData.framework */,
 				7060C025167CAA14008A9E92 /* Foundation.framework */,
+				7060C09C168660CA008A9E92 /* Quartz.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -120,6 +136,7 @@
 				7060C057167CB325008A9E92 /* ComicBook.entitlements */,
 				7060C032167CAA14008A9E92 /* CBDocument.h */,
 				7060C033167CAA14008A9E92 /* CBDocument.m */,
+				7060C085168612E5008A9E92 /* Frame */,
 				7060C035167CAA14008A9E92 /* CBDocument.xib */,
 				7060C038167CAA14008A9E92 /* MainMenu.xib */,
 				7060C027167CAA14008A9E92 /* Supporting Files */,
@@ -156,6 +173,21 @@
 				7060C049167CAA14008A9E92 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7060C085168612E5008A9E92 /* Frame */ = {
+			isa = PBXGroup;
+			children = (
+				7060C09116863914008A9E92 /* CBFrameFactory.h */,
+				7060C09216863914008A9E92 /* CBFrameFactory.m */,
+				7060C08716861319008A9E92 /* CBFrame.h */,
+				7060C08816861319008A9E92 /* CBFrame.m */,
+				7060C08A168618DD008A9E92 /* CBImageFrame.h */,
+				7060C08B168618DD008A9E92 /* CBImageFrame.m */,
+				7060C095168642B1008A9E92 /* CBPDFFrame.h */,
+				7060C096168642B1008A9E92 /* CBPDFFrame.m */,
+			);
+			name = Frame;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -270,6 +302,10 @@
 			files = (
 				7060C02D167CAA14008A9E92 /* main.m in Sources */,
 				7060C034167CAA14008A9E92 /* CBDocument.m in Sources */,
+				7060C08916861319008A9E92 /* CBFrame.m in Sources */,
+				7060C08C168618DD008A9E92 /* CBImageFrame.m in Sources */,
+				7060C09316863914008A9E92 /* CBFrameFactory.m in Sources */,
+				7060C097168642B1008A9E92 /* CBPDFFrame.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,6 +505,7 @@
 				7060C053167CAA14008A9E92 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7060C054167CAA14008A9E92 /* Build configuration list for PBXNativeTarget "ComicBookTests" */ = {
 			isa = XCConfigurationList;
@@ -477,6 +514,7 @@
 				7060C056167CAA14008A9E92 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

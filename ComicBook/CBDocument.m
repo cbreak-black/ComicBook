@@ -8,6 +8,8 @@
 
 #import "CBDocument.h"
 
+#import "CBFrameFactory.h"
+
 @implementation CBDocument
 
 - (id)init
@@ -32,10 +34,11 @@
 	// loaded the document's window.
 }
 
-- (BOOL)readFromFileWrapper:(NSFileWrapper *)fileWrapper ofType:(NSString *)typeName
-					  error:(NSError **)outError
+- (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName
+			  error:(NSError *__autoreleasing *)outError
 {
-	return YES;
+	frames = [[CBFrameFactory factory] framesFromURL:url error:outError];
+	return frames != nil;
 }
 
 -(BOOL)isEntireFileLoaded
