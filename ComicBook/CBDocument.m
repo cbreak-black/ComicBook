@@ -10,21 +10,23 @@
 
 #import "CBFrameFactory.h"
 
+#import "CBComicWindowController.h"
+
 @implementation CBDocument
 
 - (id)init
 {
-    self = [super init];
-    if (self) {
+    if (self = [super init])
+	{
 		// Add your subclass-specific initialization here.
     }
     return self;
 }
 
-- (NSString *)windowNibName
+- (void)makeWindowControllers
 {
-	// Override returning the nib file name of the document
-	return @"CBDocument";
+	CBComicWindowController * cbc = [[CBComicWindowController alloc] init];
+	[self addWindowController:cbc];
 }
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController

@@ -8,12 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		702ADC6316866CB900D55B9E /* CBApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 702ADC6216866CB900D55B9E /* CBApplicationDelegate.m */; };
+		703525D416875D9500AB06B1 /* CBComicView.m in Sources */ = {isa = PBXBuildFile; fileRef = 703525D316875D9500AB06B1 /* CBComicView.m */; };
+		703525D716876E7200AB06B1 /* CBPageLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 703525D616876E7200AB06B1 /* CBPageLayer.m */; };
+		703525DA1687A34800AB06B1 /* CBComicWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 703525D91687A34800AB06B1 /* CBComicWindowController.m */; };
 		7060C021167CAA14008A9E92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C020167CAA14008A9E92 /* Cocoa.framework */; };
 		7060C02B167CAA14008A9E92 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7060C029167CAA14008A9E92 /* InfoPlist.strings */; };
 		7060C02D167CAA14008A9E92 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C02C167CAA14008A9E92 /* main.m */; };
 		7060C031167CAA14008A9E92 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 7060C02F167CAA14008A9E92 /* Credits.rtf */; };
 		7060C034167CAA14008A9E92 /* CBDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C033167CAA14008A9E92 /* CBDocument.m */; };
-		7060C037167CAA14008A9E92 /* CBDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7060C035167CAA14008A9E92 /* CBDocument.xib */; };
+		7060C037167CAA14008A9E92 /* CBComicWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7060C035167CAA14008A9E92 /* CBComicWindow.xib */; };
 		7060C03A167CAA14008A9E92 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7060C038167CAA14008A9E92 /* MainMenu.xib */; };
 		7060C042167CAA14008A9E92 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C041167CAA14008A9E92 /* SenTestingKit.framework */; };
 		7060C043167CAA14008A9E92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C020167CAA14008A9E92 /* Cocoa.framework */; };
@@ -40,6 +43,12 @@
 /* Begin PBXFileReference section */
 		702ADC6116866CB900D55B9E /* CBApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBApplicationDelegate.h; path = Controller/CBApplicationDelegate.h; sourceTree = "<group>"; };
 		702ADC6216866CB900D55B9E /* CBApplicationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBApplicationDelegate.m; path = Controller/CBApplicationDelegate.m; sourceTree = "<group>"; };
+		703525D216875D9500AB06B1 /* CBComicView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBComicView.h; path = UI/CBComicView.h; sourceTree = "<group>"; };
+		703525D316875D9500AB06B1 /* CBComicView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBComicView.m; path = UI/CBComicView.m; sourceTree = "<group>"; };
+		703525D516876E7200AB06B1 /* CBPageLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBPageLayer.h; path = UI/CBPageLayer.h; sourceTree = "<group>"; };
+		703525D616876E7200AB06B1 /* CBPageLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBPageLayer.m; path = UI/CBPageLayer.m; sourceTree = "<group>"; };
+		703525D81687A34800AB06B1 /* CBComicWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBComicWindowController.h; path = Controller/CBComicWindowController.h; sourceTree = "<group>"; };
+		703525D91687A34800AB06B1 /* CBComicWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBComicWindowController.m; path = Controller/CBComicWindowController.m; sourceTree = "<group>"; };
 		7060C01C167CAA14008A9E92 /* ComicBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ComicBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7060C020167CAA14008A9E92 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		7060C023167CAA14008A9E92 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -52,7 +61,7 @@
 		7060C030167CAA14008A9E92 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		7060C032167CAA14008A9E92 /* CBDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CBDocument.h; sourceTree = "<group>"; };
 		7060C033167CAA14008A9E92 /* CBDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CBDocument.m; sourceTree = "<group>"; };
-		7060C036167CAA14008A9E92 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CBDocument.xib; sourceTree = "<group>"; };
+		7060C036167CAA14008A9E92 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CBComicWindow.xib; sourceTree = "<group>"; };
 		7060C039167CAA14008A9E92 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		7060C040167CAA14008A9E92 /* ComicBookTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ComicBookTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7060C041167CAA14008A9E92 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -96,6 +105,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		703525D01687563100AB06B1 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				703525D216875D9500AB06B1 /* CBComicView.h */,
+				703525D316875D9500AB06B1 /* CBComicView.m */,
+				703525D516876E7200AB06B1 /* CBPageLayer.h */,
+				703525D616876E7200AB06B1 /* CBPageLayer.m */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
 		7060C011167CAA13008A9E92 = {
 			isa = PBXGroup;
 			children = (
@@ -143,8 +163,9 @@
 				7060C032167CAA14008A9E92 /* CBDocument.h */,
 				7060C033167CAA14008A9E92 /* CBDocument.m */,
 				7060C085168612E5008A9E92 /* Frame */,
+				703525D01687563100AB06B1 /* UI */,
 				7060C0A116866963008A9E92 /* Controller */,
-				7060C035167CAA14008A9E92 /* CBDocument.xib */,
+				7060C035167CAA14008A9E92 /* CBComicWindow.xib */,
 				7060C038167CAA14008A9E92 /* MainMenu.xib */,
 				7060C027167CAA14008A9E92 /* Supporting Files */,
 			);
@@ -204,6 +225,8 @@
 				7060C0A3168669AC008A9E92 /* CBDocumentController.m */,
 				702ADC6116866CB900D55B9E /* CBApplicationDelegate.h */,
 				702ADC6216866CB900D55B9E /* CBApplicationDelegate.m */,
+				703525D81687A34800AB06B1 /* CBComicWindowController.h */,
+				703525D91687A34800AB06B1 /* CBComicWindowController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -282,7 +305,7 @@
 			files = (
 				7060C02B167CAA14008A9E92 /* InfoPlist.strings in Resources */,
 				7060C031167CAA14008A9E92 /* Credits.rtf in Resources */,
-				7060C037167CAA14008A9E92 /* CBDocument.xib in Resources */,
+				7060C037167CAA14008A9E92 /* CBComicWindow.xib in Resources */,
 				7060C03A167CAA14008A9E92 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -326,6 +349,9 @@
 				7060C097168642B1008A9E92 /* CBPDFFrame.m in Sources */,
 				7060C0A4168669AC008A9E92 /* CBDocumentController.m in Sources */,
 				702ADC6316866CB900D55B9E /* CBApplicationDelegate.m in Sources */,
+				703525D416875D9500AB06B1 /* CBComicView.m in Sources */,
+				703525D716876E7200AB06B1 /* CBPageLayer.m in Sources */,
+				703525DA1687A34800AB06B1 /* CBComicWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,12 +390,12 @@
 			name = Credits.rtf;
 			sourceTree = "<group>";
 		};
-		7060C035167CAA14008A9E92 /* CBDocument.xib */ = {
+		7060C035167CAA14008A9E92 /* CBComicWindow.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				7060C036167CAA14008A9E92 /* en */,
 			);
-			name = CBDocument.xib;
+			name = CBComicWindow.xib;
 			sourceTree = "<group>";
 		};
 		7060C038167CAA14008A9E92 /* MainMenu.xib */ = {
