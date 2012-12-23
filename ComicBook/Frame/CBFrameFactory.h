@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol CBFrameLoader
+- (BOOL)canLoadFramesFromURL:(NSURL*)url;
+- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error;
+- (BOOL)canLoadFramesFromData:(NSData*)data withPath:(NSString*)path;
+- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error;
+@end
+
 @interface CBFrameFactory : NSObject
 {
 	NSArray * frameLoaders;
@@ -21,9 +28,6 @@
 - (id)init;
 
 - (NSArray*)framesFromURL:(NSURL*)url error:(NSError **)error;
-
-- (NSArray*)framesFromDirectoryURL:(NSURL*)url error:(NSError **)error;
-- (NSArray*)framesFromFileURL:(NSURL*)url error:(NSError **)error;
 - (NSArray*)framesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error;
 
 @end

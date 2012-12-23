@@ -11,51 +11,19 @@
 #include "CBImageFrame.h"
 #include "CBPDFFrame.h"
 
-static CBFrameFactory * CBFrameFactory_staticFactory = nil;
+// URL Loader
+@interface CBDirectoryFrameLoader : NSObject<CBFrameLoader>
+@end
 
-@implementation CBFrameFactory
+@implementation CBDirectoryFrameLoader
 
-+ (CBFrameFactory*)factory
-{
-	if (!CBFrameFactory_staticFactory)
-		CBFrameFactory_staticFactory = [[CBFrameFactory alloc] init];
-	return CBFrameFactory_staticFactory;
-}
-
-- (id)init
-{
-	if (self = [super init])
-	{
-		frameLoaders = @[
-			[CBURLImageFrame loader],
-			[CBDataImageFrame loader],
-			[CBPDFFrame loader]
-		];
-	}
-	return self;
-}
-
-- (NSArray*)framesFromURL:(NSURL*)url error:(NSError **)error
+- (BOOL)canLoadFramesFromURL:(NSURL*)url
 {
 	NSNumber * isDirectory;
-	if ([url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:error])
-	{
-		if ([isDirectory boolValue])
-		{
-			return [self framesFromDirectoryURL:url error:error];
-		}
-		else
-		{
-			return [self framesFromFileURL:url error:error];
-		}
-	}
-	else
-	{
-		return nil;
-	}
+	return [url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL] && [isDirectory boolValue];
 }
 
-- (NSArray*)framesFromDirectoryURL:(NSURL*)url error:(NSError **)error
+- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error
 {
 	NSFileManager * fm = [NSFileManager defaultManager];
 	NSArray * enumProps = [NSArray arrayWithObjects:NSURLTypeIdentifierKey,NSURLIsDirectoryKey,nil];
@@ -72,9 +40,9 @@ static CBFrameFactory * CBFrameFactory_staticFactory = nil;
 	for (NSURL * url in dirEnum)
 	{
 		NSNumber * isDirectory;
-		if ([url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL] && ![isDirectory boolValue])
+		if ([url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:error] && ![isDirectory boolValue])
 		{
-			NSArray * subFrames = [self framesFromFileURL:url error:error];
+			NSArray * subFrames = [[CBFrameFactory factory] framesFromURL:url error:error];
 			if (subFrames)
 				[frames addObjectsFromArray:subFrames];
 		}
@@ -82,13 +50,50 @@ static CBFrameFactory * CBFrameFactory_staticFactory = nil;
 	return frames;
 }
 
-- (NSArray*)framesFromFileURL:(NSURL*)url error:(NSError **)error
+- (BOOL)canLoadFramesFromData:(NSData*)data withPath:(NSString*)path
+{
+	return NO;
+}
+
+- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error
+{
+	return nil;
+}
+
+@end
+
+static CBFrameFactory * CBFrameFactory_staticFactory = nil;
+
+@implementation CBFrameFactory
+
++ (CBFrameFactory*)factory
+{
+	if (!CBFrameFactory_staticFactory)
+		CBFrameFactory_staticFactory = [[CBFrameFactory alloc] init];
+	return CBFrameFactory_staticFactory;
+}
+
+- (id)init
+{
+	if (self = [super init])
+	{
+		frameLoaders = @[
+			[[CBDirectoryFrameLoader alloc] init],
+			[CBURLImageFrame loader],
+			[CBDataImageFrame loader],
+			[CBPDFFrame loader]
+		];
+	}
+	return self;
+}
+
+- (NSArray*)framesFromURL:(NSURL*)url error:(NSError **)error
 {
 	for (id<CBFrameLoader> frameLoader in frameLoaders)
 	{
 		if ([frameLoader canLoadFramesFromURL:url])
 		{
-			return [frameLoader loadFramesFromURL:url];
+			return [frameLoader loadFramesFromURL:url error:error];
 		}
 	}
 	// No valid loader found
@@ -101,7 +106,7 @@ static CBFrameFactory * CBFrameFactory_staticFactory = nil;
 	{
 		if ([frameLoader canLoadFramesFromData:data withPath:path])
 		{
-			return [frameLoader loadFramesFromData:data withPath:path];
+			return [frameLoader loadFramesFromData:data withPath:path error:error];
 		}
 	}
 	// No valid loader found

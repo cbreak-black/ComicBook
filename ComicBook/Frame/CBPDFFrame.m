@@ -20,7 +20,7 @@
 	return [[url pathExtension] isEqualToString:@"pdf"];
 }
 
-- (NSArray*)loadFramesFromURL:(NSURL*)url
+- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error
 {
 	if ([self canLoadFramesFromURL:url])
 		return [self pagesFromPdfFile:url];
@@ -34,7 +34,7 @@
 	return [fileExtension isEqualToString:@"pdf"];
 }
 
-- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path
+- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error
 {
 	if ([self canLoadFramesFromData:data withPath:path])
 		return [self pagesFromPdfData:data withPath:path];

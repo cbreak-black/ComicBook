@@ -36,7 +36,7 @@ static BOOL canLoadFramesFromURL(NSURL * url)
 	return canLoadFramesFromURL(url);
 }
 
-- (NSArray*)loadFramesFromURL:(NSURL*)url
+- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error
 {
 	CBURLImageFrame * urlFrames = [[CBURLImageFrame alloc] initWithURL:url];
 	if (urlFrames)
@@ -49,7 +49,7 @@ static BOOL canLoadFramesFromURL(NSURL * url)
 	return NO;
 }
 
-- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path
+- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error
 {
 	return nil;
 }
@@ -67,7 +67,7 @@ static BOOL canLoadFramesFromURL(NSURL * url)
 	return NO;
 }
 
-- (NSArray*)loadFramesFromURL:(NSURL*)url
+- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error
 {
 	return nil;
 }
@@ -78,7 +78,7 @@ static BOOL canLoadFramesFromURL(NSURL * url)
 	return canLoadFrameFromFormat(fileExtension);
 }
 
-- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path
+- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error
 {
 	CBDataImageFrame * dataFrames = [[CBDataImageFrame alloc] initWithData:data withPath:path];
 	if (dataFrames)

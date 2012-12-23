@@ -8,12 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol CBFrameLoader
-- (BOOL)canLoadFramesFromURL:(NSURL*)url;
-- (NSArray*)loadFramesFromURL:(NSURL*)url;
-- (BOOL)canLoadFramesFromData:(NSData*)data withPath:(NSString*)path;
-- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path;
-@end
+#import "CBFrameFactory.h"
 
 @interface CBFrame : NSObject
 {
