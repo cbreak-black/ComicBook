@@ -8,8 +8,8 @@
 
 #import "CBFrameFactory.h"
 
-#include "CBImageFrame.h"
-#include "CBPDFFrame.h"
+#import "CBImageFrame.h"
+#import "CBPDFFrame.h"
 
 @implementation CBFrameLoader
 

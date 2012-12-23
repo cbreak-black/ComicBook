@@ -8,7 +8,7 @@
 
 #import "CBApplicationDelegate.h"
 
-#include "CBDocumentController.h"
+#import "CBDocumentController.h"
 
 @implementation CBApplicationDelegate
 
