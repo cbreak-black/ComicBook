@@ -11,8 +11,39 @@
 #include "CBImageFrame.h"
 #include "CBPDFFrame.h"
 
+@implementation CBFrameLoader
+
++ (CBFrameLoader*)loader
+{
+	return [[self alloc] init];
+}
+
+- (BOOL)canLoadFramesFromURL:(NSURL*)url
+{
+	return NO;
+}
+
+- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error
+{
+	return nil;
+}
+
+- (BOOL)canLoadFramesFromData:(NSData*)data withPath:(NSString*)path
+{
+	return NO;
+}
+
+- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error
+{
+	return nil;
+}
+
+@end
+
 // URL Loader
-@interface CBDirectoryFrameLoader : NSObject<CBFrameLoader>
+@interface CBDirectoryFrameLoader : CBFrameLoader
+- (BOOL)canLoadFramesFromURL:(NSURL*)url;
+- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error;
 @end
 
 @implementation CBDirectoryFrameLoader
@@ -50,16 +81,6 @@
 	return frames;
 }
 
-- (BOOL)canLoadFramesFromData:(NSData*)data withPath:(NSString*)path
-{
-	return NO;
-}
-
-- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error
-{
-	return nil;
-}
-
 @end
 
 static CBFrameFactory * CBFrameFactory_staticFactory = nil;
@@ -78,10 +99,10 @@ static CBFrameFactory * CBFrameFactory_staticFactory = nil;
 	if (self = [super init])
 	{
 		frameLoaders = @[
-			[[CBDirectoryFrameLoader alloc] init],
-			[CBURLImageFrame loader],
-			[CBDataImageFrame loader],
-			[CBPDFFrame loader]
+			[CBDirectoryFrameLoader loader],
+			[CBPDFFrameLoader loader],
+			[CBURLImageFrameLoader loader],
+			[CBDataImageFrameLoader loader]
 		];
 	}
 	return self;
@@ -89,7 +110,7 @@ static CBFrameFactory * CBFrameFactory_staticFactory = nil;
 
 - (NSArray*)framesFromURL:(NSURL*)url error:(NSError **)error
 {
-	for (id<CBFrameLoader> frameLoader in frameLoaders)
+	for (CBFrameLoader * frameLoader in frameLoaders)
 	{
 		if ([frameLoader canLoadFramesFromURL:url])
 		{
@@ -102,7 +123,7 @@ static CBFrameFactory * CBFrameFactory_staticFactory = nil;
 
 - (NSArray*)framesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error
 {
-	for (id<CBFrameLoader> frameLoader in frameLoaders)
+	for (CBFrameLoader * frameLoader in frameLoaders)
 	{
 		if ([frameLoader canLoadFramesFromData:data withPath:path])
 		{

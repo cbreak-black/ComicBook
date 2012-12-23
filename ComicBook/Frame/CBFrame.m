@@ -29,9 +29,4 @@
 	return nil;
 }
 
-+ (id<CBFrameLoader>)loader
-{
-	return nil;
-}
-
 @end

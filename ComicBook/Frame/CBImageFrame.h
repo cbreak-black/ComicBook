@@ -21,8 +21,6 @@
 @property (retain, readonly) NSString * path;
 @property (retain, readonly) NSImage * image;
 
-+ (id<CBFrameLoader>)loader;
-
 @end
 
 /*!
@@ -39,6 +37,20 @@
 @property (retain, readonly) NSString * path;
 @property (retain, readonly) NSImage * image;
 
-+ (id<CBFrameLoader>)loader;
+@end
 
+/*!
+ \brief Load URL Image Frames
+ */
+@interface CBURLImageFrameLoader : CBFrameLoader
+- (BOOL)canLoadFramesFromURL:(NSURL*)url;
+- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error;
+@end
+
+/*!
+ \brief Load Data Image Frames
+ */
+@interface CBDataImageFrameLoader : CBFrameLoader
+- (BOOL)canLoadFramesFromData:(NSData*)data withPath:(NSString*)path;
+- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error;
 @end

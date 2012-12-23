@@ -26,8 +26,6 @@ static BOOL canLoadFramesFromURL(NSURL * url)
 }
 
 // URL Loader
-@interface CBURLImageFrameLoader : NSObject<CBFrameLoader>
-@end
 
 @implementation CBURLImageFrameLoader
 
@@ -44,33 +42,11 @@ static BOOL canLoadFramesFromURL(NSURL * url)
 	return nil;
 }
 
-- (BOOL)canLoadFramesFromData:(NSData*)data withPath:(NSString*)path
-{
-	return NO;
-}
-
-- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error
-{
-	return nil;
-}
-
 @end
 
 // Data Loader
-@interface CBDataImageFrameLoader : NSObject<CBFrameLoader>
-@end
 
 @implementation CBDataImageFrameLoader
-
-- (BOOL)canLoadFramesFromURL:(NSURL*)url
-{
-	return NO;
-}
-
-- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error
-{
-	return nil;
-}
 
 - (BOOL)canLoadFramesFromData:(NSData*)data withPath:(NSString*)path
 {
@@ -126,11 +102,6 @@ static BOOL canLoadFramesFromURL(NSURL * url)
 	return [url path];
 }
 
-+ (id<CBFrameLoader>)loader
-{
-	return [[CBURLImageFrameLoader alloc] init];
-}
-
 @end
 
 // Data Frame
@@ -169,10 +140,5 @@ static BOOL canLoadFramesFromURL(NSURL * url)
 }
 
 @synthesize path;
-
-+ (id<CBFrameLoader>)loader
-{
-	return [[CBDataImageFrameLoader alloc] init];
-}
 
 @end

@@ -27,9 +27,4 @@
  */
 @property (retain, readonly) NSImage * image;
 
-/*!
- Return a loader for that frame type
- */
-+ (id<CBFrameLoader>)loader;
-
 @end

@@ -10,9 +10,6 @@
 
 #import <Quartz/Quartz.h>
 
-@interface CBPDFFrameLoader : NSObject<CBFrameLoader>
-@end
-
 @implementation CBPDFFrameLoader
 
 - (BOOL)canLoadFramesFromURL:(NSURL*)url
@@ -122,10 +119,5 @@
 }
 
 @synthesize path;
-
-+ (id<CBFrameLoader>)loader
-{
-	return [[CBPDFFrameLoader alloc] init];
-}
 
 @end
