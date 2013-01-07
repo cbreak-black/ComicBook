@@ -11,6 +11,7 @@
 		703525D416875D9500AB06B1 /* CBComicView.m in Sources */ = {isa = PBXBuildFile; fileRef = 703525D316875D9500AB06B1 /* CBComicView.m */; };
 		703525D716876E7200AB06B1 /* CBPageLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 703525D616876E7200AB06B1 /* CBPageLayer.m */; };
 		703525DA1687A34800AB06B1 /* CBComicWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 703525D91687A34800AB06B1 /* CBComicWindowController.m */; };
+		703525DE168F658600AB06B1 /* CBComicModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 703525DD168F658600AB06B1 /* CBComicModel.m */; };
 		7049E6701691C84500A0BA78 /* CBRangeBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7049E66F1691C84500A0BA78 /* CBRangeBuffer.m */; };
 		7060C021167CAA14008A9E92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C020167CAA14008A9E92 /* Cocoa.framework */; };
 		7060C02B167CAA14008A9E92 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7060C029167CAA14008A9E92 /* InfoPlist.strings */; };
@@ -50,6 +51,8 @@
 		703525D616876E7200AB06B1 /* CBPageLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBPageLayer.m; path = UI/CBPageLayer.m; sourceTree = "<group>"; };
 		703525D81687A34800AB06B1 /* CBComicWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBComicWindowController.h; path = Controller/CBComicWindowController.h; sourceTree = "<group>"; };
 		703525D91687A34800AB06B1 /* CBComicWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBComicWindowController.m; path = Controller/CBComicWindowController.m; sourceTree = "<group>"; };
+		703525DC168F658600AB06B1 /* CBComicModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBComicModel.h; path = Model/CBComicModel.h; sourceTree = "<group>"; };
+		703525DD168F658600AB06B1 /* CBComicModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBComicModel.m; path = Model/CBComicModel.m; sourceTree = "<group>"; };
 		7049E66E1691C84500A0BA78 /* CBRangeBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBRangeBuffer.h; path = Helper/CBRangeBuffer.h; sourceTree = "<group>"; };
 		7049E66F1691C84500A0BA78 /* CBRangeBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBRangeBuffer.m; path = Helper/CBRangeBuffer.m; sourceTree = "<group>"; };
 		7060C01C167CAA14008A9E92 /* ComicBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ComicBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -119,6 +122,15 @@
 			name = UI;
 			sourceTree = "<group>";
 		};
+		703525DB168F64C300AB06B1 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				703525DC168F658600AB06B1 /* CBComicModel.h */,
+				703525DD168F658600AB06B1 /* CBComicModel.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		7049E66C1691C77B00A0BA78 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -174,6 +186,7 @@
 				7060C057167CB325008A9E92 /* ComicBook.entitlements */,
 				7060C032167CAA14008A9E92 /* CBDocument.h */,
 				7060C033167CAA14008A9E92 /* CBDocument.m */,
+				703525DB168F64C300AB06B1 /* Model */,
 				7060C085168612E5008A9E92 /* Frame */,
 				703525D01687563100AB06B1 /* UI */,
 				7060C0A116866963008A9E92 /* Controller */,
@@ -365,6 +378,7 @@
 				703525D416875D9500AB06B1 /* CBComicView.m in Sources */,
 				703525D716876E7200AB06B1 /* CBPageLayer.m in Sources */,
 				703525DA1687A34800AB06B1 /* CBComicWindowController.m in Sources */,
+				703525DE168F658600AB06B1 /* CBComicModel.m in Sources */,
 				7049E6701691C84500A0BA78 /* CBRangeBuffer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

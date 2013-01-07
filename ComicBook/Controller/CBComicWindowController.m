@@ -12,7 +12,7 @@
 
 - (id)init
 {
-	if ([super initWithWindowNibName:@"CBComicWindow"])
+	if (self = [super initWithWindowNibName:@"CBComicWindow"])
 	{
 		[self setShouldCloseDocument:YES];
 	}

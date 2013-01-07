@@ -8,9 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class CBComicModel;
+
 @interface CBDocument : NSDocument
 {
-	NSArray * frames;
+	CBComicModel * comic;
 }
 
 @end

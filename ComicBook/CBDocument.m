@@ -8,9 +8,9 @@
 
 #import "CBDocument.h"
 
-#import "CBFrameFactory.h"
-
 #import "CBComicWindowController.h"
+
+#import "CBComicModel.h"
 
 @implementation CBDocument
 
@@ -37,10 +37,10 @@
 }
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName
-			  error:(NSError *__autoreleasing *)outError
+			  error:(NSError **)outError
 {
-	frames = [[CBFrameFactory factory] framesFromURL:url error:outError];
-	return frames != nil;
+	comic = [CBComicModel comicWithURL:url error:outError];
+	return comic != nil;
 }
 
 -(BOOL)isEntireFileLoaded
