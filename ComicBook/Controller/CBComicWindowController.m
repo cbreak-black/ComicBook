@@ -8,6 +8,8 @@
 
 #import "CBComicWindowController.h"
 
+#import "CBComicView.h"
+
 @implementation CBComicWindowController
 
 - (id)init
@@ -22,6 +24,16 @@
 - (void)windowDidLoad
 {
 	[super windowDidLoad];
+	comicView.model = model;
 }
+
+- (void)setModel:(CBComicModel *)model_
+{
+	model = model_;
+	if (comicView)
+		comicView.model = model;
+}
+
+@synthesize model;
 
 @end

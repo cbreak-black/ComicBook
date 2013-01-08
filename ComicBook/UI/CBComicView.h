@@ -10,12 +10,21 @@
 
 #import <Quartz/Quartz.h>
 
+@class CBRangeBuffer;
+@class CBComicModel;
+
 /*!
  \brief The view hosting the layers that represent the comic
  */
 @interface CBComicView : NSView
 {
 	CALayer * backgroundLayer;
+	CBRangeBuffer * pages;
+	CBComicModel * model;
 }
+
+- (id)initWithFrame:(NSRect)frameRect;
+
+@property (nonatomic,retain) CBComicModel * model;
 
 @end

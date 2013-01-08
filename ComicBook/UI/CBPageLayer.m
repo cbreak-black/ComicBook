@@ -12,20 +12,30 @@
 
 @implementation CBPageLayer
 
-- (id)initWithFrame:(CBFrame*)frame_
+- (id)init
 {
 	if (self = [super init])
 	{
-		frame = frame_;
-		// TODO: Do this asynchronous for better interactivity
-		self.contents = frame.image;
 	}
 	return self;
 }
 
-+ (CBPageLayer*)layerWithFrame:(CBFrame*)frame
+- (id)initWithComicBookFrame:(CBFrame*)frame
 {
-	return [[CBPageLayer alloc] initWithFrame:frame];
+	if (self = [super init])
+	{
+		comicBookFrame = frame;
+		self.contents = comicBookFrame.image;
+	}
+	return self;
 }
+
+- (void)setComicBookFrame:(CBFrame *)comicBookFrame_
+{
+	comicBookFrame = comicBookFrame_;
+	self.contents = comicBookFrame.image;
+}
+
+@synthesize comicBookFrame;
 
 @end

@@ -8,11 +8,20 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class CBComicView;
+@class CBComicModel;
+
 /*!
  \brief A controller for handling CBComicWindows, interfacing between model and view
  */
 @interface CBComicWindowController : NSWindowController
+{
+	IBOutlet CBComicView * comicView;
+	CBComicModel * model;
+}
 
 - (id)init;
+
+@property (nonatomic,retain) CBComicModel * model;
 
 @end

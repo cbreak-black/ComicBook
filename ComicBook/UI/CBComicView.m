@@ -8,14 +8,19 @@
 
 #import "CBComicView.h"
 
+#import "CBRangeBuffer.h"
+#import "CBPageLayer.h"
+#import "CBComicModel.h"
+
 @implementation CBComicView
 
 - (id)initWithFrame:(NSRect)frame
 {
 	if (self = [super initWithFrame:frame])
 	{
-    }
-    return self;
+		pages = [[CBRangeBuffer alloc] init];
+	}
+	return self;
 }
 
 - (void)awakeFromNib
@@ -27,12 +32,37 @@
 {
 	// Background layer
 	backgroundLayer = [[CALayer alloc] init];
-	CGColorRef blackColor = CGColorCreateGenericRGB(0.0, 0.0, 0.0, 1.0);
-	backgroundLayer.backgroundColor = blackColor;
+	CGColorRef bgColor = CGColorCreateGenericRGB(1.0, 1.0, 1.0, 1.0);
+	backgroundLayer.backgroundColor = bgColor;
 	[self setLayer:backgroundLayer];
 	[self setWantsLayer:YES];
+	// Page Layers
+	for (NSUInteger i = 0; i < 32; ++i)
+	{
+		CBPageLayer * pageLayer = [[CBPageLayer alloc]init];
+		[pages addObject:pageLayer];
+		[backgroundLayer addSublayer:pageLayer];
+	}
 	// Cleanup
-	CGColorRelease(blackColor);
+	CGColorRelease(bgColor);
 }
+
+- (void)setModel:(CBComicModel *)model_
+{
+	model = model_;
+	[pages enumerateObjectsUsingBlockAsync:^(id obj, NSInteger idx)
+	{
+		CBPageLayer * pageLayer = obj;
+		if (idx >= 0)
+		{
+			[CATransaction begin];
+			[CATransaction setDisableActions:YES];
+			pageLayer.comicBookFrame = [model frameAtIndex:idx];
+			[CATransaction commit];
+		}
+	}];
+}
+
+@synthesize model;
 
 @end

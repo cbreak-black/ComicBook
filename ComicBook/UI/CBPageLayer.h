@@ -15,10 +15,12 @@
  */
 @interface CBPageLayer : CALayer
 {
-	CBFrame * frame;
+	CBFrame * comicBookFrame;
 }
 
-- (id)initWithFrame:(CBFrame*)frame;
-+ (CBPageLayer*)layerWithFrame:(CBFrame*)frame;
+- (id)init;
+- (id)initWithComicBookFrame:(CBFrame*)frame;
+
+@property (nonatomic,retain) CBFrame * comicBookFrame;
 
 @end

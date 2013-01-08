@@ -9,10 +9,12 @@
 #import <Cocoa/Cocoa.h>
 
 @class CBComicModel;
+@class CBComicWindowController;
 
 @interface CBDocument : NSDocument
 {
 	CBComicModel * comic;
+	CBComicWindowController * comicWindow;
 }
 
 @end

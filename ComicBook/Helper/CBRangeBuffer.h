@@ -21,6 +21,8 @@
 	NSInteger startIndex;
 }
 
+- (id)init;
+
 - (void)addObject:(id)anObject;
 - (id)objectAtIndex:(NSInteger)index;
 

@@ -12,6 +12,15 @@
 
 @implementation CBRangeBuffer
 
+- (id)init
+{
+	if (self = [super init])
+	{
+		buffer = [[NSMutableArray alloc] init];
+	}
+	return self;
+}
+
 - (void)addObject:(id)anObject
 {
 	@synchronized (self)

@@ -25,15 +25,9 @@
 
 - (void)makeWindowControllers
 {
-	CBComicWindowController * cbc = [[CBComicWindowController alloc] init];
-	[self addWindowController:cbc];
-}
-
-- (void)windowControllerDidLoadNib:(NSWindowController *)aController
-{
-	[super windowControllerDidLoadNib:aController];
-	// Add any code here that needs to be executed once the windowController has
-	// loaded the document's window.
+	comicWindow = [[CBComicWindowController alloc] init];
+	comicWindow.model = comic;
+	[self addWindowController:comicWindow];
 }
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName
