@@ -16,7 +16,7 @@
 #include "CBComicLayoutManager.h"
 
 static const NSInteger kCBPageCacheCountFwd = 32;
-static const NSInteger kCBPageCacheCountBwd = 0;
+static const NSInteger kCBPageCacheCountBwd = 8;
 
 @implementation CBComicView
 

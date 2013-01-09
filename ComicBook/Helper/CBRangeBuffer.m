@@ -21,6 +21,20 @@
 	return self;
 }
 
+- (NSUInteger)bufferIndexFromRangeIndex:(NSInteger)rangeIndex
+{
+	return (rangeIndex - startIndex + bufferBaseIndex) % [buffer count];
+}
+
+- (NSInteger)rangeIndexFromBufferIndex:(NSUInteger)bufferIndex
+{
+	NSInteger bufferCount = [buffer count];
+	NSInteger rangeIndex = ((NSInteger)bufferIndex - bufferBaseIndex) % bufferCount;
+	if (rangeIndex < 0) rangeIndex += bufferCount;
+	rangeIndex += startIndex;
+	return rangeIndex;
+}
+
 - (void)addObject:(id)anObject
 {
 	@synchronized (self)
@@ -43,8 +57,7 @@
 	{
 		if (index < startIndex || [self endIndex] <= index)
 			return nil;
-		NSInteger bufferIndex = (index - startIndex + bufferBaseIndex) % [buffer count];
-		return [buffer objectAtIndex:bufferIndex];
+		return [buffer objectAtIndex:[self bufferIndexFromRangeIndex:index]];
 	}
 }
 
@@ -151,11 +164,12 @@
 {
 	@synchronized (self)
 	{
-		NSInteger idx = startIndex;
+		NSUInteger bufferIdx = 0;
 		for (id obj in buffer)
 		{
-			block(obj, idx);
-			++idx;
+			NSInteger rangeIdx = [self rangeIndexFromBufferIndex:bufferIdx];
+			++bufferIdx;
+			block(obj, rangeIdx);
 		}
 	}
 }
@@ -165,14 +179,15 @@
 	@synchronized (self)
 	{
 		dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-		NSInteger idx = startIndex;
+		NSUInteger bufferIdx = 0;
 		for (id obj in buffer)
 		{
+			NSInteger rangeIdx = [self rangeIndexFromBufferIndex:bufferIdx];
+			++bufferIdx;
 			dispatch_async(queue, ^()
 			{
-				block(obj, idx);
+				block(obj, rangeIdx);
 			});
-			++idx;
 		}
 	}
 }
