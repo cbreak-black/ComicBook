@@ -31,6 +31,12 @@
 }
 
 @synthesize fileUrl;
+
+- (NSUInteger)frameCount
+{
+	return [frames count];
+}
+
 @synthesize currentFrame;
 
 - (CBFrame*)frameAtIndex:(NSUInteger)idx

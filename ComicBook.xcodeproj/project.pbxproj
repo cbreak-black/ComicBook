@@ -13,6 +13,8 @@
 		703525DA1687A34800AB06B1 /* CBComicWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 703525D91687A34800AB06B1 /* CBComicWindowController.m */; };
 		703525DE168F658600AB06B1 /* CBComicModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 703525DD168F658600AB06B1 /* CBComicModel.m */; };
 		7049267C169B0460000C073E /* CBComicWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7049267A169B0460000C073E /* CBComicWindow.xib */; };
+		7049267F169CE5D7000C073E /* CBContentLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7049267E169CE5D7000C073E /* CBContentLayoutManager.m */; };
+		70492682169D0ABE000C073E /* CBComicLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 70492681169D0ABE000C073E /* CBComicLayoutManager.m */; };
 		7049E6701691C84500A0BA78 /* CBRangeBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7049E66F1691C84500A0BA78 /* CBRangeBuffer.m */; };
 		7060C021167CAA14008A9E92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C020167CAA14008A9E92 /* Cocoa.framework */; };
 		7060C02B167CAA14008A9E92 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7060C029167CAA14008A9E92 /* InfoPlist.strings */; };
@@ -54,6 +56,10 @@
 		703525DC168F658600AB06B1 /* CBComicModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBComicModel.h; path = Model/CBComicModel.h; sourceTree = "<group>"; };
 		703525DD168F658600AB06B1 /* CBComicModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBComicModel.m; path = Model/CBComicModel.m; sourceTree = "<group>"; };
 		7049267B169B0460000C073E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CBComicWindow.xib; sourceTree = "<group>"; };
+		7049267D169CE5D7000C073E /* CBContentLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBContentLayoutManager.h; path = UI/CBContentLayoutManager.h; sourceTree = "<group>"; };
+		7049267E169CE5D7000C073E /* CBContentLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBContentLayoutManager.m; path = UI/CBContentLayoutManager.m; sourceTree = "<group>"; };
+		70492680169D0ABD000C073E /* CBComicLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBComicLayoutManager.h; path = UI/CBComicLayoutManager.h; sourceTree = "<group>"; };
+		70492681169D0ABE000C073E /* CBComicLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBComicLayoutManager.m; path = UI/CBComicLayoutManager.m; sourceTree = "<group>"; };
 		7049E66E1691C84500A0BA78 /* CBRangeBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBRangeBuffer.h; path = Helper/CBRangeBuffer.h; sourceTree = "<group>"; };
 		7049E66F1691C84500A0BA78 /* CBRangeBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBRangeBuffer.m; path = Helper/CBRangeBuffer.m; sourceTree = "<group>"; };
 		7060C01C167CAA14008A9E92 /* ComicBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ComicBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -118,6 +124,10 @@
 				703525D316875D9500AB06B1 /* CBComicView.m */,
 				703525D516876E7200AB06B1 /* CBPageLayer.h */,
 				703525D616876E7200AB06B1 /* CBPageLayer.m */,
+				7049267D169CE5D7000C073E /* CBContentLayoutManager.h */,
+				7049267E169CE5D7000C073E /* CBContentLayoutManager.m */,
+				70492680169D0ABD000C073E /* CBComicLayoutManager.h */,
+				70492681169D0ABE000C073E /* CBComicLayoutManager.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -380,6 +390,8 @@
 				703525DA1687A34800AB06B1 /* CBComicWindowController.m in Sources */,
 				703525DE168F658600AB06B1 /* CBComicModel.m in Sources */,
 				7049E6701691C84500A0BA78 /* CBRangeBuffer.m in Sources */,
+				7049267F169CE5D7000C073E /* CBContentLayoutManager.m in Sources */,
+				70492682169D0ABE000C073E /* CBComicLayoutManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

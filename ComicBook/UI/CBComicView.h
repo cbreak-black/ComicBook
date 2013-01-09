@@ -8,10 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-#import <Quartz/Quartz.h>
-
 @class CBRangeBuffer;
 @class CBComicModel;
+
+@class CBContentLayoutManager;
+@class CBComicLayoutManager;
 
 /*!
  \brief The view hosting the layers that represent the comic
@@ -19,8 +20,12 @@
 @interface CBComicView : NSView
 {
 	CALayer * backgroundLayer;
+	CALayer * contentLayer;
 	CBRangeBuffer * pages;
 	CBComicModel * model;
+	// Layout
+	CBContentLayoutManager * contentLayoutManager;
+	CBComicLayoutManager * comicLayoutManager;
 }
 
 - (id)initWithFrame:(NSRect)frameRect;

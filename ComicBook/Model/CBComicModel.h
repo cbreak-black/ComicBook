@@ -21,7 +21,8 @@
 
 + (CBComicModel*)comicWithURL:(NSURL*)url error:(NSError **)error;
 
-@property (readonly) NSURL * fileUrl;
+@property (nonatomic,readonly) NSURL * fileUrl;
+@property (nonatomic,readonly) NSUInteger frameCount;
 @property (atomic,assign) NSUInteger currentFrame;
 
 - (CBFrame*)frameAtIndex:(NSUInteger)idx;

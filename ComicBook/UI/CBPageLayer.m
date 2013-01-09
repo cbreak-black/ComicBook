@@ -16,26 +16,78 @@
 {
 	if (self = [super init])
 	{
+		aspect = CGFLOAT_MAX;
+		alignment = kCBPageUnaligned;
+		isLaidOut = NO;
 	}
 	return self;
 }
 
 - (id)initWithComicBookFrame:(CBFrame*)frame
 {
-	if (self = [super init])
+	if (self = [self init])
 	{
-		comicBookFrame = frame;
-		self.contents = comicBookFrame.image;
+		[self setComicBookFrame:frame];
 	}
 	return self;
 }
 
 - (void)setComicBookFrame:(CBFrame *)comicBookFrame_
 {
-	comicBookFrame = comicBookFrame_;
-	self.contents = comicBookFrame.image;
+	@synchronized (self)
+	{
+		comicBookFrame = comicBookFrame_;
+		alignment = kCBPageUnaligned;
+		isLaidOut = NO;
+		NSImage * image = comicBookFrame.image;
+		NSSize imageSize = [image size];
+		if (imageSize.width > 0 && imageSize.height > 0)
+			aspect = (CGFloat)imageSize.width/(CGFloat)imageSize.height;
+		else
+			aspect = CGFLOAT_MAX;
+		self.contents = image;
+		self.bounds = CGRectMake(0, 0, 0, 0);
+	}
 }
 
 @synthesize comicBookFrame;
+
+@synthesize aspect;
+
+- (void)setPosition:(CGPoint)position withAlignment:(CBPageAlignment)alignment_
+{
+	@synchronized (self)
+	{
+		switch (alignment_)
+		{
+			case kCBPageLeft:
+				self.anchorPoint = CGPointMake(1.0, 1.0);
+				self.bounds = CGRectMake(0, 0, 1.0, 1.0/aspect);
+				break;
+			case kCBPageRight:
+				self.anchorPoint = CGPointMake(0.0, 1.0);
+				self.bounds = CGRectMake(0, 0, 1.0, 1.0/aspect);
+				break;
+			case kCBPageDouble:
+				self.anchorPoint = CGPointMake(0.5, 1.0);
+				self.bounds = CGRectMake(0, 0, 2.0, 2.0/aspect);
+				break;
+			default:
+				return;
+		}
+		alignment = alignment_;
+		[self setPosition:position];
+		isLaidOut = YES;
+	}
+}
+
+@synthesize alignment;
+
+- (BOOL)isDoublePage
+{
+	return aspect > kCBPageDoubleThreshold;
+}
+
+@synthesize isLaidOut;
 
 @end

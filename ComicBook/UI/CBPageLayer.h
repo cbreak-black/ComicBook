@@ -10,17 +10,35 @@
 
 @class CBFrame;
 
+typedef enum {
+	kCBPageUnaligned = 0x00,
+	kCBPageLeft      = 0x01,
+	kCBPageRight     = 0x10,
+	kCBPageDouble    = kCBPageLeft | kCBPageRight
+} CBPageAlignment;
+
+static const CGFloat kCBPageDoubleThreshold = 1.0;
+
 /*!
  \brief A layer representing an individual single page (or a double page) inside a comic view
  */
 @interface CBPageLayer : CALayer
 {
 	CBFrame * comicBookFrame;
+	CGFloat aspect;
+	CBPageAlignment alignment;
+	BOOL isLaidOut;
 }
 
 - (id)init;
 - (id)initWithComicBookFrame:(CBFrame*)frame;
 
+- (void)setPosition:(CGPoint)position withAlignment:(CBPageAlignment)alignment;
+
 @property (nonatomic,retain) CBFrame * comicBookFrame;
+@property (atomic,readonly) CGFloat aspect;
+@property (atomic,readonly) CBPageAlignment alignment;
+@property (atomic,readonly) BOOL isDoublePage; // True if aspect > kCBPageDoubleThreshold
+@property (atomic,readonly) BOOL isLaidOut;
 
 @end
