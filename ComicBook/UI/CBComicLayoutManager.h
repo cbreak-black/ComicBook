@@ -15,13 +15,13 @@
 typedef enum {
 	kCBComicLayoutLeftToRight,
 	kCBComicLayoutRightToLeft,
-	kCBComicLayoutDouble
+	kCBComicLayoutSingle
 } CBComicLayoutMode;
 
 @interface CBComicLayoutManager : NSObject
 {
 	CBRangeBuffer * pages;
-	NSInteger anchorPageIdx;
+	NSInteger anchorPageIndex;
 	// Layout Settings
 	CBComicLayoutMode layoutMode;
 }

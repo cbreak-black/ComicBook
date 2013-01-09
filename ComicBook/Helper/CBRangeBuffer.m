@@ -41,6 +41,8 @@
 {
 	@synchronized (self)
 	{
+		if (index < startIndex || [self endIndex] <= index)
+			return nil;
 		NSInteger bufferIndex = (index - startIndex + bufferBaseIndex) % [buffer count];
 		return [buffer objectAtIndex:bufferIndex];
 	}

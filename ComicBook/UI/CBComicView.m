@@ -15,6 +15,9 @@
 #include "CBContentLayoutManager.h"
 #include "CBComicLayoutManager.h"
 
+static const NSInteger kCBPageCacheCountFwd = 32;
+static const NSInteger kCBPageCacheCountBwd = 0;
+
 @implementation CBComicView
 
 - (id)initWithFrame:(NSRect)frame
@@ -49,16 +52,17 @@
 	[self setLayer:backgroundLayer];
 	[self setWantsLayer:YES];
 	// Page Layers
-	contentLayer = [[CAScrollLayer alloc] init];
+	contentLayer = [[CALayer alloc] init];
 	contentLayer.anchorPoint = CGPointMake(0.5, 1.0);
 	contentLayer.layoutManager = comicLayoutManager;
 	[backgroundLayer addSublayer:contentLayer];
-	for (NSUInteger i = 0; i < 32; ++i)
+	for (NSUInteger i = 0; i < kCBPageCacheCountFwd + kCBPageCacheCountBwd; ++i)
 	{
 		CBPageLayer * pageLayer = [[CBPageLayer alloc] init];
 		[pages addObject:pageLayer];
 		[contentLayer addSublayer:pageLayer];
 	}
+	[pages setStartIndex:-kCBPageCacheCountBwd];
 	// Cleanup
 	CGColorRelease(bgColor);
 }
@@ -73,17 +77,13 @@
 	if (model != nil)
 	{
 		[model addObserver:self forKeyPath:@"currentFrame" options:0 context:0];
-		NSInteger endIdx = model.frameCount;
 		[pages enumerateObjectsUsingBlockAsync:^(id obj, NSInteger idx)
 		{
 			CBPageLayer * pageLayer = obj;
-			if (idx >= 0 && idx < endIdx)
-			{
-				[CATransaction begin];
-				[CATransaction setDisableActions:YES];
-				pageLayer.comicBookFrame = [model frameAtIndex:idx];
-				[CATransaction commit];
-			}
+			[CATransaction begin];
+			[CATransaction setDisableActions:YES];
+			pageLayer.comicBookFrame = [model frameAtIndex:idx];
+			[CATransaction commit];
 		}];
 	}
 }

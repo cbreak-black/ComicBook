@@ -37,7 +37,7 @@ static const CGFloat kCBPageDoubleThreshold = 1.0;
 
 @property (nonatomic,retain) CBFrame * comicBookFrame;
 @property (atomic,readonly) CGFloat aspect;
-@property (atomic,readonly) CBPageAlignment alignment;
+@property (atomic,assign) CBPageAlignment alignment;
 @property (atomic,readonly) BOOL isDoublePage; // True if aspect > kCBPageDoubleThreshold
 @property (atomic,readonly) BOOL isLaidOut;
 
