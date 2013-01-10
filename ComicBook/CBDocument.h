@@ -17,4 +17,6 @@
 	CBComicWindowController * comicWindow;
 }
 
++ (BOOL)canConcurrentlyReadDocumentsOfType:(NSString *)typeName;
+
 @end

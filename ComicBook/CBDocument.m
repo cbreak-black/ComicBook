@@ -42,4 +42,9 @@
 	return NO;
 }
 
++ (BOOL)canConcurrentlyReadDocumentsOfType:(NSString *)typeName
+{
+	return YES;
+}
+
 @end
