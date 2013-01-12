@@ -89,9 +89,12 @@ static CBFrameFactory * CBFrameFactory_staticFactory = nil;
 
 + (CBFrameFactory*)factory
 {
-	if (!CBFrameFactory_staticFactory)
-		CBFrameFactory_staticFactory = [[CBFrameFactory alloc] init];
 	return CBFrameFactory_staticFactory;
+}
+
++ (void)initialize
+{
+	CBFrameFactory_staticFactory = [[CBFrameFactory alloc] init];
 }
 
 - (id)init

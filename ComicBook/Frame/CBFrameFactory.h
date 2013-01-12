@@ -26,6 +26,8 @@
  */
 + (CBFrameFactory*)factory;
 
++ (void)initialize;
+
 - (id)init;
 
 - (NSArray*)framesFromURL:(NSURL*)url error:(NSError **)error;
