@@ -14,6 +14,8 @@
 @class CBContentLayoutManager;
 @class CBComicLayoutManager;
 
+@class CIFilter;
+
 /*!
  \brief The view hosting the layers that represent the comic
  */
@@ -26,6 +28,8 @@
 	// Layout
 	CBContentLayoutManager * contentLayoutManager;
 	CBComicLayoutManager * comicLayoutManager;
+	// Filters
+	CIFilter * gammaFilter;
 	// View Transformation State
 	CGFloat zoom;
 	CGPoint position;
@@ -34,6 +38,8 @@
 - (id)initWithFrame:(NSRect)frameRect;
 
 @property (nonatomic,retain) CBComicModel * model;
+
+@property (nonatomic,assign) CGFloat gammaPower;
 
 - (void)zoomBy:(CGFloat)factor;
 - (void)moveBy:(CGPoint)offset;

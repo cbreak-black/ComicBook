@@ -15,6 +15,8 @@
 #include "CBContentLayoutManager.h"
 #include "CBComicLayoutManager.h"
 
+#import <QuartzCore/CoreImage.h>
+
 static const NSInteger kCBPageCacheCountFwd = 32;
 static const NSInteger kCBPageCacheCountBwd = 8;
 static const CGFloat kCBCoarseLineFactor = 32.0;
@@ -28,8 +30,12 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 		pages = [[CBRangeBuffer alloc] init];
 		contentLayoutManager = [[CBContentLayoutManager alloc] init];
 		comicLayoutManager = [[CBComicLayoutManager alloc] initWithPages:pages];
+		// Default View State
 		zoom = 1.0;
 		position = CGPointMake(0, 0);
+		// Configuration
+		[self configureLayers];
+		[self configureFilters];
 	}
 	return self;
 }
@@ -41,7 +47,6 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 
 - (void)awakeFromNib
 {
-	[self configureLayers];
 }
 
 - (void)configureLayers
@@ -68,6 +73,25 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 	[pages setStartIndex:-kCBPageCacheCountBwd];
 	// Cleanup
 	CGColorRelease(bgColor);
+}
+
+- (void)configureFilters
+{
+	// Gamma Correction
+	gammaFilter = [CIFilter filterWithName:@"CIGammaAdjust"];
+	[self setGammaPower:1.0]; // 0.1 - 3.0
+	// Registering
+	backgroundLayer.filters = @[gammaFilter];
+}
+
+- (CGFloat)gammaPower
+{
+	return [[gammaFilter valueForKey:@"inputPower"] doubleValue];
+}
+
+- (void)setGammaPower:(CGFloat)gammaPower
+{
+	[gammaFilter setValue:[NSNumber numberWithDouble:gammaPower] forKey:@"inputPower"];
 }
 
 - (void)setModel:(CBComicModel *)model_
