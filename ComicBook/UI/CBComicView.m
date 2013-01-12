@@ -114,8 +114,8 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 
 - (void)moveBy:(CGPoint)offset
 {
-	position.x += offset.x;
-	position.y += offset.y;
+	position.x += offset.x/contentLayoutManager.contentScale;
+	position.y += offset.y/contentLayoutManager.contentScale;
 	[self setNeedsViewTransformUpdate];
 }
 
@@ -157,7 +157,7 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 	CATransform3D scale = CATransform3DMakeScale(zoom, zoom, 1);
 	CATransform3D translate = CATransform3DMakeTranslation(position.x, position.y, 0);
 	CATransform3D viewTransform = CATransform3DConcat(translate, scale);
-	contentLayer.transform = viewTransform;
+	contentLayer.sublayerTransform = viewTransform;
 	[CATransaction commit];
 }
 

@@ -14,6 +14,7 @@
 {
 	if (self = [super init])
 	{
+		contentScale = 1.0;
 	}
 	return self;
 }
@@ -23,20 +24,22 @@
 	[CATransaction begin];
 	[CATransaction setDisableActions:YES];
 	CGRect frame = layer.frame;
+	// Scale frame width up from 2 to frame.size.width
+	self.contentScale = frame.size.width/2.0;
+	CATransform3D frameTransform = CATransform3DMakeScale(contentScale, contentScale, 1);
 	CGPoint anchor = CGPointMake(frame.origin.x + frame.size.width/2.0,
 								 frame.origin.y + frame.size.height);
-	CGRect bounds = CGRectMake(-frame.size.width/2.0, -frame.size.height,
-							   frame.size.width, frame.size.height);
-	// Change width to be 2
-	CGFloat frameScale = frame.size.width/2.0;
-	CATransform3D frameTransform = CATransform3DMakeScale(frameScale, frameScale, 1);
+	CGRect bounds = CGRectMake(-1.0, -frame.size.height/contentScale,
+							   2.0, frame.size.height/contentScale);
 	for (CALayer * sublayer in layer.sublayers)
 	{
 		sublayer.position = anchor;
 		sublayer.bounds = bounds;
-		sublayer.sublayerTransform = frameTransform;
+		sublayer.transform = frameTransform;
 	}
 	[CATransaction commit];
 }
+
+@synthesize contentScale;
 
 @end

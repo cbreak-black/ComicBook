@@ -12,10 +12,13 @@
 
 @interface CBContentLayoutManager : NSObject
 {
+	CGFloat contentScale;
 }
 
 - (id)init;
 
 - (void)layoutSublayersOfLayer:(CALayer *)layer;
+
+@property (atomic,assign) CGFloat contentScale;
 
 @end
