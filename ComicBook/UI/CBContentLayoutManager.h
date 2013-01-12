@@ -12,15 +12,10 @@
 
 @interface CBContentLayoutManager : NSObject
 {
-	CGFloat zoom;
-	CGPoint position;
 }
 
 - (id)init;
 
 - (void)layoutSublayersOfLayer:(CALayer *)layer;
-
-@property (atomic,assign) CGFloat zoom;
-@property (atomic,assign) CGPoint position;
 
 @end

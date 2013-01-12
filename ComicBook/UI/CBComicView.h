@@ -26,10 +26,35 @@
 	// Layout
 	CBContentLayoutManager * contentLayoutManager;
 	CBComicLayoutManager * comicLayoutManager;
+	// View Transformation State
+	CGFloat zoom;
+	CGPoint position;
 }
 
 - (id)initWithFrame:(NSRect)frameRect;
 
 @property (nonatomic,retain) CBComicModel * model;
+
+- (void)zoomBy:(CGFloat)factor;
+- (void)moveBy:(CGPoint)offset;
+
+@property (nonatomic,assign) CGFloat zoom;
+@property (nonatomic,assign) CGPoint position;
+
+- (void)setNeedsViewTransformUpdate;
+- (void)clampViewTransformState;
+- (void)updateViewTransform;
+
+- (BOOL)acceptsFirstResponder;
+- (BOOL)resignFirstResponder;
+
+- (void)mouseDown:(NSEvent*)event;
+- (void)mouseDragged:(NSEvent*)event;
+- (void)mouseMoved:(NSEvent*)event;
+- (void)mouseUp:(NSEvent*)event;
+- (void)scrollWheel:(NSEvent*)event;
+- (void)keyDown:(NSEvent*)event;
+- (void)keyUp:(NSEvent*)event;
+- (void)swipeWithEvent:(NSEvent*)event;
 
 @end

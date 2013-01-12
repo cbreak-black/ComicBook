@@ -14,8 +14,6 @@
 {
 	if (self = [super init])
 	{
-		zoom = 1.0;
-		position = CGPointMake(0, 0);
 	}
 	return self;
 }
@@ -32,20 +30,13 @@
 	// Change width to be 2
 	CGFloat frameScale = frame.size.width/2.0;
 	CATransform3D frameTransform = CATransform3DMakeScale(frameScale, frameScale, 1);
-	CATransform3D translate = CATransform3DMakeTranslation(position.x, position.y, 0);
-	CATransform3D scale = CATransform3DMakeScale(zoom, zoom, 1);
-	CATransform3D viewTransform = CATransform3DConcat(translate, scale);
 	for (CALayer * sublayer in layer.sublayers)
 	{
 		sublayer.position = anchor;
 		sublayer.bounds = bounds;
 		sublayer.sublayerTransform = frameTransform;
 	}
-	layer.sublayerTransform = viewTransform;
 	[CATransaction commit];
 }
-
-@synthesize zoom;
-@synthesize position;
 
 @end

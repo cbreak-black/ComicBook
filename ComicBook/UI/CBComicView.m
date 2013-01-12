@@ -17,6 +17,7 @@
 
 static const NSInteger kCBPageCacheCountFwd = 32;
 static const NSInteger kCBPageCacheCountBwd = 8;
+static const CGFloat kCBCoarseLineFactor = 32.0;
 
 @implementation CBComicView
 
@@ -27,6 +28,8 @@ static const NSInteger kCBPageCacheCountBwd = 8;
 		pages = [[CBRangeBuffer alloc] init];
 		contentLayoutManager = [[CBContentLayoutManager alloc] init];
 		comicLayoutManager = [[CBComicLayoutManager alloc] initWithPages:pages];
+		zoom = 1.0;
+		position = CGPointMake(0, 0);
 	}
 	return self;
 }
@@ -101,6 +104,124 @@ static const NSInteger kCBPageCacheCountBwd = 8;
 			// TODO: Update layout manager anchor page
 		}
 	}
+}
+
+- (void)zoomBy:(CGFloat)factor
+{
+	zoom *= factor;
+	[self setNeedsViewTransformUpdate];
+}
+
+- (void)moveBy:(CGPoint)offset
+{
+	position.x += offset.x;
+	position.y += offset.y;
+	[self setNeedsViewTransformUpdate];
+}
+
+- (void)setZoom:(CGFloat)zoom_
+{
+	zoom = zoom_;
+	[self setNeedsViewTransformUpdate];
+}
+
+- (void)setPosition:(CGPoint)position_
+{
+	position = position_;
+	[self setNeedsViewTransformUpdate];
+}
+
+@synthesize zoom;
+@synthesize position;
+
+- (void)setNeedsViewTransformUpdate
+{
+	[self clampViewTransformState];
+	[self updateViewTransform];
+}
+
+- (void)clampViewTransformState
+{
+	if      (zoom < 0.20) zoom = 0.20;
+	else if (zoom > 5.00) zoom = 5.00;
+	CGRect bounds = contentLayer.bounds;
+	CGFloat hLimit = fabs(bounds.size.width/2*(1.0-1.0/zoom));
+	if      (position.x < -hLimit) position.x = -hLimit;
+	else if (position.x > +hLimit) position.x = +hLimit;
+}
+
+- (void)updateViewTransform
+{
+	[CATransaction begin];
+	[CATransaction setDisableActions:YES];
+	CATransform3D scale = CATransform3DMakeScale(zoom, zoom, 1);
+	CATransform3D translate = CATransform3DMakeTranslation(position.x, position.y, 0);
+	CATransform3D viewTransform = CATransform3DConcat(translate, scale);
+	contentLayer.transform = viewTransform;
+	[CATransaction commit];
+}
+
+- (BOOL)acceptsFirstResponder
+{
+	return YES;
+}
+
+- (BOOL)resignFirstResponder
+{
+	return NO;
+}
+
+- (void)mouseDown:(NSEvent*)event
+{
+}
+
+- (void)mouseDragged:(NSEvent*)event
+{
+	[self moveBy:CGPointMake([event deltaX]/zoom, -[event deltaY]/zoom)];
+}
+
+- (void)mouseMoved:(NSEvent*)event
+{
+}
+
+- (void)mouseUp:(NSEvent*)event
+{
+}
+
+- (void)scrollWheel:(NSEvent*)event
+{
+	if ([event modifierFlags] & NSShiftKeyMask)
+	{
+		CGFloat offset = [event scrollingDeltaX]-[event scrollingDeltaY];
+		if (![event hasPreciseScrollingDeltas])
+			offset *= kCBCoarseLineFactor;
+		CGFloat factor = pow(0.999, offset);
+		[self zoomBy:factor];
+	}
+	else
+	{
+		if ([event hasPreciseScrollingDeltas])
+			[self moveBy:CGPointMake(+[event scrollingDeltaX],
+									 -[event scrollingDeltaY])];
+		else
+			[self moveBy:CGPointMake(+[event scrollingDeltaX]*kCBCoarseLineFactor,
+									 -[event scrollingDeltaY]*kCBCoarseLineFactor)];
+	}
+}
+
+- (void)keyDown:(NSEvent*)event
+{
+	NSLog(@"%@", event);
+}
+
+- (void)keyUp:(NSEvent*)event
+{
+	NSLog(@"%@", event);
+}
+
+- (void)swipeWithEvent:(NSEvent*)event
+{
+	NSLog(@"%@", event);
 }
 
 @end

@@ -24,6 +24,7 @@
 - (void)windowDidLoad
 {
 	[super windowDidLoad];
+	[[self window] setInitialFirstResponder:comicView];
 	comicView.model = model;
 }
 
