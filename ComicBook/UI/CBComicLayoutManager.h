@@ -24,12 +24,18 @@ typedef enum {
 	NSInteger anchorPageIndex;
 	// Layout Settings
 	CBComicLayoutMode layoutMode;
+	// Meta Infos
+	CGFloat verticalTop;
+	CGFloat verticalBottom;
 }
 
 - (id)initWithPages:(CBRangeBuffer*)pageBuffer;
 
 @property (nonatomic,assign) NSInteger anchorPageIndex;
 @property (nonatomic,assign) CBComicLayoutMode layoutMode;
+
+@property (nonatomic,readonly) CGFloat verticalTop;
+@property (nonatomic,readonly) CGFloat verticalBottom;
 
 // Layout Manager
 - (void)layoutSublayersOfLayer:(CALayer *)layer;

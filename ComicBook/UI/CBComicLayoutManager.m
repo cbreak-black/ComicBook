@@ -124,6 +124,7 @@
 			pageRowHeight = 0.0;
 		}
 	}
+	verticalBottom = pageRowBase;
 	// Backward (this is a pain due to uneven line heights and single between double pages)
 	pageRowBase = layoutAnchorRow;
 	for (NSInteger i = layoutAnchorIdx-1; i >= pageIdxStart;)
@@ -168,6 +169,7 @@
 			}
 		}
 	}
+	verticalTop = pageRowBase;
 }
 
 - (void)layoutSingle
@@ -194,7 +196,9 @@
 		[pageLayer setPosition:CGPointMake(0, pageRowBase) withAlignment:kCBPageDouble];
 		pageRowBase -= pageLayer.bounds.size.height;
 	}
+	verticalBottom = pageRowBase;
 	// Backward
+	pageRowBase = layoutAnchorRow;
 	for (NSInteger i = layoutAnchorIdx-1; i >= pageIdxStart; --i)
 	{
 		CBPageLayer * pageLayer = [pages objectAtIndex:i];
@@ -202,6 +206,10 @@
 		pageRowBase += pageLayer.bounds.size.height;
 		[pageLayer setPosition:CGPointMake(0, pageRowBase)];
 	}
+	verticalTop = pageRowBase;
 }
+
+@synthesize verticalTop;
+@synthesize verticalBottom;
 
 @end

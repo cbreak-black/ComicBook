@@ -170,8 +170,14 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 	else if (zoom > 5.00) zoom = 5.00;
 	CGRect bounds = contentLayer.bounds;
 	CGFloat hLimit = fabs(bounds.size.width/2*(1.0-1.0/zoom));
+	// position y is flipped
+	CGFloat vLimitTop = -comicLayoutManager.verticalTop;
+	CGFloat vLimitBottom = -comicLayoutManager.verticalBottom-bounds.size.height/zoom;
+	if (vLimitBottom < vLimitTop) vLimitBottom = vLimitTop;
 	if      (position.x < -hLimit) position.x = -hLimit;
 	else if (position.x > +hLimit) position.x = +hLimit;
+	if      (position.y < vLimitTop) position.y = vLimitTop;
+	else if (position.y > vLimitBottom) position.y = vLimitBottom;
 }
 
 - (void)updateViewTransform
