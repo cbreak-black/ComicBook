@@ -104,7 +104,7 @@
 	@synchronized (self)
 	{
 		startIndex += offset;
-		NSUInteger bufferCount = [buffer count];
+		NSInteger bufferCount = [buffer count];
 		bufferBaseIndex = (bufferBaseIndex + offset) % bufferCount;
 		if (bufferBaseIndex < 0)
 			bufferBaseIndex += bufferCount;
@@ -112,16 +112,19 @@
 		{
 			if (offset <= -bufferCount || offset >= bufferCount)
 			{
+				// Everything changed
 				outRange[0] = startIndex;
 				outRange[1] = startIndex + bufferCount;
 			}
 			else if (offset <= 0)
 			{
+				// Shifting down, only start changed
 				outRange[0] = startIndex;
 				outRange[1] = startIndex - offset;
 			}
 			else
 			{
+				// Shifting up, only end changed
 				outRange[0] = startIndex + bufferCount - offset;
 				outRange[1] = startIndex + bufferCount;
 			}
@@ -158,6 +161,16 @@
 			});
 		}
 	}
+}
+
+- (void)shiftTo:(NSInteger)newStartIdx usingBlock:(void (^)(id obj, NSInteger idx))block
+{
+	[self shiftBy:(newStartIdx-startIndex) usingBlock:block];
+}
+
+- (void)shiftTo:(NSInteger)newStartIdx usingBlockAsync:(void (^)(id obj, NSInteger idx))block
+{
+	[self shiftBy:(newStartIdx-startIndex) usingBlockAsync:block];
 }
 
 - (void)enumerateObjectsUsingBlock:(void (^)(id obj, NSInteger idx))block

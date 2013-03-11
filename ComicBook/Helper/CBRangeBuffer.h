@@ -17,8 +17,8 @@
 @interface CBRangeBuffer : NSObject
 {
 	NSMutableArray * buffer;
-	NSInteger bufferBaseIndex;
-	NSInteger startIndex;
+	NSInteger bufferBaseIndex; ///< First element in the buffer is at this buffer index
+	NSInteger startIndex;      ///< First element in the buffer has this range index
 }
 
 - (id)init;
@@ -35,6 +35,9 @@
 
 - (void)shiftBy:(NSInteger)offset usingBlock:(void (^)(id obj, NSInteger idx))block;
 - (void)shiftBy:(NSInteger)offset usingBlockAsync:(void (^)(id obj, NSInteger idx))block;
+
+- (void)shiftTo:(NSInteger)newStartIdx usingBlock:(void (^)(id obj, NSInteger idx))block;
+- (void)shiftTo:(NSInteger)newStartIdx usingBlockAsync:(void (^)(id obj, NSInteger idx))block;
 
 - (void)enumerateObjectsUsingBlock:(void (^)(id obj, NSInteger idx))block;
 - (void)enumerateObjectsUsingBlockAsync:(void (^)(id obj, NSInteger idx))block;
