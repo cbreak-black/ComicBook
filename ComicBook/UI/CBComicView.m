@@ -42,10 +42,15 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 		updatePagesBlock = ^(id obj, NSInteger idx)
 		{
 			CBPageLayer * pageLayer = obj;
-			[CATransaction begin];
-			[CATransaction setDisableActions:YES];
-			pageLayer.comicBookFrame = [[weakSelf model] frameAtIndex:idx];
-			[CATransaction commit];
+			// Load frame in current queue, assign in main thread
+			CBFrame * frame = [[weakSelf model] frameAtIndex:idx];
+			dispatch_async(dispatch_get_main_queue(), ^()
+			{
+				[CATransaction begin];
+				[CATransaction setDisableActions:YES];
+				pageLayer.comicBookFrame = frame;
+				[CATransaction commit];
+			});
 		};
 	}
 	return self;
@@ -115,11 +120,13 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 	if (model != nil)
 	{
 		[model addObserver:self forKeyPath:@"currentFrame" options:0 context:0];
-		[CATransaction begin];
-		[CATransaction setDisableActions:YES];
-		[pages enumerateObjectsUsingBlock:updatePagesBlock];
-		[self updatePageFromModel];
-		[CATransaction commit];
+		[pages enumerateObjectsUsingBlockAsync:updatePagesBlock completion:^()
+		 {
+			 dispatch_async(dispatch_get_main_queue(), ^()
+			 {
+				 [self updatePageFromModel];
+			 });
+		 }];
 	}
 }
 
@@ -173,23 +180,29 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 {
 	NSInteger currentPage = model.currentFrame;
 	comicLayoutManager.anchorPageIndex = currentPage;
-	if ([pages startIndex] <= currentPage && currentPage < [pages endIndex])
-		[pages shiftTo:(currentPage-kCBPageCacheCountBwd) usingBlockAsync:updatePagesBlock];
-	else
-		[pages shiftTo:(currentPage-kCBPageCacheCountBwd) usingBlock:updatePagesBlock];
-	if (currentPage != [self findCurrentPage])
+	if (currentPage != [self currentPageIndex])
 	{
-		// TODO: Jump to proper page entry point
-		CBPageLayer * page = [pages objectAtIndex:currentPage];
-		if (page.isLaidOut)
-			self.position = page.position;
+		[pages shiftTo:(currentPage-kCBPageCacheCountBwd) usingBlockAsync:updatePagesBlock completion:^()
+		{
+			dispatch_async(dispatch_get_main_queue(), ^()
+			{
+				// TODO: Jump to proper page entry point
+				CBPageLayer * page = [pages objectAtIndex:currentPage];
+				if (page.isLaidOut)
+					self.position = CGPointMake(0, -page.position.y);
+			});
+		}];
+	}
+	else
+	{
+		[pages shiftTo:(currentPage-kCBPageCacheCountBwd) usingBlockAsync:updatePagesBlock];
 	}
 }
 
 - (void)updatePageToModel
 {
 	// Update pages asynchronously
-	NSInteger currentPage = [self findCurrentPage];
+	NSInteger currentPage = [self currentPageIndex];
 	if (model.currentFrame != currentPage && currentPage >= 0)
 		model.currentFrame = currentPage;
 }
@@ -225,9 +238,9 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 	contentLayer.sublayerTransform = viewTransform;
 }
 
-- (NSInteger)findCurrentPage
+- (NSInteger)currentPageIndex
 {
-	// Find closest page, advance range buffer, set it as anchor
+	// Find closest page
 	__block NSInteger closestPageIdx = -1;
 	__block CGFloat closestPageDistance = CGFLOAT_MAX;
 	[pages enumerateObjectsUsingBlock:^(id obj, NSInteger idx)

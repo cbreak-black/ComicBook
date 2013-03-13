@@ -56,7 +56,7 @@
 - (void)clampViewTransformState;
 - (void)updateViewTransform;
 
-- (NSInteger)findCurrentPage;
+- (NSInteger)currentPageIndex;
 
 - (BOOL)acceptsFirstResponder;
 - (BOOL)resignFirstResponder;
