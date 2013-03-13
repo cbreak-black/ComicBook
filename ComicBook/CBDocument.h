@@ -13,10 +13,17 @@
 
 @interface CBDocument : NSDocument
 {
-	CBComicModel * comic;
+	CBComicModel * model;
 	CBComicWindowController * comicWindow;
+	NSTimer * autosaveTimer;
 }
 
 + (BOOL)canConcurrentlyReadDocumentsOfType:(NSString *)typeName;
+
+- (void)close;
+
+- (void)timedAutosave:(NSTimer*)timer;
+
+@property (nonatomic,retain) CBComicModel * model;
 
 @end

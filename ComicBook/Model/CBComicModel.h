@@ -27,4 +27,10 @@
 
 - (CBFrame*)frameAtIndex:(NSUInteger)idx;
 
+- (void)loadPersistentData;
+- (void)storePersistentData;
+
++ (NSDictionary*)persistentDictionaryForURL:(NSURL*)url;
++ (void)storePersistentDictionary:(NSDictionary*)dict forURL:(NSURL*)url;
+
 @end
