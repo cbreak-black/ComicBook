@@ -94,10 +94,19 @@
 	if (layoutAnchorIdx < pageIdxStart) layoutAnchorIdx = pageIdxStart;
 	if (layoutAnchorIdx >= pageIdxEnd) layoutAnchorIdx = pageIdxEnd-1;
 	CBPageLayer * anchorLayer = [pages objectAtIndex:layoutAnchorIdx];
+	CBPageLayer * anchorLayerPre = [pages objectAtIndex:layoutAnchorIdx-1];
 	if (anchorLayer.isLaidOut)
 	{
 		layoutAnchorAlignment = anchorLayer.alignment;
 		layoutAnchorRow = anchorLayer.position.y;
+	}
+	// If the previous page is a single page and the current page is at the end, anchor at the prev
+	if (anchorLayerPre.comicBookFrame &&
+		!anchorLayerPre.isDoublePage && layoutAnchorAlignment == [self lineEndAlignment])
+	{
+		// Not laid out, but anchor has a previous that is not double page
+		layoutAnchorAlignment = [self nextAlignment:layoutAnchorAlignment];
+		layoutAnchorIdx -= 1;
 	}
 	// Forward
 	CBPageAlignment pageAlignment = layoutAnchorAlignment;
