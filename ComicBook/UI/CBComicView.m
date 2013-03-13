@@ -161,6 +161,34 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 							 relativeOffset.y*bounds.size.height/zoom)];
 }
 
+- (void)nextPage
+{
+	NSInteger currentIdx = [self currentPageIndex];
+	CBPageLayer * currentPage = [pages objectAtIndex:currentIdx];
+	CBPageLayer * nextPage = [pages objectAtIndex:currentIdx+1];
+	if (currentPage.isLaidOut && nextPage.isLaidOut)
+	{
+		if (currentPage.position.y == nextPage.position.y)
+			model.currentFrame += 2;
+		else
+			model.currentFrame += 1;
+	}
+}
+
+- (void)previousPage
+{
+	NSInteger currentIdx = [self currentPageIndex];
+	CBPageLayer * currentPage = [pages objectAtIndex:currentIdx];
+	CBPageLayer * previousPage = [pages objectAtIndex:currentIdx-1];
+	if (currentPage.isLaidOut)
+	{
+		if (currentPage.position.y == previousPage.position.y)
+			model.currentFrame -= 2;
+		else
+			model.currentFrame -= 1;
+	}
+}
+
 - (void)setZoom:(CGFloat)zoom_
 {
 	zoom = zoom_;
@@ -342,6 +370,12 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 			break;
 		case NSRightArrowFunctionKey:
 			[self moveByRelative:CGPointMake(-kCBKeyboardMoveFactor, 0)];
+			break;
+		case NSPageUpFunctionKey:
+			[self previousPage];
+			break;
+		case NSPageDownFunctionKey:
+			[self nextPage];
 			break;
 		default:
 			NSLog(@"Unhandled Key Event: %@", event);

@@ -46,6 +46,8 @@
 - (void)zoomBy:(CGFloat)factor;
 - (void)moveBy:(CGPoint)offset;
 - (void)moveByRelative:(CGPoint)relativeOffset;
+- (void)nextPage;
+- (void)previousPage;
 
 @property (nonatomic,assign) CGFloat zoom;
 @property (nonatomic,assign) CGPoint position;
