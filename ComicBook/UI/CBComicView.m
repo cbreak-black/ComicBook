@@ -36,6 +36,15 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 		// Configuration
 		[self configureLayers];
 		[self configureFilters];
+		__unsafe_unretained CBComicView * weakSelf = self;
+		updatePagesBlock = ^(id obj, NSInteger idx)
+		{
+			CBPageLayer * pageLayer = obj;
+			[CATransaction begin];
+			[CATransaction setDisableActions:YES];
+			pageLayer.comicBookFrame = [[weakSelf model] frameAtIndex:idx];
+			[CATransaction commit];
+		};
 	}
 	return self;
 }
@@ -104,14 +113,7 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 	if (model != nil)
 	{
 		[model addObserver:self forKeyPath:@"currentFrame" options:0 context:0];
-		[pages enumerateObjectsUsingBlockAsync:^(id obj, NSInteger idx)
-		{
-			CBPageLayer * pageLayer = obj;
-			[CATransaction begin];
-			[CATransaction setDisableActions:YES];
-			pageLayer.comicBookFrame = [model frameAtIndex:idx];
-			[CATransaction commit];
-		}];
+		[pages enumerateObjectsUsingBlockAsync:updatePagesBlock];
 	}
 }
 
@@ -162,6 +164,7 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 {
 	[self clampViewTransformState];
 	[self updateViewTransform];
+	[self updatePages];
 }
 
 - (void)clampViewTransformState
@@ -189,6 +192,35 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 	CATransform3D viewTransform = CATransform3DConcat(translate, scale);
 	contentLayer.sublayerTransform = viewTransform;
 	[CATransaction commit];
+}
+
+- (void)updatePages
+{
+	// Update pages asynchronously
+	NSInteger currentPage = [self findCurrentPage];
+	comicLayoutManager.anchorPageIndex = currentPage;
+	[pages shiftTo:(currentPage-kCBPageCacheCountBwd) usingBlock:updatePagesBlock];
+}
+
+- (NSInteger)findCurrentPage
+{
+	// Find closest page, advance range buffer, set it as anchor
+	__block NSInteger closestPageIdx = -1;
+	__block CGFloat closestPageDistance = CGFLOAT_MAX;
+	[pages enumerateObjectsUsingBlock:^(id obj, NSInteger idx)
+	 {
+		 CBPageLayer * page = obj;
+		 if (!page.isLaidOut || page.comicBookFrame == nil)
+			 return;
+		 CGPoint pagePos = page.position;
+		 CGFloat pageDistance = fabs(-position.y - pagePos.y);
+		 if (closestPageDistance > pageDistance)
+		 {
+			 closestPageDistance = pageDistance;
+			 closestPageIdx = idx;
+		 }
+	 }];
+	return closestPageIdx;
 }
 
 - (BOOL)acceptsFirstResponder
