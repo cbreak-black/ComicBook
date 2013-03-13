@@ -84,7 +84,7 @@
 - (void)layoutDouble
 {
 	// Determine initial layout state
-	CBPageAlignment layoutAnchorAlignment = [self lineEndAlignment];
+	CBPageAlignment layoutAnchorAlignment = [self lineStartAlignment];
 	CGFloat layoutAnchorRow = 0.0;
 	NSInteger layoutAnchorIdx = anchorPageIndex;
 	NSInteger pageIdxStart = pages.startIndex;
@@ -95,6 +95,11 @@
 	if (layoutAnchorIdx >= pageIdxEnd) layoutAnchorIdx = pageIdxEnd-1;
 	CBPageLayer * anchorLayer = [pages objectAtIndex:layoutAnchorIdx];
 	CBPageLayer * anchorLayerPre = [pages objectAtIndex:layoutAnchorIdx-1];
+	if (layoutAnchorIdx == 0)
+	{
+		// First Page is empty
+		layoutAnchorAlignment = [self nextAlignment:layoutAnchorAlignment];
+	}
 	if (anchorLayer.isLaidOut)
 	{
 		layoutAnchorAlignment = anchorLayer.alignment;
