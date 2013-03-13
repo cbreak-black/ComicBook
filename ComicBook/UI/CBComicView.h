@@ -45,6 +45,7 @@
 
 - (void)zoomBy:(CGFloat)factor;
 - (void)moveBy:(CGPoint)offset;
+- (void)moveByRelative:(CGPoint)relativeOffset;
 
 @property (nonatomic,assign) CGFloat zoom;
 @property (nonatomic,assign) CGPoint position;

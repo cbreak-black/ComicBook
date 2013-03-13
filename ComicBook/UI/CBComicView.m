@@ -18,8 +18,10 @@
 #import <QuartzCore/CoreImage.h>
 
 static const NSInteger kCBPageCacheCountFwd = 32;
-static const NSInteger kCBPageCacheCountBwd = 8;
+static const NSInteger kCBPageCacheCountBwd = 16;
 static const CGFloat kCBCoarseLineFactor = 32.0;
+static const CGFloat kCBKeyboardMoveFactor = 0.75;
+static const CGFloat kCBKeyboardZoomFactor = 1.25;
 
 @implementation CBComicView
 
@@ -143,6 +145,13 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 	position.x += offset.x/contentLayoutManager.contentScale;
 	position.y += offset.y/contentLayoutManager.contentScale;
 	[self updateView];
+}
+
+- (void)moveByRelative:(CGPoint)relativeOffset
+{
+	CGRect bounds = backgroundLayer.bounds;
+	[self moveBy:CGPointMake(relativeOffset.x*bounds.size.width/zoom,
+							 relativeOffset.y*bounds.size.height/zoom)];
 }
 
 - (void)setZoom:(CGFloat)zoom_
@@ -288,16 +297,47 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 			[self moveBy:CGPointMake(+[event scrollingDeltaX]*kCBCoarseLineFactor,
 									 -[event scrollingDeltaY]*kCBCoarseLineFactor)];
 	}
+	[CATransaction commit];
 }
 
 - (void)keyDown:(NSEvent*)event
 {
-	NSLog(@"%@", event);
+	[CATransaction begin];
+	if ([event modifierFlags] & NSShiftKeyMask && [event modifierFlags] & NSCommandKeyMask)
+	{
+		[CATransaction setAnimationDuration:1.0];
+	}
+	NSString * characters = [event charactersIgnoringModifiers];
+	switch ([characters characterAtIndex:0])
+	{
+		case ' ':
+			break;
+		case '+':
+			[self zoomBy:kCBKeyboardZoomFactor];
+			break;
+		case '-':
+			[self zoomBy:1.0/kCBKeyboardZoomFactor];
+			break;
+		case NSUpArrowFunctionKey:
+			[self moveByRelative:CGPointMake(0, -kCBKeyboardMoveFactor)];
+			break;
+		case NSDownArrowFunctionKey:
+			[self moveByRelative:CGPointMake(0, +kCBKeyboardMoveFactor)];
+			break;
+		case NSLeftArrowFunctionKey:
+			[self moveByRelative:CGPointMake(+kCBKeyboardMoveFactor, 0)];
+			break;
+		case NSRightArrowFunctionKey:
+			[self moveByRelative:CGPointMake(-kCBKeyboardMoveFactor, 0)];
+			break;
+		default:
+			NSLog(@"Unhandled Key Event: %@", event);
+	}
+	[CATransaction commit];
 }
 
 - (void)keyUp:(NSEvent*)event
 {
-	NSLog(@"%@", event);
 }
 
 - (void)swipeWithEvent:(NSEvent*)event
