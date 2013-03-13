@@ -35,11 +35,17 @@
 
 - (void)shiftBy:(NSInteger)offset usingBlock:(void (^)(id obj, NSInteger idx))block;
 - (void)shiftBy:(NSInteger)offset usingBlockAsync:(void (^)(id obj, NSInteger idx))block;
+- (void)shiftBy:(NSInteger)offset usingBlockAsync:(void (^)(id obj, NSInteger idx))block
+	 completion:(void (^)())completionBlock;
 
 - (void)shiftTo:(NSInteger)newStartIdx usingBlock:(void (^)(id obj, NSInteger idx))block;
 - (void)shiftTo:(NSInteger)newStartIdx usingBlockAsync:(void (^)(id obj, NSInteger idx))block;
+- (void)shiftTo:(NSInteger)newStartIdx usingBlockAsync:(void (^)(id obj, NSInteger idx))block
+	 completion:(void (^)())completionBlock;
 
 - (void)enumerateObjectsUsingBlock:(void (^)(id obj, NSInteger idx))block;
 - (void)enumerateObjectsUsingBlockAsync:(void (^)(id obj, NSInteger idx))block;
+- (void)enumerateObjectsUsingBlockAsync:(void (^)(id obj, NSInteger idx))block
+							 completion:(void (^)())completionBlock;
 
 @end

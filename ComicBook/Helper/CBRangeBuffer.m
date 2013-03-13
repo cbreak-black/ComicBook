@@ -147,6 +147,12 @@
 
 - (void)shiftBy:(NSInteger)offset usingBlockAsync:(void (^)(id obj, NSInteger idx))block
 {
+	[self shiftBy:offset usingBlockAsync:block completion:NULL];
+}
+
+- (void)shiftBy:(NSInteger)offset usingBlockAsync:(void (^)(id obj, NSInteger idx))block
+	 completion:(void (^)())completionBlock
+{
 	@synchronized (self)
 	{
 		dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -160,6 +166,10 @@
 				block(obj, idx);
 			});
 		}
+		if (completionBlock)
+		{
+			dispatch_barrier_async(queue, completionBlock);
+		}
 	}
 }
 
@@ -171,6 +181,12 @@
 - (void)shiftTo:(NSInteger)newStartIdx usingBlockAsync:(void (^)(id obj, NSInteger idx))block
 {
 	[self shiftBy:(newStartIdx-startIndex) usingBlockAsync:block];
+}
+
+- (void)shiftTo:(NSInteger)newStartIdx usingBlockAsync:(void (^)(id obj, NSInteger idx))block
+	 completion:(void (^)())completionBlock
+{
+	[self shiftBy:(newStartIdx-startIndex) usingBlockAsync:block completion:completionBlock];
 }
 
 - (void)enumerateObjectsUsingBlock:(void (^)(id obj, NSInteger idx))block
@@ -189,6 +205,12 @@
 
 - (void)enumerateObjectsUsingBlockAsync:(void (^)(id obj, NSInteger idx))block
 {
+	[self enumerateObjectsUsingBlockAsync:block completion:NULL];
+}
+
+- (void)enumerateObjectsUsingBlockAsync:(void (^)(id obj, NSInteger idx))block
+							 completion:(void (^)())completionBlock
+{
 	@synchronized (self)
 	{
 		dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -201,6 +223,10 @@
 			{
 				block(obj, rangeIdx);
 			});
+		}
+		if (completionBlock)
+		{
+			dispatch_barrier_async(queue, completionBlock);
 		}
 	}
 }
