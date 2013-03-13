@@ -113,7 +113,11 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 	if (model != nil)
 	{
 		[model addObserver:self forKeyPath:@"currentFrame" options:0 context:0];
-		[pages enumerateObjectsUsingBlockAsync:updatePagesBlock];
+		[CATransaction begin];
+		[CATransaction setDisableActions:YES];
+		[pages enumerateObjectsUsingBlock:updatePagesBlock];
+		[self updatePageFromModel];
+		[CATransaction commit];
 	}
 }
 
@@ -124,47 +128,67 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 {
 	if ([keyPath isEqualToString:@"currentFrame"])
 	{
-		if (comicLayoutManager.anchorPageIndex != model.currentFrame)
-		{
-			// TODO: Advance range buffer
-			// TODO: Update layout manager anchor page
-		}
+		[self updatePageFromModel];
 	}
 }
 
 - (void)zoomBy:(CGFloat)factor
 {
 	zoom *= factor;
-	[self setNeedsViewTransformUpdate];
+	[self updateView];
 }
 
 - (void)moveBy:(CGPoint)offset
 {
 	position.x += offset.x/contentLayoutManager.contentScale;
 	position.y += offset.y/contentLayoutManager.contentScale;
-	[self setNeedsViewTransformUpdate];
+	[self updateView];
 }
 
 - (void)setZoom:(CGFloat)zoom_
 {
 	zoom = zoom_;
-	[self setNeedsViewTransformUpdate];
+	[self updateView];
 }
 
 - (void)setPosition:(CGPoint)position_
 {
 	position = position_;
-	[self setNeedsViewTransformUpdate];
+	[self updateView];
 }
 
 @synthesize zoom;
 @synthesize position;
 
-- (void)setNeedsViewTransformUpdate
+- (void)updatePageFromModel
 {
-	[self clampViewTransformState];
+	NSInteger currentPage = model.currentFrame;
+	comicLayoutManager.anchorPageIndex = currentPage;
+	if ([pages startIndex] <= currentPage && currentPage < [pages endIndex])
+		[pages shiftTo:(currentPage-kCBPageCacheCountBwd) usingBlockAsync:updatePagesBlock];
+	else
+		[pages shiftTo:(currentPage-kCBPageCacheCountBwd) usingBlock:updatePagesBlock];
+	if (currentPage != [self findCurrentPage])
+	{
+		// TODO: Jump to proper page entry point
+		CBPageLayer * page = [pages objectAtIndex:currentPage];
+		if (page.isLaidOut)
+			self.position = page.position;
+	}
+}
+
+- (void)updatePageToModel
+{
+	// Update pages asynchronously
+	NSInteger currentPage = [self findCurrentPage];
+	if (model.currentFrame != currentPage && currentPage >= 0)
+		model.currentFrame = currentPage;
+}
+
+- (void)updateView
+{
 	[self updateViewTransform];
-	[self updatePages];
+	[self updatePageToModel];
 }
 
 - (void)clampViewTransformState
@@ -185,21 +209,11 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 
 - (void)updateViewTransform
 {
-	[CATransaction begin];
-	[CATransaction setDisableActions:YES];
+	[self clampViewTransformState];
 	CATransform3D scale = CATransform3DMakeScale(zoom, zoom, 1);
 	CATransform3D translate = CATransform3DMakeTranslation(position.x, position.y, 0);
 	CATransform3D viewTransform = CATransform3DConcat(translate, scale);
 	contentLayer.sublayerTransform = viewTransform;
-	[CATransaction commit];
-}
-
-- (void)updatePages
-{
-	// Update pages asynchronously
-	NSInteger currentPage = [self findCurrentPage];
-	comicLayoutManager.anchorPageIndex = currentPage;
-	[pages shiftTo:(currentPage-kCBPageCacheCountBwd) usingBlock:updatePagesBlock];
 }
 
 - (NSInteger)findCurrentPage
@@ -239,7 +253,10 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 
 - (void)mouseDragged:(NSEvent*)event
 {
+	[CATransaction begin];
+	[CATransaction setDisableActions:YES];
 	[self moveBy:CGPointMake([event deltaX]/zoom, -[event deltaY]/zoom)];
+	[CATransaction commit];
 }
 
 - (void)mouseMoved:(NSEvent*)event
@@ -252,6 +269,8 @@ static const CGFloat kCBCoarseLineFactor = 32.0;
 
 - (void)scrollWheel:(NSEvent*)event
 {
+	[CATransaction begin];
+	[CATransaction setDisableActions:YES];
 	if ([event modifierFlags] & NSShiftKeyMask)
 	{
 		CGFloat offset = [event scrollingDeltaX]-[event scrollingDeltaY];

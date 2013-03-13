@@ -49,10 +49,11 @@
 @property (nonatomic,assign) CGFloat zoom;
 @property (nonatomic,assign) CGPoint position;
 
-- (void)setNeedsViewTransformUpdate;
+- (void)updatePageFromModel;
+- (void)updatePageToModel;
+- (void)updateView;
 - (void)clampViewTransformState;
 - (void)updateViewTransform;
-- (void)updatePages;
 
 - (NSInteger)findCurrentPage;
 
