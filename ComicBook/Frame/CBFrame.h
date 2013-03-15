@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "CBFrameFactory.h"
+#import "CBFrameDataSource.h"
 
 @interface CBFrame : NSObject
 {

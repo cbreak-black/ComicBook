@@ -16,6 +16,7 @@
 		7049267F169CE5D7000C073E /* CBContentLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7049267E169CE5D7000C073E /* CBContentLayoutManager.m */; };
 		70492682169D0ABE000C073E /* CBComicLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 70492681169D0ABE000C073E /* CBComicLayoutManager.m */; };
 		7049E6701691C84500A0BA78 /* CBRangeBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7049E66F1691C84500A0BA78 /* CBRangeBuffer.m */; };
+		705202D916F364FF0079E0CF /* CBFrameDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 705202D816F364FF0079E0CF /* CBFrameDataSource.m */; };
 		7060C021167CAA14008A9E92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C020167CAA14008A9E92 /* Cocoa.framework */; };
 		7060C02B167CAA14008A9E92 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7060C029167CAA14008A9E92 /* InfoPlist.strings */; };
 		7060C02D167CAA14008A9E92 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C02C167CAA14008A9E92 /* main.m */; };
@@ -64,6 +65,8 @@
 		70492681169D0ABE000C073E /* CBComicLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBComicLayoutManager.m; path = UI/CBComicLayoutManager.m; sourceTree = "<group>"; };
 		7049E66E1691C84500A0BA78 /* CBRangeBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBRangeBuffer.h; path = Helper/CBRangeBuffer.h; sourceTree = "<group>"; };
 		7049E66F1691C84500A0BA78 /* CBRangeBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBRangeBuffer.m; path = Helper/CBRangeBuffer.m; sourceTree = "<group>"; };
+		705202D716F364FF0079E0CF /* CBFrameDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBFrameDataSource.h; path = Frame/CBFrameDataSource.h; sourceTree = "<group>"; };
+		705202D816F364FF0079E0CF /* CBFrameDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBFrameDataSource.m; path = Frame/CBFrameDataSource.m; sourceTree = "<group>"; };
 		7060C01C167CAA14008A9E92 /* ComicBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ComicBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7060C020167CAA14008A9E92 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		7060C023167CAA14008A9E92 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -250,6 +253,8 @@
 		7060C085168612E5008A9E92 /* Frame */ = {
 			isa = PBXGroup;
 			children = (
+				705202D716F364FF0079E0CF /* CBFrameDataSource.h */,
+				705202D816F364FF0079E0CF /* CBFrameDataSource.m */,
 				7060C09116863914008A9E92 /* CBFrameFactory.h */,
 				7060C09216863914008A9E92 /* CBFrameFactory.m */,
 				7060C08716861319008A9E92 /* CBFrame.h */,
@@ -400,6 +405,7 @@
 				7049E6701691C84500A0BA78 /* CBRangeBuffer.m in Sources */,
 				7049267F169CE5D7000C073E /* CBContentLayoutManager.m in Sources */,
 				70492682169D0ABE000C073E /* CBComicLayoutManager.m in Sources */,
+				705202D916F364FF0079E0CF /* CBFrameDataSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

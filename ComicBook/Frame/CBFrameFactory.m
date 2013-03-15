@@ -28,12 +28,12 @@
 	return nil;
 }
 
-- (BOOL)canLoadFramesFromData:(NSData*)data withPath:(NSString*)path
+- (BOOL)canLoadFramesFromDataSource:(id<CBFrameDataSource>)dataSource
 {
 	return NO;
 }
 
-- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error
+- (NSArray*)loadFramesFromDataSource:(id<CBFrameDataSource>)dataSource error:(NSError **)error
 {
 	return nil;
 }
@@ -124,13 +124,13 @@ static CBFrameFactory * CBFrameFactory_staticFactory = nil;
 	return nil;
 }
 
-- (NSArray*)framesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error
+- (NSArray*)framesFromDataSource:(id<CBFrameDataSource>)dataSource error:(NSError **)error;
 {
 	for (CBFrameLoader * frameLoader in frameLoaders)
 	{
-		if ([frameLoader canLoadFramesFromData:data withPath:path])
+		if ([frameLoader canLoadFramesFromDataSource:dataSource])
 		{
-			return [frameLoader loadFramesFromData:data withPath:path error:error];
+			return [frameLoader loadFramesFromDataSource:dataSource error:error];
 		}
 	}
 	// No valid loader found

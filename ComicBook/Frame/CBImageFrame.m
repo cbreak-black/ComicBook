@@ -48,17 +48,17 @@ static BOOL canLoadFramesFromURL(NSURL * url)
 
 @implementation CBDataImageFrameLoader
 
-- (BOOL)canLoadFramesFromData:(NSData*)data withPath:(NSString*)path
+- (BOOL)canLoadFramesFromDataSource:(id<CBFrameDataSource>)dataSource;
 {
-	NSString * fileExtension = [path pathExtension];
+	NSString * fileExtension = [[dataSource framePath] pathExtension];
 	return canLoadFrameFromFormat(fileExtension);
 }
 
-- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error
+- (NSArray*)loadFramesFromDataSource:(id<CBFrameDataSource>)dataSource error:(NSError **)error;
 {
-	CBDataImageFrame * dataFrames = [[CBDataImageFrame alloc] initWithData:data withPath:path];
-	if (dataFrames)
-		return @[dataFrames];
+	CBDataImageFrame * dataFrame = [[CBDataImageFrame alloc] initWithDataSource:dataSource];
+	if (dataFrame)
+		return @[dataFrame];
 	return nil;
 }
 
@@ -90,11 +90,8 @@ static BOOL canLoadFramesFromURL(NSURL * url)
 	{
 		return image;
 	}
-	else
-	{
-		NSLog(@"Error loading image from url %@", [self path]);
-		return [super image];
-	}
+	NSLog(@"Error loading image from url %@", [self path]);
+	return [super image];
 }
 
 - (NSString *)path;
@@ -107,15 +104,14 @@ static BOOL canLoadFramesFromURL(NSURL * url)
 // Data Frame
 @implementation CBDataImageFrame
 
-- (id)initWithData:(NSData*)data_ withPath:(NSString*)path_
+- (id)initWithDataSource:(id<CBFrameDataSource>)dataSource_
 {
 	if (self = [super init])
 	{
-		NSString * fileExtension = [path pathExtension];
+		NSString * fileExtension = [[dataSource_ framePath] pathExtension];
 		if (canLoadFrameFromFormat(fileExtension))
 		{
-			data = data_;
-			path = path_;
+			dataSource = dataSource_;
 		}
 		else
 		{
@@ -127,18 +123,18 @@ static BOOL canLoadFramesFromURL(NSURL * url)
 
 - (NSImage*)image
 {
-	NSImage * image = [[NSImage alloc] initWithData:data];
+	NSImage * image = [[NSImage alloc] initWithData:[dataSource frameData]];
 	if (image && [image isValid])
 	{
 		return image;
 	}
-	else
-	{
-		NSLog(@"Error loading image from url %@", [self path]);
-		return [super image];
-	}
+	NSLog(@"Error loading image from data with path %@", [self path]);
+	return [super image];
 }
 
-@synthesize path;
+- (NSString*)path
+{
+	return [dataSource framePath];
+}
 
 @end

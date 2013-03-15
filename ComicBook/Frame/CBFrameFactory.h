@@ -8,12 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
+#import "CBFrameDataSource.h"
+
+/*!
+ \brief Frame loader base class
+ */
 @interface CBFrameLoader : NSObject
 + (CBFrameLoader*)loader;
 - (BOOL)canLoadFramesFromURL:(NSURL*)url;
 - (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error;
-- (BOOL)canLoadFramesFromData:(NSData*)data withPath:(NSString*)path;
-- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error;
+- (BOOL)canLoadFramesFromDataSource:(id<CBFrameDataSource>)dataSource;
+- (NSArray*)loadFramesFromDataSource:(id<CBFrameDataSource>)dataSource error:(NSError **)error;
 @end
 
 @interface CBFrameFactory : NSObject
@@ -31,6 +36,6 @@
 - (id)init;
 
 - (NSArray*)framesFromURL:(NSURL*)url error:(NSError **)error;
-- (NSArray*)framesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error;
+- (NSArray*)framesFromDataSource:(id<CBFrameDataSource>)dataSource error:(NSError **)error;
 
 @end

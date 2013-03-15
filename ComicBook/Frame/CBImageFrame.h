@@ -28,11 +28,10 @@
  */
 @interface CBDataImageFrame : CBFrame
 {
-	NSData * data;
-	NSString * path;
+	id<CBFrameDataSource> dataSource;
 }
 
-- (id)initWithData:(NSData*)data withPath:(NSString*)path;
+- (id)initWithDataSource:(id<CBFrameDataSource>)dataSource;
 
 @property (retain, readonly) NSString * path;
 @property (retain, readonly) NSImage * image;
@@ -51,6 +50,6 @@
  \brief Load Data Image Frames
  */
 @interface CBDataImageFrameLoader : CBFrameLoader
-- (BOOL)canLoadFramesFromData:(NSData*)data withPath:(NSString*)path;
-- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error;
+- (BOOL)canLoadFramesFromDataSource:(id<CBFrameDataSource>)dataSource;
+- (NSArray*)loadFramesFromDataSource:(id<CBFrameDataSource>)dataSource error:(NSError **)error;
 @end
