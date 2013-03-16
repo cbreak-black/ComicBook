@@ -69,7 +69,7 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
 						change:(NSDictionary *)change context:(void *)context
 {
-	if ([keyPath isEqualToString:@"currentFrame"])
+	if ([keyPath isEqualToString:@"currentFrameIdx"])
 	{
 		if (!autosaveTimer || ![autosaveTimer isValid])
 		{
@@ -83,12 +83,12 @@
 {
 	if (model != nil)
 	{
-		[model removeObserver:self forKeyPath:@"currentFrame"];
+		[model removeObserver:self forKeyPath:@"currentFrameIdx"];
 	}
 	model = model_;
 	if (model != nil)
 	{
-		[model addObserver:self forKeyPath:@"currentFrame" options:0 context:0];
+		[model addObserver:self forKeyPath:@"currentFrameIdx" options:0 context:0];
 	}
 }
 

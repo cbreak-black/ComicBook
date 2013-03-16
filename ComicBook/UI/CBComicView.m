@@ -114,12 +114,12 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 {
 	if (model != nil)
 	{
-		[model removeObserver:self forKeyPath:@"currentFrame"];
+		[model removeObserver:self forKeyPath:@"currentFrameIdx"];
 	}
 	model = model_;
 	if (model != nil)
 	{
-		[model addObserver:self forKeyPath:@"currentFrame" options:0 context:0];
+		[model addObserver:self forKeyPath:@"currentFrameIdx" options:0 context:0];
 		[pages enumerateObjectsUsingBlockAsync:updatePagesBlock completion:^()
 		 {
 			 dispatch_async(dispatch_get_main_queue(), ^()
@@ -135,7 +135,7 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
 						change:(NSDictionary *)change context:(void *)context
 {
-	if ([keyPath isEqualToString:@"currentFrame"])
+	if ([keyPath isEqualToString:@"currentFrameIdx"])
 	{
 		[self updatePageFromModel];
 	}
@@ -169,9 +169,9 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 	if (currentPage.isLaidOut && nextPage.isLaidOut)
 	{
 		if (currentPage.position.y == nextPage.position.y)
-			model.currentFrame += 2;
+			model.currentFrameIdx += 2;
 		else
-			model.currentFrame += 1;
+			model.currentFrameIdx += 1;
 	}
 }
 
@@ -183,9 +183,9 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 	if (currentPage.isLaidOut)
 	{
 		if (currentPage.position.y == previousPage.position.y)
-			model.currentFrame -= 2;
+			model.currentFrameIdx -= 2;
 		else
-			model.currentFrame -= 1;
+			model.currentFrameIdx -= 1;
 	}
 }
 
@@ -206,7 +206,7 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 
 - (void)updatePageFromModel
 {
-	NSInteger currentPage = model.currentFrame;
+	NSInteger currentPage = model.currentFrameIdx;
 	comicLayoutManager.anchorPageIndex = currentPage;
 	if (currentPage != [self currentPageIndex])
 	{
@@ -231,8 +231,8 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 {
 	// Update pages asynchronously
 	NSInteger currentPage = [self currentPageIndex];
-	if (model.currentFrame != currentPage && currentPage >= 0)
-		model.currentFrame = currentPage;
+	if (model.currentFrameIdx != currentPage && currentPage >= 0)
+		model.currentFrameIdx = currentPage;
 }
 
 - (void)updateView

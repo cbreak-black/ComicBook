@@ -13,8 +13,8 @@
 @interface CBComicModel : NSObject
 {
 	NSURL * fileUrl;
+	NSUInteger currentFrameIdx;
 	NSArray * frames;
-	NSUInteger currentFrame;
 }
 
 - (id)initWithURL:(NSURL*)url error:(NSError **)error;
@@ -23,7 +23,7 @@
 
 @property (nonatomic,readonly) NSURL * fileUrl;
 @property (nonatomic,readonly) NSUInteger frameCount;
-@property (atomic,assign) NSUInteger currentFrame;
+@property (atomic,assign) NSUInteger currentFrameIdx;
 
 - (CBFrame*)frameAtIndex:(NSUInteger)idx;
 

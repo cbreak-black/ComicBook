@@ -19,7 +19,7 @@
 	if (self = [super init])
 	{
 		fileUrl = [url fileReferenceURL];
-		currentFrame = 0;
+		currentFrameIdx = 0;
 		frames = [[CBFrameFactory factory] framesFromURL:url error:error];
 		if (!frames)
 			self = nil;
@@ -40,7 +40,7 @@
 	return [frames count];
 }
 
-@synthesize currentFrame;
+@synthesize currentFrameIdx;
 
 - (CBFrame*)frameAtIndex:(NSUInteger)idx
 {
@@ -54,9 +54,9 @@
 	NSDictionary * dict = [CBComicModel persistentDictionaryForURL:fileUrl];
 	if (dict)
 	{
-		NSNumber * n = [dict objectForKey:@"currentFrame"];
+		NSNumber * n = [dict objectForKey:@"currentFrameIdx"];
 		if (n)
-			currentFrame = [n unsignedIntegerValue];
+			currentFrameIdx = [n unsignedIntegerValue];
 	}
 }
 
@@ -66,7 +66,7 @@
 						  includingResourceValuesForKeys:nil relativeToURL:nil error:nil];
 	NSDictionary * dict = @{
 		@"name": [fileUrl lastPathComponent],
-		@"currentFrame": [NSNumber numberWithUnsignedInteger:currentFrame],
+		@"currentFrameIdx": [NSNumber numberWithUnsignedInteger:currentFrameIdx],
 		@"bookmark": bookmark
 	};
 	[CBComicModel storePersistentDictionary:dict forURL:fileUrl];
