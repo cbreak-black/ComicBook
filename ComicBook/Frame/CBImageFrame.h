@@ -39,17 +39,11 @@
 @end
 
 /*!
- \brief Load URL Image Frames
+ \brief Load Image Frames
  */
-@interface CBURLImageFrameLoader : CBFrameLoader
+@interface CBImageFrameLoader : CBFrameLoader
 - (BOOL)canLoadFramesFromURL:(NSURL*)url;
-- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error;
-@end
-
-/*!
- \brief Load Data Image Frames
- */
-@interface CBDataImageFrameLoader : CBFrameLoader
+- (BOOL)loadFramesFromURL:(NSURL*)url withBlock:(void (^)(CBFrame*))frameCallback;
 - (BOOL)canLoadFramesFromDataSource:(id<CBFrameDataSource>)dataSource;
-- (NSArray*)loadFramesFromDataSource:(id<CBFrameDataSource>)dataSource error:(NSError **)error;
+- (BOOL)loadFramesFromDataSource:(id<CBFrameDataSource>)dataSource withBlock:(void (^)(CBFrame*))frameCallback;
 @end

@@ -28,26 +28,23 @@ static BOOL canLoadFramesFromURL(NSURL * url)
 
 // URL Loader
 
-@implementation CBURLImageFrameLoader
+@implementation CBImageFrameLoader
 
 - (BOOL)canLoadFramesFromURL:(NSURL*)url
 {
 	return canLoadFramesFromURL(url);
 }
 
-- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error
+- (BOOL)loadFramesFromURL:(NSURL*)url withBlock:(void (^)(CBFrame*))frameCallback
 {
-	CBURLImageFrame * urlFrames = [[CBURLImageFrame alloc] initWithURL:url];
-	if (urlFrames)
-		return @[urlFrames];
-	return nil;
+	CBURLImageFrame * imageFrame = [[CBURLImageFrame alloc] initWithURL:url];
+	if (imageFrame)
+	{
+		frameCallback(imageFrame);
+		return YES;
+	}
+	return NO;
 }
-
-@end
-
-// Data Loader
-
-@implementation CBDataImageFrameLoader
 
 - (BOOL)canLoadFramesFromDataSource:(id<CBFrameDataSource>)dataSource;
 {
@@ -55,12 +52,15 @@ static BOOL canLoadFramesFromURL(NSURL * url)
 	return canLoadFrameFromFormat(fileExtension);
 }
 
-- (NSArray*)loadFramesFromDataSource:(id<CBFrameDataSource>)dataSource error:(NSError **)error;
+- (BOOL)loadFramesFromDataSource:(id<CBFrameDataSource>)dataSource withBlock:(void (^)(CBFrame*))frameCallback
 {
-	CBDataImageFrame * dataFrame = [[CBDataImageFrame alloc] initWithDataSource:dataSource];
-	if (dataFrame)
-		return @[dataFrame];
-	return nil;
+	CBDataImageFrame * imageFrame = [[CBDataImageFrame alloc] initWithDataSource:dataSource];
+	if (imageFrame)
+	{
+		frameCallback(imageFrame);
+		return YES;
+	}
+	return NO;
 }
 
 @end

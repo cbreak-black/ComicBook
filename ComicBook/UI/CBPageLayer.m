@@ -8,8 +8,6 @@
 
 #import "CBPageLayer.h"
 
-#import "CBFrame.h"
-
 @implementation CBPageLayer
 
 - (id)init
@@ -23,25 +21,15 @@
 	return self;
 }
 
-- (id)initWithComicBookFrame:(CBFrame*)frame
-{
-	if (self = [self init])
-	{
-		[self setComicBookFrame:frame];
-	}
-	return self;
-}
-
-- (void)setComicBookFrame:(CBFrame *)comicBookFrame_
+- (void)setImage:(NSImage*)image_
 {
 	@synchronized (self)
 	{
-		comicBookFrame = comicBookFrame_;
 		alignment = kCBPageUnaligned;
 		isLaidOut = NO;
-		if (comicBookFrame)
+		if (image_)
 		{
-			NSImage * image = comicBookFrame.image;
+			image = image_;
 			NSSize imageSize = [image size];
 			if (imageSize.width > 0 && imageSize.height > 0)
 				aspect = (CGFloat)imageSize.width/(CGFloat)imageSize.height;
@@ -58,7 +46,13 @@
 	}
 }
 
-@synthesize comicBookFrame;
+- (NSImage*)image
+{
+	@synchronized (self)
+	{
+		return image;
+	}
+}
 
 @synthesize aspect;
 

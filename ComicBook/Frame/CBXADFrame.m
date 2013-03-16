@@ -41,54 +41,38 @@
 	return [CBXADProxy canLoadArchiveAtURL:url];
 }
 
-- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error
+- (BOOL)loadFramesFromURL:(NSURL*)url withBlock:(void (^)(CBFrame*))frameCallback
 {
-	NSArray * files = [CBXADProxy loadArchiveAtURL:url error:error];
-	if (files)
+	return [CBXADProxy loadArchiveAtURL:url withBlock:^(CBXADArchiveFileProxy * file)
 	{
-		return [self framesFromArchiveFiles:files];
-	}
-	return nil;
+		[self framesFromArchiveFile:file withBlock:frameCallback];
+	}];
 }
 
-- (BOOL)canLoadFramesFromData:(NSData*)data withPath:(NSString*)path
+- (BOOL)canLoadFramesFromDataSource:(id<CBFrameDataSource>)dataSource
 {
 	return NO;
 }
 
-- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error
+- (BOOL)loadFramesFromDataSource:(id<CBFrameDataSource>)dataSource withBlock:(void (^)(CBFrame*))frameCallback
 {
 	// This would require a lot of RAM, so only implement if really needed...
-	return nil;
+	return NO;
 }
 
-- (NSArray*)framesFromArchiveFile:(CBXADArchiveFileProxy*)archiveFile
+- (BOOL)framesFromArchiveFile:(CBXADArchiveFileProxy*)archiveFile withBlock:(void (^)(CBFrame*))frameCallback
 {
 	CBXADFrameDataSource * source = [[CBXADFrameDataSource alloc] initWithXADArchive:archiveFile];
-	// One of the generic handler can handle the file
-	NSArray * frames = [[CBFrameFactory factory] framesFromDataSource:source error:nil];
-	if (frames)
-		return frames;
-	// It is an archive, recurse into it
-	NSArray * archiveFiles = [CBXADProxy loadArchiveFromArchiveFile:archiveFile error:nil];
-	if (archiveFiles)
-		return [self framesFromArchiveFiles:archiveFiles];
-	// Couldn't be handled
-	return nil;
-}
-
-- (NSArray*)framesFromArchiveFiles:(NSArray*)archiveFiles
-{
-	NSMutableArray * allFrames = [NSMutableArray arrayWithCapacity:[archiveFiles count]];
-	for (CBXADArchiveFileProxy * file in archiveFiles)
+	// Maybe one of the generic handler can handle the file
+	if ([[CBFrameFactory factory] framesFromDataSource:source withBlock:frameCallback])
+		return YES;
+	// Otherwise it may be an archive, recurse into it
+	if ([CBXADProxy loadArchiveFromArchiveFile:archiveFile withBlock:^(CBXADArchiveFileProxy * file)
+		 { [self framesFromArchiveFile:file withBlock:frameCallback]; }])
 	{
-		NSArray * frames = [self framesFromArchiveFile:file];
-		if (frames)
-		{
-			[allFrames addObjectsFromArray:frames];
-		}
+		return YES;
 	}
-	return allFrames;
+	return NO;
 }
 
 @end

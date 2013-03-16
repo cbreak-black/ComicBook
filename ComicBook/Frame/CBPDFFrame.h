@@ -26,7 +26,7 @@
 
 @interface CBPDFFrameLoader : CBFrameLoader
 - (BOOL)canLoadFramesFromURL:(NSURL*)url;
-- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error;
-- (BOOL)canLoadFramesFromData:(NSData*)data withPath:(NSString*)path;
-- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error;
+- (BOOL)loadFramesFromURL:(NSURL*)url withBlock:(void (^)(CBFrame*))frameCallback;
+- (BOOL)canLoadFramesFromDataSource:(id<CBFrameDataSource>)dataSource;
+- (BOOL)loadFramesFromDataSource:(id<CBFrameDataSource>)dataSource withBlock:(void (^)(CBFrame*))frameCallback;
 @end

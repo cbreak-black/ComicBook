@@ -12,6 +12,8 @@
 
 #import <Foundation/NSUserDefaults.h>
 
+#import <dispatch/dispatch.h>
+
 @implementation CBComicModel
 
 - (id)initWithURL:(NSURL*)url error:(NSError **)error
@@ -20,10 +22,17 @@
 	{
 		fileUrl = [url fileReferenceURL];
 		currentFrameIdx = 0;
-		frames = [[CBFrameFactory factory] framesFromURL:url error:error];
-		if (!frames)
-			self = nil;
+		frames = [NSMutableArray arrayWithCapacity:40];
 		[self loadPersistentData];
+		// Asyncronously load frames
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^()
+		{
+			[[CBFrameFactory factory] framesFromURL:url withBlock:^(CBFrame * frame){
+				dispatch_async(dispatch_get_main_queue(), ^(){
+					[self addFrame:frame];
+				});
+			}];
+		});
 	}
 	return self;
 }
@@ -40,7 +49,41 @@
 	return [frames count];
 }
 
+- (void)setCurrentFrameIdx:(NSUInteger)newFrameIdx
+{
+	if (newFrameIdx >= [frames count])
+		newFrameIdx = [frames count]-1;
+	currentFrameIdx = newFrameIdx;
+}
+
 @synthesize currentFrameIdx;
+
+- (void)shiftCurrentFrameIdx:(NSInteger)offset
+{
+	NSInteger newFrameIdx = currentFrameIdx + offset;
+	if (newFrameIdx < 0)
+		newFrameIdx = 0;
+	if (newFrameIdx >= [frames count])
+		newFrameIdx = [frames count]-1;
+	if (currentFrameIdx != newFrameIdx)
+	{
+		[self willChangeValueForKey:@"currentFrameIdx"];
+		currentFrameIdx = newFrameIdx;
+		[self didChangeValueForKey:@"currentFrameIdx"];
+	}
+}
+
+- (void)addFrame:(CBFrame*)frame
+{
+	[self willChangeValueForKey:@"frameCount"];
+	[frames addObject:frame];
+	[self didChangeValueForKey:@"frameCount"];
+}
+
+- (void)addFrames:(NSArray*)frames_
+{
+	[frames addObjectsFromArray:frames_];
+}
 
 - (CBFrame*)frameAtIndex:(NSUInteger)idx
 {

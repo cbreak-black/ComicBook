@@ -10,15 +10,17 @@
 
 #import "CBFrameDataSource.h"
 
+@class CBFrame;
+
 /*!
  \brief Frame loader base class
  */
 @interface CBFrameLoader : NSObject
 + (CBFrameLoader*)loader;
 - (BOOL)canLoadFramesFromURL:(NSURL*)url;
-- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error;
+- (BOOL)loadFramesFromURL:(NSURL*)url withBlock:(void (^)(CBFrame*))frameCallback;
 - (BOOL)canLoadFramesFromDataSource:(id<CBFrameDataSource>)dataSource;
-- (NSArray*)loadFramesFromDataSource:(id<CBFrameDataSource>)dataSource error:(NSError **)error;
+- (BOOL)loadFramesFromDataSource:(id<CBFrameDataSource>)dataSource withBlock:(void (^)(CBFrame*))frameCallback;
 @end
 
 @interface CBFrameFactory : NSObject
@@ -35,7 +37,7 @@
 
 - (id)init;
 
-- (NSArray*)framesFromURL:(NSURL*)url error:(NSError **)error;
-- (NSArray*)framesFromDataSource:(id<CBFrameDataSource>)dataSource error:(NSError **)error;
+- (BOOL)framesFromURL:(NSURL*)url withBlock:(void (^)(CBFrame*))frameCallback;
+- (BOOL)framesFromDataSource:(id<CBFrameDataSource>)dataSource withBlock:(void (^)(CBFrame*))frameCallback;
 
 @end

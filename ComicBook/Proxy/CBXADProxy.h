@@ -33,11 +33,14 @@
 @interface CBXADProxy : NSObject
 
 + (BOOL)canLoadArchiveAtURL:(NSURL*)url;
-+ (NSArray*)loadArchiveAtURL:(NSURL*)url error:(NSError **)error;
++ (BOOL)loadArchiveAtURL:(NSURL*)url
+			   withBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback;
 
 + (BOOL)canLoadArchiveFromArchiveFile:(CBXADArchiveFileProxy*)archiveFile;
-+ (NSArray*)loadArchiveFromArchiveFile:(CBXADArchiveFileProxy*)archiveFile error:(NSError **)error;
++ (BOOL)loadArchiveFromArchiveFile:(CBXADArchiveFileProxy*)archiveFile
+						 withBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback;
 
-+ (NSArray*)loadArchiveFromParser:(XADArchiveParser*)parser error:(NSError **)error;
++ (BOOL)loadArchiveFromParser:(XADArchiveParser*)parser
+					withBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback;
 
 @end

@@ -17,59 +17,40 @@
 	return [[url pathExtension] isEqualToString:@"pdf"];
 }
 
-- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error
+- (BOOL)loadFramesFromURL:(NSURL*)url withBlock:(void (^)(CBFrame*))frameCallback
 {
-	if ([self canLoadFramesFromURL:url])
-		return [self pagesFromPdfFile:url];
-	else
-		return nil;
+	PDFDocument * doc = [[PDFDocument alloc] initWithURL:url];
+	return [self pagesFromPdfDocument:doc withPath:[url absoluteString] withBlock:frameCallback];
 }
 
-- (BOOL)canLoadFramesFromData:(NSData*)data withPath:(NSString*)path
+- (BOOL)canLoadFramesFromDataSource:(id<CBFrameDataSource>)dataSource;
 {
-	NSString * fileExtension = [path pathExtension];
+	NSString * fileExtension = [[dataSource framePath] pathExtension];
 	return [fileExtension isEqualToString:@"pdf"];
 }
 
-- (NSArray*)loadFramesFromData:(NSData*)data withPath:(NSString*)path error:(NSError **)error
+- (BOOL)loadFramesFromDataSource:(id<CBFrameDataSource>)dataSource withBlock:(void (^)(CBFrame*))frameCallback
 {
-	if ([self canLoadFramesFromData:data withPath:path])
-		return [self pagesFromPdfData:data withPath:path];
-	else
-		return nil;
+	PDFDocument * doc = [[PDFDocument alloc] initWithData:[dataSource frameData]];
+	return [self pagesFromPdfDocument:doc withPath:[dataSource framePath] withBlock:frameCallback];
 }
 
-- (NSArray*)pagesFromPdfFile:(NSURL*)pdfPath
-{
-	PDFDocument * doc = [[PDFDocument alloc] initWithURL:pdfPath];
-	return [self pagesFromPdfDocument:doc withPath:[pdfPath absoluteString]];
-}
-
-- (NSArray*)pagesFromPdfData:(NSData*)pdfData withPath:(NSString*)pdfPath
-{
-	PDFDocument * doc = [[PDFDocument alloc] initWithData:pdfData];
-	return [self pagesFromPdfDocument:doc withPath:pdfPath];
-}
-
-- (NSArray*)pagesFromPdfDocument:(PDFDocument*)document withPath:(NSString*)pdfPath
+- (BOOL)pagesFromPdfDocument:(PDFDocument*)document withPath:(NSString*)pdfPath
+				   withBlock:(void (^)(CBFrame*))frameCallback
 {
 	if (document)
 	{
-		NSMutableArray * pages = [NSMutableArray arrayWithCapacity:1];
 		for	(NSUInteger i = 0; i < [document pageCount]; i++)
 		{
 			PDFPage * pdfPage = [document pageAtIndex:i];
 			NSString * name = [pdfPath stringByAppendingPathComponent:[pdfPage label]];
 			CBPDFFrame * page = [[CBPDFFrame alloc] initWithPdfPage:pdfPage withPath:name];
 			if (page)
-				[pages addObject:page];
+				frameCallback(page);
 		}
-		return pages;
+		return YES;
 	}
-	else
-	{
-		return nil;
-	}
+	return NO;
 }
 
 @end

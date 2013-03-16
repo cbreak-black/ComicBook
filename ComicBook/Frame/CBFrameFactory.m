@@ -24,9 +24,9 @@
 	return NO;
 }
 
-- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error
+- (BOOL)loadFramesFromURL:(NSURL*)url withBlock:(void (^)(CBFrame*))frameCallback
 {
-	return nil;
+	return NO;
 }
 
 - (BOOL)canLoadFramesFromDataSource:(id<CBFrameDataSource>)dataSource
@@ -34,9 +34,9 @@
 	return NO;
 }
 
-- (NSArray*)loadFramesFromDataSource:(id<CBFrameDataSource>)dataSource error:(NSError **)error
+- (BOOL)loadFramesFromDataSource:(id<CBFrameDataSource>)dataSource withBlock:(void (^)(CBFrame*))frameCallback
 {
-	return nil;
+	return NO;
 }
 
 @end
@@ -44,7 +44,7 @@
 // URL Loader
 @interface CBDirectoryFrameLoader : CBFrameLoader
 - (BOOL)canLoadFramesFromURL:(NSURL*)url;
-- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error;
+- (BOOL)loadFramesFromURL:(NSURL*)url withBlock:(void (^)(CBFrame*))frameCallback;
 @end
 
 @implementation CBDirectoryFrameLoader
@@ -55,7 +55,7 @@
 	return [url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL] && [isDirectory boolValue];
 }
 
-- (NSArray*)loadFramesFromURL:(NSURL*)url error:(NSError **)error
+- (BOOL)loadFramesFromURL:(NSURL*)url withBlock:(void (^)(CBFrame*))frameCallback
 {
 	NSFileManager * fm = [NSFileManager defaultManager];
 	NSArray * enumProps = [NSArray arrayWithObjects:NSURLTypeIdentifierKey,NSURLIsDirectoryKey,nil];
@@ -65,21 +65,17 @@
 		   errorHandler:^(NSURL *u, NSError *e)
 	 {
 		 NSLog(@"framesFromDirectoryURL enumerator error: %@ %@", u, e);
-		 if (error) *error = e;
 		 return YES;
 	 }];
-	NSMutableArray * frames = [NSMutableArray arrayWithCapacity:1];
 	for (NSURL * url in dirEnum)
 	{
 		NSNumber * isDirectory;
-		if ([url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:error] && ![isDirectory boolValue])
+		if ([url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL] && ![isDirectory boolValue])
 		{
-			NSArray * subFrames = [[CBFrameFactory factory] framesFromURL:url error:error];
-			if (subFrames)
-				[frames addObjectsFromArray:subFrames];
+			[[CBFrameFactory factory] framesFromURL:url withBlock:frameCallback];
 		}
 	}
-	return frames;
+	return YES;
 }
 
 @end
@@ -105,38 +101,35 @@ static CBFrameFactory * CBFrameFactory_staticFactory = nil;
 		frameLoaders = @[
 			[CBDirectoryFrameLoader loader],
 			[CBPDFFrameLoader loader],
-			[CBURLImageFrameLoader loader],
-			[CBDataImageFrameLoader loader],
+			[CBImageFrameLoader loader],
 			[CBXADFrameLoader loader]
 		];
 	}
 	return self;
 }
 
-- (NSArray*)framesFromURL:(NSURL*)url error:(NSError **)error
+- (BOOL)framesFromURL:(NSURL*)url withBlock:(void (^)(CBFrame*))frameCallback;
 {
 	for (CBFrameLoader * frameLoader in frameLoaders)
 	{
 		if ([frameLoader canLoadFramesFromURL:url])
 		{
-			return [frameLoader loadFramesFromURL:url error:error];
+			return [frameLoader loadFramesFromURL:url withBlock:frameCallback];
 		}
 	}
-	// No valid loader found
-	return nil;
+	return NO;
 }
 
-- (NSArray*)framesFromDataSource:(id<CBFrameDataSource>)dataSource error:(NSError **)error;
+- (BOOL)framesFromDataSource:(id<CBFrameDataSource>)dataSource withBlock:(void (^)(CBFrame*))frameCallback;
 {
 	for (CBFrameLoader * frameLoader in frameLoaders)
 	{
 		if ([frameLoader canLoadFramesFromDataSource:dataSource])
 		{
-			return [frameLoader loadFramesFromDataSource:dataSource error:error];
+			return [frameLoader loadFramesFromDataSource:dataSource withBlock:frameCallback];
 		}
 	}
-	// No valid loader found
-	return nil;
+	return NO;
 }
 
 @end

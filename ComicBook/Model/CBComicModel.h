@@ -14,7 +14,7 @@
 {
 	NSURL * fileUrl;
 	NSUInteger currentFrameIdx;
-	NSArray * frames;
+	NSMutableArray * frames;
 }
 
 - (id)initWithURL:(NSURL*)url error:(NSError **)error;
@@ -23,8 +23,12 @@
 
 @property (nonatomic,readonly) NSURL * fileUrl;
 @property (nonatomic,readonly) NSUInteger frameCount;
-@property (atomic,assign) NSUInteger currentFrameIdx;
+@property (nonatomic,assign) NSUInteger currentFrameIdx;
 
+- (void)shiftCurrentFrameIdx:(NSInteger)offset;
+
+- (void)addFrame:(CBFrame*)frame;
+- (void)addFrames:(NSArray*)frames;
 - (CBFrame*)frameAtIndex:(NSUInteger)idx;
 
 - (void)loadPersistentData;

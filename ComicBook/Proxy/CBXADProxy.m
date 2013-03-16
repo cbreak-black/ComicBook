@@ -39,14 +39,18 @@
 
 - (NSData*)data
 {
-	XADError error = XADNoError;
-	CSHandle * archiveDataHandle = [archive handleForEntryWithDictionary:entry
-															wantChecksum:YES error:&error];
-	if (error == XADNoError)
+	@try
 	{
-		return [archiveDataHandle remainingFileContents];
+		@synchronized (archive)
+		{
+			CSHandle * archiveDataHandle = [archive handleForEntryWithDictionary:entry wantChecksum:YES];
+			return [archiveDataHandle remainingFileContents];
+		}
 	}
-	NSLog(@"Error %@ reading archive at path %@", [XADException describeXADError:error], [self path]);
+	@catch (NSException * e)
+	{
+		NSLog(@"Exception %@ reading archive at path %@", e, [self path]);
+	}
 	return nil;
 }
 
@@ -58,13 +62,10 @@
 // Delegate for parsing
 @interface CBXADArchiveParserDelegate : NSObject
 {
-	NSMutableArray * archiveFiles;
+	void (^fileCallback)(CBXADArchiveFileProxy*);
 }
 
-- (id)init;
-- (void)dealloc;
-
-- (NSArray*)archiveFiles;
+- (id)initWithBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback;
 
 - (void)archiveParser:(XADArchiveParser *)parser foundEntryWithDictionary:(NSDictionary *)dict;
 - (BOOL)archiveParsingShouldStop:(XADArchiveParser *)parser;
@@ -75,24 +76,13 @@
 
 @implementation CBXADArchiveParserDelegate
 
-- (id)init
+- (id)initWithBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback_
 {
 	if (self = [super init])
 	{
-		archiveFiles = [[NSMutableArray alloc] init];
+		fileCallback = fileCallback_;
 	}
 	return self;
-}
-
-- (void)dealloc
-{
-	[archiveFiles release];
-	[super dealloc];
-}
-
-- (NSArray*)archiveFiles
-{
-	return archiveFiles;
 }
 
 - (void)archiveParser:(XADArchiveParser *)parser foundEntryWithDictionary:(NSDictionary *)dict
@@ -106,7 +96,7 @@
 		![[dict objectForKey:XADIsFIFOKey] boolValue])
 	{
 		CBXADArchiveFileProxy * archiveFile = [[CBXADArchiveFileProxy alloc] initWithEntry:dict inArchive:parser];
-		[archiveFiles addObject:archiveFile];
+		fileCallback(archiveFile);
 		[archiveFile release];
 	}
 }
@@ -138,13 +128,14 @@
 	return (parser && error == XADNoError);
 }
 
-+ (NSArray*)loadArchiveAtURL:(NSURL*)url error:(NSError **)outError
++ (BOOL)loadArchiveAtURL:(NSURL*)url
+			   withBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback
 {
 	XADError error = XADNoError;
 	XADArchiveParser * parser = [XADArchiveParser archiveParserForPath:[url path] error:&error];
 	if (parser && error == XADNoError)
-		return [self loadArchiveFromParser:parser error:error];
-	return nil;
+		return [self loadArchiveFromParser:parser withBlock:fileCallback];
+	return NO;
 }
 
 + (BOOL)canLoadArchiveFromArchiveFile:(CBXADArchiveFileProxy*)archiveFile
@@ -155,7 +146,8 @@
 	return (parser && error == XADNoError);
 }
 
-+ (NSArray*)loadArchiveFromArchiveFile:(CBXADArchiveFileProxy*)archiveFile error:(NSError **)outError
++ (BOOL)loadArchiveFromArchiveFile:(CBXADArchiveFileProxy*)archiveFile
+						 withBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback
 {
 	XADError error = XADNoError;
 	XADArchiveParser * parser = [XADArchiveParser archiveParserForEntryWithDictionary:[archiveFile entry]
@@ -164,19 +156,22 @@
 	{
 		if ([parser filename] == nil)
 			[parser setFilename:[archiveFile path]];
-		return [self loadArchiveFromParser:parser error:error];
+		return [self loadArchiveFromParser:parser withBlock:fileCallback];
 	}
-	return nil;
+	return NO;
 }
 
-+ (NSArray*)loadArchiveFromParser:(XADArchiveParser*)parser error:(NSError **)error
++ (BOOL)loadArchiveFromParser:(XADArchiveParser*)parser
+					withBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback
 {
-	CBXADArchiveParserDelegate * delegate = [[CBXADArchiveParserDelegate alloc] init];
-	[parser setDelegate:delegate];
-	[parser parse];
-	NSArray * files = [[[delegate archiveFiles] retain] autorelease];
-	[delegate release];
-	return files;
+	@synchronized (parser)
+	{
+		CBXADArchiveParserDelegate * delegate = [[CBXADArchiveParserDelegate alloc] initWithBlock:fileCallback];
+		[parser setDelegate:delegate];
+		XADError error = [parser parseWithoutExceptions];
+		[delegate release];
+		return error == XADNoError;
+	}
 }
 
 @end
