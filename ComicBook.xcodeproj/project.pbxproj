@@ -16,7 +16,9 @@
 		7049267F169CE5D7000C073E /* CBContentLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7049267E169CE5D7000C073E /* CBContentLayoutManager.m */; };
 		70492682169D0ABE000C073E /* CBComicLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 70492681169D0ABE000C073E /* CBComicLayoutManager.m */; };
 		7049E6701691C84500A0BA78 /* CBRangeBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7049E66F1691C84500A0BA78 /* CBRangeBuffer.m */; };
+		705202D616F33AF90079E0CF /* CBXADFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 705202D516F33AF90079E0CF /* CBXADFrame.m */; };
 		705202D916F364FF0079E0CF /* CBFrameDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 705202D816F364FF0079E0CF /* CBFrameDataSource.m */; };
+		705202DE16F3785D0079E0CF /* CBXADProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 705202DD16F3785D0079E0CF /* CBXADProxy.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		7060C021167CAA14008A9E92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C020167CAA14008A9E92 /* Cocoa.framework */; };
 		7060C02B167CAA14008A9E92 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7060C029167CAA14008A9E92 /* InfoPlist.strings */; };
 		7060C02D167CAA14008A9E92 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C02C167CAA14008A9E92 /* main.m */; };
@@ -27,14 +29,14 @@
 		7060C043167CAA14008A9E92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C020167CAA14008A9E92 /* Cocoa.framework */; };
 		7060C04B167CAA14008A9E92 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7060C049167CAA14008A9E92 /* InfoPlist.strings */; };
 		7060C04E167CAA14008A9E92 /* ComicBookTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C04D167CAA14008A9E92 /* ComicBookTests.m */; };
+		7060C07F1685DF4A008A9E92 /* UniversalDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C07D1685DF4A008A9E92 /* UniversalDetector.framework */; };
+		7060C0801685DF4A008A9E92 /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C07E1685DF4A008A9E92 /* XADMaster.framework */; };
 		7060C08916861319008A9E92 /* CBFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C08816861319008A9E92 /* CBFrame.m */; };
 		7060C08C168618DD008A9E92 /* CBImageFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C08B168618DD008A9E92 /* CBImageFrame.m */; };
 		7060C09316863914008A9E92 /* CBFrameFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C09216863914008A9E92 /* CBFrameFactory.m */; };
 		7060C097168642B1008A9E92 /* CBPDFFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C096168642B1008A9E92 /* CBPDFFrame.m */; };
 		7060C09D168660CA008A9E92 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C09C168660CA008A9E92 /* Quartz.framework */; };
 		7060C0A4168669AC008A9E92 /* CBDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C0A3168669AC008A9E92 /* CBDocumentController.m */; };
-		7060C07F1685DF4A008A9E92 /* UniversalDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C07D1685DF4A008A9E92 /* UniversalDetector.framework */; };
-		7060C0801685DF4A008A9E92 /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C07E1685DF4A008A9E92 /* XADMaster.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,8 +67,12 @@
 		70492681169D0ABE000C073E /* CBComicLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBComicLayoutManager.m; path = UI/CBComicLayoutManager.m; sourceTree = "<group>"; };
 		7049E66E1691C84500A0BA78 /* CBRangeBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBRangeBuffer.h; path = Helper/CBRangeBuffer.h; sourceTree = "<group>"; };
 		7049E66F1691C84500A0BA78 /* CBRangeBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBRangeBuffer.m; path = Helper/CBRangeBuffer.m; sourceTree = "<group>"; };
+		705202D416F33AF90079E0CF /* CBXADFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBXADFrame.h; path = Frame/CBXADFrame.h; sourceTree = "<group>"; };
+		705202D516F33AF90079E0CF /* CBXADFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBXADFrame.m; path = Frame/CBXADFrame.m; sourceTree = "<group>"; };
 		705202D716F364FF0079E0CF /* CBFrameDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBFrameDataSource.h; path = Frame/CBFrameDataSource.h; sourceTree = "<group>"; };
 		705202D816F364FF0079E0CF /* CBFrameDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBFrameDataSource.m; path = Frame/CBFrameDataSource.m; sourceTree = "<group>"; };
+		705202DC16F3785D0079E0CF /* CBXADProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBXADProxy.h; path = Proxy/CBXADProxy.h; sourceTree = "<group>"; };
+		705202DD16F3785D0079E0CF /* CBXADProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBXADProxy.m; path = Proxy/CBXADProxy.m; sourceTree = "<group>"; };
 		7060C01C167CAA14008A9E92 /* ComicBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ComicBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7060C020167CAA14008A9E92 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		7060C023167CAA14008A9E92 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -87,6 +93,8 @@
 		7060C04C167CAA14008A9E92 /* ComicBookTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ComicBookTests.h; sourceTree = "<group>"; };
 		7060C04D167CAA14008A9E92 /* ComicBookTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ComicBookTests.m; sourceTree = "<group>"; };
 		7060C057167CB325008A9E92 /* ComicBook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ComicBook.entitlements; sourceTree = "<group>"; };
+		7060C07D1685DF4A008A9E92 /* UniversalDetector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniversalDetector.framework; path = ../../../Library/Frameworks/UniversalDetector.framework; sourceTree = "<group>"; };
+		7060C07E1685DF4A008A9E92 /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = ../../../Library/Frameworks/XADMaster.framework; sourceTree = "<group>"; };
 		7060C08716861319008A9E92 /* CBFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBFrame.h; path = Frame/CBFrame.h; sourceTree = "<group>"; };
 		7060C08816861319008A9E92 /* CBFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBFrame.m; path = Frame/CBFrame.m; sourceTree = "<group>"; };
 		7060C08A168618DD008A9E92 /* CBImageFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBImageFrame.h; path = Frame/CBImageFrame.h; sourceTree = "<group>"; };
@@ -98,8 +106,6 @@
 		7060C09C168660CA008A9E92 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		7060C0A2168669AC008A9E92 /* CBDocumentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBDocumentController.h; path = Controller/CBDocumentController.h; sourceTree = "<group>"; };
 		7060C0A3168669AC008A9E92 /* CBDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBDocumentController.m; path = Controller/CBDocumentController.m; sourceTree = "<group>"; };
-		7060C07D1685DF4A008A9E92 /* UniversalDetector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniversalDetector.framework; path = ../../../Library/Frameworks/UniversalDetector.framework; sourceTree = "<group>"; };
-		7060C07E1685DF4A008A9E92 /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = ../../../Library/Frameworks/XADMaster.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +165,15 @@
 			name = Helper;
 			sourceTree = "<group>";
 		};
+		705202DB16F378370079E0CF /* Proxy */ = {
+			isa = PBXGroup;
+			children = (
+				705202DC16F3785D0079E0CF /* CBXADProxy.h */,
+				705202DD16F3785D0079E0CF /* CBXADProxy.m */,
+			);
+			name = Proxy;
+			sourceTree = "<group>";
+		};
 		7060C011167CAA13008A9E92 = {
 			isa = PBXGroup;
 			children = (
@@ -212,6 +227,7 @@
 				703525D01687563100AB06B1 /* UI */,
 				7060C0A116866963008A9E92 /* Controller */,
 				7049E66C1691C77B00A0BA78 /* Helper */,
+				705202DB16F378370079E0CF /* Proxy */,
 				7049267A169B0460000C073E /* CBComicWindow.xib */,
 				7060C038167CAA14008A9E92 /* MainMenu.xib */,
 				7060C027167CAA14008A9E92 /* Supporting Files */,
@@ -263,6 +279,8 @@
 				7060C08B168618DD008A9E92 /* CBImageFrame.m */,
 				7060C095168642B1008A9E92 /* CBPDFFrame.h */,
 				7060C096168642B1008A9E92 /* CBPDFFrame.m */,
+				705202D416F33AF90079E0CF /* CBXADFrame.h */,
+				705202D516F33AF90079E0CF /* CBXADFrame.m */,
 			);
 			name = Frame;
 			sourceTree = "<group>";
@@ -405,7 +423,9 @@
 				7049E6701691C84500A0BA78 /* CBRangeBuffer.m in Sources */,
 				7049267F169CE5D7000C073E /* CBContentLayoutManager.m in Sources */,
 				70492682169D0ABE000C073E /* CBComicLayoutManager.m in Sources */,
+				705202D616F33AF90079E0CF /* CBXADFrame.m in Sources */,
 				705202D916F364FF0079E0CF /* CBFrameDataSource.m in Sources */,
+				705202DE16F3785D0079E0CF /* CBXADProxy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

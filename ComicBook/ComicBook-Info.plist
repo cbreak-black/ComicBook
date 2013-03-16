@@ -136,6 +136,18 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeName</key>
+			<string>archive-7z</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>org.7-zip.7-zip-archive</string>
+			</array>
+			<key>NSDocumentClass</key>
+			<string>CBDocument</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
 			<string>archive-cbr</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -586,6 +598,30 @@
 				<key>public.mime-type</key>
 				<array>
 					<string>application/x-ace-compressed</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>7z Archive</string>
+			<key>UTTypeIconFile</key>
+			<string></string>
+			<key>UTTypeIdentifier</key>
+			<string>org.7-zip.7-zip-archive</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>7z</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/x-7z-compressed</string>
 				</array>
 			</dict>
 		</dict>

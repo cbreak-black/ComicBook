@@ -10,8 +10,8 @@
 
 static BOOL canLoadFrameFromFormat(NSString * extension)
 {
-	NSArray * imageTypes = [NSImage imageTypes];
-	return [imageTypes containsObject:extension];
+	// imageFileTypes contains extensions
+	return [[NSImage imageFileTypes] containsObject:extension];
 }
 
 static BOOL canLoadFramesFromURL(NSURL * url)
@@ -20,7 +20,8 @@ static BOOL canLoadFramesFromURL(NSURL * url)
 	BOOL success = [url getResourceValue:&urlType forKey:NSURLTypeIdentifierKey error:NULL];
 	if (success && urlType)
 	{
-		return canLoadFrameFromFormat(urlType);
+		// imageTypes contains UTIs
+		return [[NSImage imageTypes] containsObject:urlType];
 	}
 	return NO;
 }

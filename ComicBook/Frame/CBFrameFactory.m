@@ -10,6 +10,7 @@
 
 #import "CBImageFrame.h"
 #import "CBPDFFrame.h"
+#import "CBXADFrame.h"
 
 @implementation CBFrameLoader
 
@@ -105,7 +106,8 @@ static CBFrameFactory * CBFrameFactory_staticFactory = nil;
 			[CBDirectoryFrameLoader loader],
 			[CBPDFFrameLoader loader],
 			[CBURLImageFrameLoader loader],
-			[CBDataImageFrameLoader loader]
+			[CBDataImageFrameLoader loader],
+			[CBXADFrameLoader loader]
 		];
 	}
 	return self;
