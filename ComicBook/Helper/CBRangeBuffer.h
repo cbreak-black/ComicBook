@@ -9,6 +9,21 @@
 #import <Foundation/NSArray.h>
 
 /*!
+ \brief Standard half-open signed range [start, end[
+ */
+typedef struct
+{
+	NSInteger start;
+	NSInteger end;
+} CBRange;
+
+NS_INLINE CBRange CBRangeMake(NSInteger s, NSInteger e)
+{
+	CBRange range = { s, e };
+	return range;
+}
+
+/*!
  \brief A kind of ring buffer modeling an indexed range
 
  This class models a range buffer. Primary operations are inserting of objects (at the start, for
@@ -28,10 +43,11 @@
 
 @property (assign) NSInteger startIndex;
 @property (assign,readonly) NSInteger endIndex;
+@property (assign,readonly) CBRange range;
 
 - (NSInteger)shiftUp;
 - (NSInteger)shiftDown;
-- (void)shiftBy:(NSInteger)offset changedRange:(NSInteger*)outRange;
+- (void)shiftBy:(NSInteger)offset changedRange:(CBRange*)outRange;
 
 - (void)shiftBy:(NSInteger)offset usingBlock:(void (^)(id obj, NSInteger idx))block;
 - (void)shiftBy:(NSInteger)offset usingBlockAsync:(void (^)(id obj, NSInteger idx))block;
@@ -47,5 +63,10 @@
 - (void)enumerateObjectsUsingBlockAsync:(void (^)(id obj, NSInteger idx))block;
 - (void)enumerateObjectsUsingBlockAsync:(void (^)(id obj, NSInteger idx))block
 							 completion:(void (^)())completionBlock;
+
+- (void)enumerateObjectsInRange:(CBRange)range usingBlock:(void (^)(id obj, NSInteger idx))block;
+- (void)enumerateObjectsInRange:(CBRange)range usingBlockAsync:(void (^)(id obj, NSInteger idx))block;
+- (void)enumerateObjectsInRange:(CBRange)range usingBlockAsync:(void (^)(id obj, NSInteger idx))block
+					 completion:(void (^)())completionBlock;
 
 @end
