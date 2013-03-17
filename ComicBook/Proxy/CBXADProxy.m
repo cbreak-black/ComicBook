@@ -63,9 +63,12 @@
 @interface CBXADArchiveParserDelegate : NSObject
 {
 	void (^fileCallback)(CBXADArchiveFileProxy*);
+	NSMutableArray * files;
 }
 
 - (id)initWithBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback;
+
+- (void)commit;
 
 - (void)archiveParser:(XADArchiveParser *)parser foundEntryWithDictionary:(NSDictionary *)dict;
 - (BOOL)archiveParsingShouldStop:(XADArchiveParser *)parser;
@@ -81,8 +84,28 @@
 	if (self = [super init])
 	{
 		fileCallback = fileCallback_;
+		files = [[NSMutableArray alloc] initWithCapacity:32];
 	}
 	return self;
+}
+
+- (void)dealloc
+{
+	[files release];
+	[super dealloc];
+}
+
+- (void)commit
+{
+	// Sort
+	[files sortUsingComparator:^(CBXADArchiveFileProxy * a, CBXADArchiveFileProxy * b)
+	{ return [a.path compare:b.path options:NSNumericSearch]; }];
+	// Notify with callback
+	for (CBXADArchiveFileProxy * archiveFile in files)
+	{
+		fileCallback(archiveFile);
+	}
+	[files removeAllObjects];
 }
 
 - (void)archiveParser:(XADArchiveParser *)parser foundEntryWithDictionary:(NSDictionary *)dict
@@ -96,7 +119,7 @@
 		![[dict objectForKey:XADIsFIFOKey] boolValue])
 	{
 		CBXADArchiveFileProxy * archiveFile = [[CBXADArchiveFileProxy alloc] initWithEntry:dict inArchive:parser];
-		fileCallback(archiveFile);
+		[files addObject:archiveFile];
 		[archiveFile release];
 	}
 }
@@ -169,6 +192,7 @@
 		CBXADArchiveParserDelegate * delegate = [[CBXADArchiveParserDelegate alloc] initWithBlock:fileCallback];
 		[parser setDelegate:delegate];
 		XADError error = [parser parseWithoutExceptions];
+		[delegate commit];
 		[delegate release];
 		return error == XADNoError;
 	}
