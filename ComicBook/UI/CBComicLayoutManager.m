@@ -26,7 +26,19 @@
 	return self;
 }
 
+- (void)setAnchorPageIndex:(NSInteger)anchorPageIndex_
+{
+	anchorPageIndex = anchorPageIndex_;
+	[self layoutPages];
+}
+
 @synthesize anchorPageIndex;
+
+- (void)setLayoutMode:(CBComicLayoutMode)layoutMode_
+{
+	layoutMode = layoutMode_;
+	[self layoutPages];
+}
 
 @synthesize layoutMode;
 
@@ -73,12 +85,17 @@
 	}
 }
 
-- (void)layoutSublayersOfLayer:(CALayer *)layer
+- (void)layoutPages
 {
 	if (layoutMode == kCBComicLayoutSingle)
 		[self layoutSingle];
 	else
 		[self layoutDouble];
+}
+
+- (void)layoutSublayersOfLayer:(CALayer *)layer
+{
+	[self layoutPages];
 }
 
 - (void)layoutDouble
@@ -102,7 +119,8 @@
 	}
 	if (anchorLayer.isLaidOut)
 	{
-		layoutAnchorAlignment = anchorLayer.alignment;
+		if (anchorLayer.alignment != kCBPageDouble)
+			layoutAnchorAlignment = anchorLayer.alignment;
 		layoutAnchorRow = anchorLayer.position.y;
 	}
 	// If the previous page is a single page and the current page is at the end, anchor at the prev

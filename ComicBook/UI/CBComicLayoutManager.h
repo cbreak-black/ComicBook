@@ -10,13 +10,9 @@
 
 #import <Quartz/Quartz.h>
 
-@class CBRangeBuffer;
+#import "CBConstants.h"
 
-typedef enum {
-	kCBComicLayoutLeftToRight,
-	kCBComicLayoutRightToLeft,
-	kCBComicLayoutSingle
-} CBComicLayoutMode;
+@class CBRangeBuffer;
 
 @interface CBComicLayoutManager : NSObject
 {
@@ -36,6 +32,8 @@ typedef enum {
 
 @property (nonatomic,readonly) CGFloat verticalTop;
 @property (nonatomic,readonly) CGFloat verticalBottom;
+
+- (void)layoutPages;
 
 // Layout Manager
 - (void)layoutSublayersOfLayer:(CALayer *)layer;

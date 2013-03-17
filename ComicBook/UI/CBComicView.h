@@ -72,4 +72,8 @@
 - (void)keyUp:(NSEvent*)event;
 - (void)swipeWithEvent:(NSEvent*)event;
 
+- (IBAction)setLayoutLeftToRight:(id)sender;
+- (IBAction)setLayoutRightToLeft:(id)sender;
+- (IBAction)setLayoutSingle:(id)sender;
+
 @end

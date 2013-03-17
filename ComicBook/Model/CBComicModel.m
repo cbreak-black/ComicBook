@@ -58,6 +58,8 @@
 
 @synthesize currentFrameIdx;
 
+@synthesize layoutMode;
+
 - (void)shiftCurrentFrameIdx:(NSInteger)offset
 {
 	NSInteger newFrameIdx = currentFrameIdx + offset;
@@ -98,8 +100,9 @@
 	if (dict)
 	{
 		NSNumber * n = [dict objectForKey:@"currentFrameIdx"];
-		if (n)
-			currentFrameIdx = [n unsignedIntegerValue];
+		if (n) currentFrameIdx = [n unsignedIntegerValue];
+		NSNumber * l = [dict objectForKey:@"layoutMode"];
+		if (l) layoutMode = (CBComicLayoutMode)[l unsignedIntegerValue];
 	}
 }
 
@@ -110,6 +113,7 @@
 	NSDictionary * dict = @{
 		@"name": [fileUrl lastPathComponent],
 		@"currentFrameIdx": [NSNumber numberWithUnsignedInteger:currentFrameIdx],
+		@"layoutMode": [NSNumber numberWithUnsignedInteger:layoutMode],
 		@"bookmark": bookmark
 	};
 	[CBComicModel storePersistentDictionary:dict forURL:fileUrl];

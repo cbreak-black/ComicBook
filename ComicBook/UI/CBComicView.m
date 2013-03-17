@@ -116,14 +116,19 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 {
 	if (model != nil)
 	{
-		[model removeObserver:self forKeyPath:@"currentFrameIdx"];
 		[model removeObserver:self forKeyPath:@"frameCount"];
+		[model removeObserver:self forKeyPath:@"currentFrameIdx"];
+		[model removeObserver:self forKeyPath:@"layoutMode"];
 	}
 	model = model_;
 	if (model != nil)
 	{
-		[model addObserver:self forKeyPath:@"currentFrameIdx" options:0 context:0];
-		[model addObserver:self forKeyPath:@"frameCount" options:NSKeyValueObservingOptionOld context:0];
+		[model addObserver:self forKeyPath:@"frameCount"
+				   options:NSKeyValueObservingOptionOld context:0];
+		[model addObserver:self forKeyPath:@"currentFrameIdx"
+				   options:NSKeyValueObservingOptionInitial context:0];
+		[model addObserver:self forKeyPath:@"layoutMode"
+				   options:NSKeyValueObservingOptionInitial context:0];
 	}
 }
 
@@ -132,10 +137,6 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
 						change:(NSDictionary *)change context:(void *)context
 {
-	if ([keyPath isEqualToString:@"currentFrameIdx"])
-	{
-		[self updatePageFromModel];
-	}
 	if ([keyPath isEqualToString:@"frameCount"])
 	{
 		NSUInteger oldFrameCount = [[change objectForKey:NSKeyValueChangeOldKey] unsignedIntegerValue];
@@ -153,6 +154,14 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 				 });
 			 }
 		 }];
+	}
+	else if ([keyPath isEqualToString:@"currentFrameIdx"])
+	{
+		[self updatePageFromModel];
+	}
+	else if ([keyPath isEqualToString:@"layoutMode"])
+	{
+		comicLayoutManager.layoutMode = model.layoutMode;
 	}
 }
 
@@ -405,6 +414,21 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 - (void)swipeWithEvent:(NSEvent*)event
 {
 	NSLog(@"%@", event);
+}
+
+- (IBAction)setLayoutLeftToRight:(id)sender
+{
+	model.layoutMode = kCBComicLayoutLeftToRight;
+}
+
+- (IBAction)setLayoutRightToLeft:(id)sender
+{
+	model.layoutMode = kCBComicLayoutRightToLeft;
+}
+
+- (IBAction)setLayoutSingle:(id)sender
+{
+	model.layoutMode = kCBComicLayoutSingle;
 }
 
 @end

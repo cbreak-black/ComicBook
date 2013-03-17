@@ -73,6 +73,7 @@
 		705202D816F364FF0079E0CF /* CBFrameDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBFrameDataSource.m; path = Frame/CBFrameDataSource.m; sourceTree = "<group>"; };
 		705202DC16F3785D0079E0CF /* CBXADProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBXADProxy.h; path = Proxy/CBXADProxy.h; sourceTree = "<group>"; };
 		705202DD16F3785D0079E0CF /* CBXADProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBXADProxy.m; path = Proxy/CBXADProxy.m; sourceTree = "<group>"; };
+		705202E116F52CFA0079E0CF /* CBConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CBConstants.h; path = Model/CBConstants.h; sourceTree = "<group>"; };
 		7060C01C167CAA14008A9E92 /* ComicBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ComicBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7060C020167CAA14008A9E92 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		7060C023167CAA14008A9E92 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -152,6 +153,7 @@
 			children = (
 				703525DC168F658600AB06B1 /* CBComicModel.h */,
 				703525DD168F658600AB06B1 /* CBComicModel.m */,
+				705202E116F52CFA0079E0CF /* CBConstants.h */,
 			);
 			name = Model;
 			sourceTree = "<group>";

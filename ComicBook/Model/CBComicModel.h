@@ -8,13 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+#import "CBConstants.h"
+
 @class CBFrame;
 
 @interface CBComicModel : NSObject
 {
 	NSURL * fileUrl;
-	NSUInteger currentFrameIdx;
 	NSMutableArray * frames;
+	NSUInteger currentFrameIdx;
+	CBComicLayoutMode layoutMode;
 }
 
 - (id)initWithURL:(NSURL*)url error:(NSError **)error;
@@ -24,6 +27,7 @@
 @property (nonatomic,readonly) NSURL * fileUrl;
 @property (nonatomic,readonly) NSUInteger frameCount;
 @property (nonatomic,assign) NSUInteger currentFrameIdx;
+@property (nonatomic,assign) CBComicLayoutMode layoutMode;
 
 - (void)shiftCurrentFrameIdx:(NSInteger)offset;
 
