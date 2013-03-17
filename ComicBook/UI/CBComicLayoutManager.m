@@ -124,7 +124,7 @@
 		layoutAnchorRow = anchorLayer.position.y;
 	}
 	// If the previous page is a single page and the current page is at the end, anchor at the prev
-	if (anchorLayerPre.image &&
+	if (anchorLayerPre.isValid &&
 		!anchorLayerPre.isDoublePage && layoutAnchorAlignment == [self lineEndAlignment])
 	{
 		// Not laid out, but anchor has a previous that is not double page
@@ -173,7 +173,7 @@
 		else
 		{
 			CBPageLayer * pageLayer1 = [pages objectAtIndex:i-1];
-			if (pageLayer1 && pageLayer1.image) // Valid
+			if (pageLayer1 && pageLayer1.isValid) // Valid
 			{
 				if (pageLayer1.isDoublePage)
 				{

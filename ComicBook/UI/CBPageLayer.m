@@ -21,15 +21,15 @@
 	return self;
 }
 
-- (void)setImage:(NSImage*)image_
+- (void)setImage:(NSImage*)image forFrame:(CBFrame*)comicFrame_
 {
 	@synchronized (self)
 	{
 		alignment = kCBPageUnaligned;
 		isLaidOut = NO;
-		if (image_)
+		comicFrame = comicFrame_;
+		if (image)
 		{
-			image = image_;
 			NSSize imageSize = [image size];
 			if (imageSize.width > 0 && imageSize.height > 0)
 				aspect = (CGFloat)imageSize.width/(CGFloat)imageSize.height;
@@ -46,14 +46,7 @@
 	}
 }
 
-- (NSImage*)image
-{
-	@synchronized (self)
-	{
-		return image;
-	}
-}
-
+@synthesize comicFrame;
 @synthesize aspect;
 
 - (void)setPosition:(CGPoint)position withAlignment:(CBPageAlignment)alignment_
@@ -110,5 +103,10 @@
 }
 
 @synthesize isLaidOut;
+
+- (BOOL)isValid
+{
+	return comicFrame != nil;
+}
 
 @end

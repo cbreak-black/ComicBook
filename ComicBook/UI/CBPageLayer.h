@@ -24,7 +24,7 @@ static const CGFloat kCBPageDoubleThreshold = 1.0;
  */
 @interface CBPageLayer : CALayer
 {
-	NSImage * image;
+	CBFrame * comicFrame;
 	CGFloat aspect;
 	CBPageAlignment alignment;
 	BOOL isLaidOut;
@@ -32,12 +32,14 @@ static const CGFloat kCBPageDoubleThreshold = 1.0;
 
 - (id)init;
 
+- (void)setImage:(NSImage*)image forFrame:(CBFrame*)comicFrame;
 - (void)setPosition:(CGPoint)position withAlignment:(CBPageAlignment)alignment;
 
-@property (atomic,retain) NSImage * image;
+@property (atomic,readonly) CBFrame * comicFrame;
 @property (atomic,readonly) CGFloat aspect;
 @property (atomic,assign) CBPageAlignment alignment;
 @property (atomic,readonly) BOOL isDoublePage; // True if aspect > kCBPageDoubleThreshold
 @property (atomic,readonly) BOOL isLaidOut;
+@property (atomic,readonly) BOOL isValid;
 
 @end

@@ -43,16 +43,19 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 		updatePagesBlock = ^(id obj, NSInteger idx)
 		{
 			CBPageLayer * pageLayer = obj;
-			// Load frame in current queue, assign in main thread
 			CBFrame * frame = [[weakSelf model] frameAtIndex:idx];
-			NSImage * image = [frame image];
-			dispatch_async(dispatch_get_main_queue(), ^()
+			if (pageLayer.comicFrame != frame)
 			{
-				[CATransaction begin];
-				[CATransaction setDisableActions:YES];
-				pageLayer.image = image;
-				[CATransaction commit];
-			});
+				// Load frame in current queue, assign in main thread
+				NSImage * image = [frame image];
+				dispatch_async(dispatch_get_main_queue(), ^()
+				{
+					[CATransaction begin];
+					[CATransaction setDisableActions:YES];
+					[pageLayer setImage:image forFrame:frame];
+					[CATransaction commit];
+				});
+			}
 		};
 	}
 	return self;
@@ -298,7 +301,7 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 	[pages enumerateObjectsUsingBlock:^(id obj, NSInteger idx)
 	 {
 		 CBPageLayer * page = obj;
-		 if (!page.isLaidOut || page.image == nil)
+		 if (!page.isLaidOut || !page.isValid)
 			 return;
 		 CGPoint pagePos = page.position;
 		 CGFloat pageDistance = fabs(-position.y - pagePos.y);
