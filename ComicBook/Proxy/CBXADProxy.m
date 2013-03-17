@@ -20,6 +20,19 @@
 	{
 		entry = [entry_ retain];
 		archive = [archive_ retain];
+		master = [archive_ retain];
+	}
+	return self;
+}
+
+- (id)initWithEntry:(NSDictionary*)entry_ inArchive:(XADArchiveParser*)archive_
+								  withMasterArchive:(XADArchiveParser*)master_
+{
+	if (self = [super init])
+	{
+		entry = [entry_ retain];
+		archive = [archive_ retain];
+		master = [master_ retain];
 	}
 	return self;
 }
@@ -28,6 +41,7 @@
 {
 	[entry release];
 	[archive release];
+	[master release];
 	[super dealloc];
 }
 
@@ -41,7 +55,8 @@
 {
 	@try
 	{
-		@synchronized (archive)
+		// Lock on master, so no archive, not even other sub archives, are used concurrently
+		@synchronized (master)
 		{
 			CSHandle * archiveDataHandle = [archive handleForEntryWithDictionary:entry wantChecksum:YES];
 			return [archiveDataHandle remainingFileContents];
@@ -56,17 +71,19 @@
 
 @synthesize entry;
 @synthesize archive;
+@synthesize master;
 
 @end
 
 // Delegate for parsing
 @interface CBXADArchiveParserDelegate : NSObject
 {
-	void (^fileCallback)(CBXADArchiveFileProxy*);
 	NSMutableArray * files;
+	void (^fileCallback)(CBXADArchiveFileProxy*); // Non-owning
+	XADArchiveParser * master; // Non-owning
 }
 
-- (id)initWithBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback;
+- (id)initWithBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback withMasterArchive:(XADArchiveParser*)master;
 
 - (void)commit;
 
@@ -79,12 +96,13 @@
 
 @implementation CBXADArchiveParserDelegate
 
-- (id)initWithBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback_
+- (id)initWithBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback_ withMasterArchive:(XADArchiveParser*)master_
 {
 	if (self = [super init])
 	{
-		fileCallback = fileCallback_;
 		files = [[NSMutableArray alloc] initWithCapacity:32];
+		fileCallback = fileCallback_;
+		master = master_;
 	}
 	return self;
 }
@@ -118,7 +136,8 @@
 		![[dict objectForKey:XADIsBlockDeviceKey] boolValue] &&
 		![[dict objectForKey:XADIsFIFOKey] boolValue])
 	{
-		CBXADArchiveFileProxy * archiveFile = [[CBXADArchiveFileProxy alloc] initWithEntry:dict inArchive:parser];
+		CBXADArchiveFileProxy * archiveFile = [[CBXADArchiveFileProxy alloc]
+				initWithEntry:dict inArchive:parser withMasterArchive:master];
 		[files addObject:archiveFile];
 		[archiveFile release];
 	}
@@ -179,7 +198,7 @@
 	{
 		if ([parser filename] == nil)
 			[parser setFilename:[archiveFile path]];
-		return [self loadArchiveFromParser:parser withBlock:fileCallback];
+		return [self loadArchiveFromParser:parser master:[archiveFile master] withBlock:fileCallback];
 	}
 	return NO;
 }
@@ -187,9 +206,16 @@
 + (BOOL)loadArchiveFromParser:(XADArchiveParser*)parser
 					withBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback
 {
+	return [self loadArchiveFromParser:parser master:parser withBlock:fileCallback];
+}
+
++ (BOOL)loadArchiveFromParser:(XADArchiveParser*)parser master:(XADArchiveParser*)master
+					withBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback
+{
 	@synchronized (parser)
 	{
-		CBXADArchiveParserDelegate * delegate = [[CBXADArchiveParserDelegate alloc] initWithBlock:fileCallback];
+		CBXADArchiveParserDelegate * delegate = [[CBXADArchiveParserDelegate alloc]
+			initWithBlock:fileCallback withMasterArchive:master];
 		[parser setDelegate:delegate];
 		XADError error = [parser parseWithoutExceptions];
 		[delegate commit];

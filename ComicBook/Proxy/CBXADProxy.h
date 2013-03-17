@@ -14,9 +14,12 @@
 {
 	NSDictionary * entry;
 	XADArchiveParser * archive;
+	XADArchiveParser * master;
 }
 
 - (id)initWithEntry:(NSDictionary*)entry inArchive:(XADArchiveParser*)archive;
+- (id)initWithEntry:(NSDictionary*)entry inArchive:(XADArchiveParser*)archive
+								 withMasterArchive:(XADArchiveParser*)master;
 - (void)dealloc;
 
 @property (readonly) NSString * path;
@@ -24,6 +27,7 @@
 
 @property (readonly) NSDictionary * entry;
 @property (readonly) XADArchiveParser * archive;
+@property (readonly) XADArchiveParser * master;
 
 @end
 
@@ -41,6 +45,8 @@
 						 withBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback;
 
 + (BOOL)loadArchiveFromParser:(XADArchiveParser*)parser
+					withBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback;
++ (BOOL)loadArchiveFromParser:(XADArchiveParser*)parser master:(XADArchiveParser*)master
 					withBlock:(void (^)(CBXADArchiveFileProxy*))fileCallback;
 
 @end
