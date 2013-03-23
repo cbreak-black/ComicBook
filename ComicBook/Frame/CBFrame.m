@@ -18,15 +18,38 @@
 	return self;
 }
 
+- (NSImage*)image
+{
+	// TODO: Return placeholder image
+	return nil;
+}
+
 - (NSString*)path
 {
 	return @"";
 }
 
-- (NSImage*)image
+@synthesize filteredPath;
+
+static NSString * empty = @"";
+static NSString * bracketPatterns[] = {
+	@"[ _]*+\\[.*?\\][ _]*+",
+	@"[ _]*+\\(.*?\\)[ _]*+",
+	@"[ _]*+\\{.*?\\}[ _]*+"
+};
+
+- (NSString*)filterPathWithRoot:(NSString*)rootPath
 {
-	// TODO: Return placeholder image
-	return nil;
+	filteredPath = [self.path mutableCopy];
+	[filteredPath replaceOccurrencesOfString:rootPath withString:empty
+		options:NSAnchoredSearch range:NSMakeRange(0, [filteredPath length])];
+	// Remove stuff in bracketed things
+	for (NSUInteger i = 0; i < sizeof(bracketPatterns)/sizeof(NSString*); ++i)
+	{
+		[filteredPath replaceOccurrencesOfString:bracketPatterns[i] withString:empty
+			options:NSRegularExpressionSearch range:NSMakeRange(0, [filteredPath length])];
+	}
+	return filteredPath;
 }
 
 @end

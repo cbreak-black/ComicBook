@@ -14,7 +14,7 @@
 
 @interface CBComicModel : NSObject
 {
-	NSURL * fileUrl;
+	NSURL * comicURL;
 	NSMutableArray * frames;
 	NSUInteger currentFrameIdx;
 	CBComicLayoutMode layoutMode;
@@ -24,7 +24,8 @@
 
 + (CBComicModel*)comicWithURL:(NSURL*)url error:(NSError **)error;
 
-@property (nonatomic,readonly) NSURL * fileUrl;
+@property (nonatomic,readonly) NSURL * comicURL;
+@property (nonatomic,readonly) NSString * comicPath;
 @property (nonatomic,readonly) NSUInteger frameCount;
 @property (nonatomic,assign) NSUInteger currentFrameIdx;
 @property (nonatomic,assign) CBComicLayoutMode layoutMode;

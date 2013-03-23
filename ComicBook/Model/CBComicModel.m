@@ -9,6 +9,7 @@
 #import "CBComicModel.h"
 
 #import "CBFrameFactory.h"
+#import "CBFrame.h"
 
 #import <Foundation/NSUserDefaults.h>
 
@@ -20,7 +21,7 @@
 {
 	if (self = [super init])
 	{
-		fileUrl = [url fileReferenceURL];
+		comicURL = [url fileReferenceURL];
 		currentFrameIdx = 0;
 		frames = [NSMutableArray arrayWithCapacity:40];
 		[self loadPersistentData];
@@ -42,7 +43,12 @@
 	return [[self alloc] initWithURL:url error:error];
 }
 
-@synthesize fileUrl;
+@synthesize comicURL;
+
+- (NSString*)comicPath
+{
+	return [[[comicURL filePathURL] path] stringByAppendingString:@"/"];
+}
 
 - (NSUInteger)frameCount
 {
@@ -77,6 +83,7 @@
 
 - (void)addFrame:(CBFrame*)frame
 {
+	[frame filterPathWithRoot:[self comicPath]];
 	[self willChangeValueForKey:@"frameCount"];
 	[frames addObject:frame];
 	[self didChangeValueForKey:@"frameCount"];
@@ -84,6 +91,9 @@
 
 - (void)addFrames:(NSArray*)frames_
 {
+	NSString * path = [self comicPath];
+	for (CBFrame * frame in frames_)
+		[frame filterPathWithRoot:path];
 	[frames addObjectsFromArray:frames_];
 }
 
@@ -96,7 +106,7 @@
 
 - (void)loadPersistentData
 {
-	NSDictionary * dict = [CBComicModel persistentDictionaryForURL:fileUrl];
+	NSDictionary * dict = [CBComicModel persistentDictionaryForURL:comicURL];
 	if (dict)
 	{
 		NSNumber * n = [dict objectForKey:@"currentFrameIdx"];
@@ -108,15 +118,15 @@
 
 - (void)storePersistentData
 {
-	NSData * bookmark = [fileUrl bookmarkDataWithOptions:NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess
+	NSData * bookmark = [comicURL bookmarkDataWithOptions:NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess
 						  includingResourceValuesForKeys:nil relativeToURL:nil error:nil];
 	NSDictionary * dict = @{
-		@"name": [fileUrl lastPathComponent],
+		@"name": [comicURL lastPathComponent],
 		@"currentFrameIdx": [NSNumber numberWithUnsignedInteger:currentFrameIdx],
 		@"layoutMode": [NSNumber numberWithUnsignedInteger:layoutMode],
 		@"bookmark": bookmark
 	};
-	[CBComicModel storePersistentDictionary:dict forURL:fileUrl];
+	[CBComicModel storePersistentDictionary:dict forURL:comicURL];
 }
 
 + (NSDictionary*)persistentDictionaryForURL:(NSURL*)url;
