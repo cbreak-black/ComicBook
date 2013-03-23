@@ -119,15 +119,15 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 {
 	if (model != nil)
 	{
-		[model removeObserver:self forKeyPath:@"frameCount"];
+		[model removeObserver:self forKeyPath:@"frames"];
 		[model removeObserver:self forKeyPath:@"currentFrameIdx"];
 		[model removeObserver:self forKeyPath:@"layoutMode"];
 	}
 	model = model_;
 	if (model != nil)
 	{
-		[model addObserver:self forKeyPath:@"frameCount"
-				   options:NSKeyValueObservingOptionOld context:0];
+		[model addObserver:self forKeyPath:@"frames"
+				   options:0 context:0];
 		[model addObserver:self forKeyPath:@"currentFrameIdx"
 				   options:NSKeyValueObservingOptionInitial context:0];
 		[model addObserver:self forKeyPath:@"layoutMode"
@@ -140,16 +140,15 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
 						change:(NSDictionary *)change context:(void *)context
 {
-	if ([keyPath isEqualToString:@"frameCount"])
+	if ([keyPath isEqualToString:@"frames"])
 	{
-		NSUInteger oldFrameCount = [[change objectForKey:NSKeyValueChangeOldKey] unsignedIntegerValue];
-		NSUInteger newFrameCount = model.frameCount;
+		NSIndexSet * changed = [change objectForKey:NSKeyValueChangeIndexesKey];
 		NSUInteger currentFrameIdx = model.currentFrameIdx;
-		[pages enumerateObjectsInRange:CBRangeMake(oldFrameCount, newFrameCount)
+		[pages enumerateObjectsInRange:CBRangeMake([changed firstIndex], [changed lastIndex]+1)
 					   usingBlockAsync:updatePagesBlock
 							completion:^()
 		 {
-			 if (oldFrameCount <= currentFrameIdx && newFrameCount > currentFrameIdx)
+			 if ([changed containsIndex:currentFrameIdx])
 			 {
 				 dispatch_async(dispatch_get_main_queue(), ^()
 				 {

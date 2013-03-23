@@ -27,6 +27,7 @@
 @property (nonatomic,readonly) NSURL * comicURL;
 @property (nonatomic,readonly) NSString * comicPath;
 @property (nonatomic,readonly) NSUInteger frameCount;
+@property (nonatomic,readonly) NSArray * frames;
 @property (nonatomic,assign) NSUInteger currentFrameIdx;
 @property (nonatomic,assign) CBComicLayoutMode layoutMode;
 
@@ -35,6 +36,8 @@
 - (void)addFrame:(CBFrame*)frame;
 - (void)addFrames:(NSArray*)frames;
 - (CBFrame*)frameAtIndex:(NSUInteger)idx;
+
+- (void)sortFrames;
 
 - (void)loadPersistentData;
 - (void)storePersistentData;

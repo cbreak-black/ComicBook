@@ -33,6 +33,9 @@
 					[self addFrame:frame];
 				});
 			}];
+			dispatch_async(dispatch_get_main_queue(), ^(){
+				[self sortFrames];
+			});
 		});
 	}
 	return self;
@@ -54,6 +57,8 @@
 {
 	return [frames count];
 }
+
+@synthesize frames;
 
 - (void)setCurrentFrameIdx:(NSUInteger)newFrameIdx
 {
@@ -84,9 +89,12 @@
 - (void)addFrame:(CBFrame*)frame
 {
 	[frame filterPathWithRoot:[self comicPath]];
+	NSIndexSet * indexes = [NSIndexSet indexSetWithIndex:[frames count]];
+	[self willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:@"frames"];
 	[self willChangeValueForKey:@"frameCount"];
 	[frames addObject:frame];
 	[self didChangeValueForKey:@"frameCount"];
+	[self didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:@"frames"];
 }
 
 - (void)addFrames:(NSArray*)frames_
@@ -94,7 +102,12 @@
 	NSString * path = [self comicPath];
 	for (CBFrame * frame in frames_)
 		[frame filterPathWithRoot:path];
+	NSIndexSet * indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange([frames count], [frames_ count])];
+	[self willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:@"frames"];
+	[self willChangeValueForKey:@"frameCount"];
 	[frames addObjectsFromArray:frames_];
+	[self didChangeValueForKey:@"frameCount"];
+	[self didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:@"frames"];
 }
 
 - (CBFrame*)frameAtIndex:(NSUInteger)idx
@@ -102,6 +115,15 @@
 	if (idx < [frames count])
 		return [frames objectAtIndex:idx];
 	return nil;
+}
+
+- (void)sortFrames
+{
+	NSIndexSet * indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [frames count])];
+	[self willChange:NSKeyValueChangeReplacement valuesAtIndexes:indexes forKey:@"frames"];
+	[frames sortUsingComparator:^(CBFrame * a, CBFrame * b)
+	 { return [a.filteredPath compare:b.filteredPath options:NSNumericSearch]; }];
+	[self didChange:NSKeyValueChangeReplacement valuesAtIndexes:indexes forKey:@"frames"];
 }
 
 - (void)loadPersistentData
