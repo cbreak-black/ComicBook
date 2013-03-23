@@ -21,8 +21,10 @@
 {
 	if (self = [super init])
 	{
+		NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
 		comicURL = [url fileReferenceURL];
 		currentFrameIdx = 0;
+		layoutMode = (CBComicLayoutMode)[defaults integerForKey:@"defaultLayoutMode"];
 		frames = [NSMutableArray arrayWithCapacity:40];
 		[self loadPersistentData];
 		// Asyncronously load frames
@@ -39,6 +41,14 @@
 		});
 	}
 	return self;
+}
+
++ (void)initialize
+{
+	NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+	[defaults registerDefaults:@{
+		@"defaultLayoutMode": [NSNumber numberWithInteger:kCBComicLayoutRightToLeft]
+	 }];
 }
 
 + (CBComicModel*)comicWithURL:(NSURL*)url error:(NSError **)error
