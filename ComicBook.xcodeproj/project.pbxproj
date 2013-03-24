@@ -84,8 +84,8 @@
 		7060C02C167CAA14008A9E92 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7060C02E167CAA14008A9E92 /* ComicBook-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ComicBook-Prefix.pch"; sourceTree = "<group>"; };
 		7060C030167CAA14008A9E92 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		7060C032167CAA14008A9E92 /* CBDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CBDocument.h; sourceTree = "<group>"; };
-		7060C033167CAA14008A9E92 /* CBDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CBDocument.m; sourceTree = "<group>"; };
+		7060C032167CAA14008A9E92 /* CBDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CBDocument.h; path = Controller/CBDocument.h; sourceTree = "<group>"; };
+		7060C033167CAA14008A9E92 /* CBDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CBDocument.m; path = Controller/CBDocument.m; sourceTree = "<group>"; };
 		7060C039167CAA14008A9E92 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		7060C040167CAA14008A9E92 /* ComicBookTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ComicBookTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7060C041167CAA14008A9E92 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -222,8 +222,6 @@
 			isa = PBXGroup;
 			children = (
 				7060C057167CB325008A9E92 /* ComicBook.entitlements */,
-				7060C032167CAA14008A9E92 /* CBDocument.h */,
-				7060C033167CAA14008A9E92 /* CBDocument.m */,
 				703525DB168F64C300AB06B1 /* Model */,
 				7060C085168612E5008A9E92 /* Frame */,
 				703525D01687563100AB06B1 /* UI */,
@@ -290,6 +288,8 @@
 		7060C0A116866963008A9E92 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				7060C032167CAA14008A9E92 /* CBDocument.h */,
+				7060C033167CAA14008A9E92 /* CBDocument.m */,
 				7060C0A2168669AC008A9E92 /* CBDocumentController.h */,
 				7060C0A3168669AC008A9E92 /* CBDocumentController.m */,
 				702ADC6116866CB900D55B9E /* CBApplicationDelegate.h */,
