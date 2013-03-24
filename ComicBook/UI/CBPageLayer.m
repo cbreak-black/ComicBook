@@ -17,6 +17,8 @@
 		aspect = CGFLOAT_MAX;
 		alignment = kCBPageUnaligned;
 		isLaidOut = NO;
+		self.shadowOpacity = 0.25;
+		self.shadowRadius = 0.05;
 	}
 	return self;
 }

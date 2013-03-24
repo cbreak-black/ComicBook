@@ -92,6 +92,7 @@
 	[CATransaction begin];
 	[CATransaction setAnimationDuration:0.5];
 	[CATransaction setDisableActions:NO];
+	[self configurePages];
 	if (layoutMode == kCBComicLayoutSingle)
 		[self layoutSingle];
 	else
@@ -245,6 +246,23 @@
 		[pageLayer setPosition:CGPointMake(0, pageRowBase)];
 	}
 	verticalTop = pageRowBase;
+}
+
+- (void)configurePages
+{
+	CGSize shadowOffset;
+	if (layoutMode == kCBComicLayoutLeftToRight)
+		shadowOffset = CGSizeMake(padding/2, -padding/2);
+	else if (layoutMode == kCBComicLayoutRightToLeft)
+		shadowOffset = CGSizeMake(-padding/2, -padding/2);
+	else
+		shadowOffset = CGSizeMake(0.0, -padding/2);
+	[pages enumerateObjectsUsingBlock:^(id obj, NSInteger idx)
+	{
+		CBPageLayer * page = obj;
+		page.shadowOffset = shadowOffset;
+		page.zPosition = (CGFloat)idx;
+	}];
 }
 
 @synthesize verticalTop;

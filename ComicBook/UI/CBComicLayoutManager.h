@@ -36,6 +36,7 @@
 @property (nonatomic,readonly) CGFloat verticalBottom;
 
 - (void)layoutPages;
+- (void)configurePages;
 
 // Layout Manager
 - (void)layoutSublayersOfLayer:(CALayer *)layer;
