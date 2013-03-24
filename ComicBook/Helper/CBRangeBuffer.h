@@ -37,6 +37,8 @@ typedef void (^CBRangeVoidBlock)();
 	NSMutableArray * buffer;
 	NSInteger bufferBaseIndex; ///< First element in the buffer is at this buffer index
 	NSInteger startIndex;      ///< First element in the buffer has this range index
+	// Dispatch Queue
+	dispatch_queue_t queue;
 	// Blocks
 	CBRangeObjectBlock exitBlock;
 	CBRangeObjectBlock enterBlock;

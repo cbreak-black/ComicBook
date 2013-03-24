@@ -17,8 +17,14 @@
 	if (self = [super init])
 	{
 		buffer = [[NSMutableArray alloc] init];
+		queue = dispatch_queue_create("net.the-color-black.rangebuffer", DISPATCH_QUEUE_CONCURRENT);
 	}
 	return self;
+}
+
+- (void)dealloc
+{
+	dispatch_release(queue);
 }
 
 @synthesize exitBlock;
@@ -259,7 +265,6 @@
 {
 	@synchronized (self)
 	{
-		dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 		if (block)
 		{
 			if (range.start < startIndex) range.start = startIndex;
