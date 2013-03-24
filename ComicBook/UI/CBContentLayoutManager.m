@@ -15,6 +15,7 @@
 	if (self = [super init])
 	{
 		contentScale = 1.0;
+		contentWidth = 2.0;
 	}
 	return self;
 }
@@ -25,7 +26,7 @@
 	[CATransaction setDisableActions:YES];
 	CGRect frame = layer.frame;
 	// Scale frame width up from 2 to frame.size.width
-	self.contentScale = frame.size.width/2.0;
+	self.contentScale = frame.size.width/contentWidth;
 	CATransform3D frameTransform = CATransform3DMakeScale(contentScale, contentScale, 1);
 	CGPoint anchor = CGPointMake(frame.origin.x + frame.size.width/2.0,
 								 frame.origin.y + frame.size.height);
@@ -41,5 +42,6 @@
 }
 
 @synthesize contentScale;
+@synthesize contentWidth;
 
 @end

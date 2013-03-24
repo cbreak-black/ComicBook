@@ -20,20 +20,24 @@
 	NSInteger anchorPageIndex;
 	// Layout Settings
 	CBComicLayoutMode layoutMode;
-	CGFloat padding;
+	CGFloat paddingHorizontal;
+	CGFloat paddingVertical;
 	// Meta Infos
 	CGFloat verticalTop;
 	CGFloat verticalBottom;
+	CGFloat width;
 }
 
 - (id)initWithPages:(CBRangeBuffer*)pageBuffer;
 
 @property (nonatomic,assign) NSInteger anchorPageIndex;
 @property (nonatomic,assign) CBComicLayoutMode layoutMode;
-@property (nonatomic,assign) CGFloat padding;
+@property (nonatomic,assign) CGFloat paddingVertical;
+@property (nonatomic,assign) CGFloat paddingHorizontal;
 
 @property (nonatomic,readonly) CGFloat verticalTop;
 @property (nonatomic,readonly) CGFloat verticalBottom;
+@property (nonatomic,readonly) CGFloat width;
 
 - (void)layoutPages;
 - (void)configurePages;

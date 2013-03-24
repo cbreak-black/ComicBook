@@ -15,10 +15,11 @@
 	if (self = [super init])
 	{
 		aspect = CGFLOAT_MAX;
+		width = 1.0;
 		alignment = kCBPageUnaligned;
 		isLaidOut = NO;
 		self.shadowOpacity = 0.25;
-		self.shadowRadius = 0.05;
+		self.shadowRadius = 0.025;
 	}
 	return self;
 }
@@ -44,19 +45,27 @@
 			aspect = CGFLOAT_MAX;
 			self.contents = nil;
 		}
-		self.bounds = CGRectMake(0, 0, 0, 0);
+		self.bounds = CGRectMake(0, 0, width, width/aspect);
 	}
 }
 
 @synthesize comicFrame;
 @synthesize aspect;
 
-- (void)setPosition:(CGPoint)position withAlignment:(CBPageAlignment)alignment_
+- (void)setWidth:(CGFloat)width_
 {
 	@synchronized (self)
 	{
-		[self setAlignment:alignment_];
-		[self setPosition:position];
+		width = width_;
+		self.bounds = CGRectMake(0, 0, width, width/aspect);
+	}
+}
+
+- (CGFloat)width
+{
+	@synchronized (self)
+	{
+		return width;
 	}
 }
 
@@ -77,15 +86,12 @@
 		{
 			case kCBPageLeft:
 				self.anchorPoint = CGPointMake(1.0, 1.0);
-				self.bounds = CGRectMake(0, 0, 1.0, 1.0/aspect);
 				break;
 			case kCBPageRight:
 				self.anchorPoint = CGPointMake(0.0, 1.0);
-				self.bounds = CGRectMake(0, 0, 1.0, 1.0/aspect);
 				break;
 			case kCBPageDouble:
 				self.anchorPoint = CGPointMake(0.5, 1.0);
-				self.bounds = CGRectMake(0, 0, 2.0, 2.0/aspect);
 				break;
 			default:
 				return;

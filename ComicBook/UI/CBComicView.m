@@ -55,7 +55,7 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 		{
 			dispatch_sync(dispatch_get_main_queue(), ^()
 			{
-				[weakSelf->comicLayoutManager layoutPages];
+				[weakSelf relayout];
 			});
 		};
 		pages.enterBlock = ^(id obj, NSInteger idx)
@@ -180,6 +180,7 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 	else if ([keyPath isEqualToString:@"layoutMode"])
 	{
 		comicLayoutManager.layoutMode = model.layoutMode;
+		[self relayout];
 	}
 }
 
@@ -444,6 +445,13 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 - (IBAction)setLayoutSingle:(id)sender
 {
 	model.layoutMode = kCBComicLayoutSingle;
+}
+
+- (void)relayout
+{
+	[comicLayoutManager layoutPages];
+	contentLayoutManager.contentWidth = comicLayoutManager.width;
+	[backgroundLayer setNeedsLayout];
 }
 
 @end

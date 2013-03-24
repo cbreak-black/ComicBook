@@ -74,4 +74,6 @@
 - (IBAction)setLayoutRightToLeft:(id)sender;
 - (IBAction)setLayoutSingle:(id)sender;
 
+- (void)relayout;
+
 @end
