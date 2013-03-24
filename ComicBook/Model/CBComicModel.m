@@ -72,12 +72,25 @@
 
 - (void)setCurrentFrameIdx:(NSUInteger)newFrameIdx
 {
+	[self willChangeValueForKey:@"currentFrameSet"];
 	if (newFrameIdx >= [frames count])
 		newFrameIdx = [frames count]-1;
 	currentFrameIdx = newFrameIdx;
+	[self didChangeValueForKey:@"currentFrameSet"];
 }
 
 @synthesize currentFrameIdx;
+
+- (NSIndexSet*)currentFrameSet
+{
+	return [NSIndexSet indexSetWithIndex:currentFrameIdx];
+}
+
+- (void)setCurrentFrameSet:(NSIndexSet *)currentFrameSet
+{
+	if ([currentFrameSet count] > 0)
+		[self setCurrentFrameIdx:[currentFrameSet firstIndex]];
+}
 
 @synthesize layoutMode;
 
@@ -90,9 +103,11 @@
 		newFrameIdx = [frames count]-1;
 	if (currentFrameIdx != newFrameIdx)
 	{
+		[self willChangeValueForKey:@"currentFrameSet"];
 		[self willChangeValueForKey:@"currentFrameIdx"];
 		currentFrameIdx = newFrameIdx;
 		[self didChangeValueForKey:@"currentFrameIdx"];
+		[self didChangeValueForKey:@"currentFrameSet"];
 	}
 }
 

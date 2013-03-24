@@ -10,11 +10,13 @@
 
 @class CBComicModel;
 @class CBComicWindowController;
+@class CBComicListController;
 
 @interface CBDocument : NSDocument
 {
 	CBComicModel * model;
 	CBComicWindowController * comicWindow;
+	CBComicListController * comicList;
 	NSTimer * autosaveTimer;
 }
 
@@ -25,5 +27,7 @@
 - (void)timedAutosave:(NSTimer*)timer;
 
 @property (nonatomic,retain) CBComicModel * model;
+
+- (IBAction)toggleComicList:(id)sender;
 
 @end

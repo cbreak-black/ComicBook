@@ -29,6 +29,7 @@
 @property (nonatomic,readonly) NSUInteger frameCount;
 @property (nonatomic,readonly) NSArray * frames;
 @property (nonatomic,assign) NSUInteger currentFrameIdx;
+@property (nonatomic,retain) NSIndexSet * currentFrameSet;
 @property (nonatomic,assign) CBComicLayoutMode layoutMode;
 
 - (void)shiftCurrentFrameIdx:(NSInteger)offset;
