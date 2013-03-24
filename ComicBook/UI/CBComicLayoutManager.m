@@ -22,6 +22,7 @@
 		pages = pageBuffer;
 		anchorPageIndex = 0;
 		layoutMode = kCBComicLayoutRightToLeft;
+		padding = 0.1;
 	}
 	return self;
 }
@@ -41,6 +42,7 @@
 }
 
 @synthesize layoutMode;
+@synthesize padding;
 
 - (CBPageAlignment)lineStartAlignment
 {
@@ -156,7 +158,7 @@
 		pageAlignment = [self nextAlignment:pageAlignment];
 		if (pageAlignment == [self lineStartAlignment])
 		{
-			pageRowBase -= pageRowHeight;
+			pageRowBase -= pageRowHeight + padding;
 			pageRowHeight = 0.0;
 		}
 	}
@@ -170,7 +172,7 @@
 		if (pageLayer0.isDoublePage)
 		{
 			[pageLayer0 setAlignment:kCBPageDouble];
-			pageRowBase += pageLayer0.bounds.size.height;
+			pageRowBase += pageLayer0.bounds.size.height + padding;
 			[pageLayer0 setPosition:CGPointMake(0, pageRowBase)];
 			--i;
 		}
@@ -182,7 +184,7 @@
 				if (pageLayer1.isDoublePage)
 				{
 					[pageLayer0 setAlignment:[self lineStartAlignment]];
-					pageRowBase += pageLayer0.bounds.size.height;
+					pageRowBase += pageLayer0.bounds.size.height + padding;
 					[pageLayer0 setPosition:CGPointMake(0, pageRowBase)];
 					--i;
 				}
@@ -190,7 +192,7 @@
 				{
 					[pageLayer0 setAlignment:[self lineEndAlignment]];
 					[pageLayer1 setAlignment:[self lineStartAlignment]];
-					pageRowBase += fmax(pageLayer0.bounds.size.height, pageLayer1.bounds.size.height);
+					pageRowBase += fmax(pageLayer0.bounds.size.height, pageLayer1.bounds.size.height) + padding;
 					[pageLayer0 setPosition:CGPointMake(0, pageRowBase)];
 					[pageLayer1 setPosition:CGPointMake(0, pageRowBase)];
 					i -= 2;
@@ -199,7 +201,7 @@
 			else
 			{
 				[pageLayer0 setAlignment:[self lineEndAlignment]];
-				pageRowBase += pageLayer0.bounds.size.height;
+				pageRowBase += pageLayer0.bounds.size.height + padding;
 				[pageLayer0 setPosition:CGPointMake(0, pageRowBase)];
 				--i;
 			}
@@ -230,7 +232,7 @@
 	{
 		CBPageLayer * pageLayer = [pages objectAtIndex:i];
 		[pageLayer setPosition:CGPointMake(0, pageRowBase) withAlignment:kCBPageDouble];
-		pageRowBase -= pageLayer.bounds.size.height;
+		pageRowBase -= pageLayer.bounds.size.height + padding;
 	}
 	verticalBottom = pageRowBase;
 	// Backward
@@ -239,7 +241,7 @@
 	{
 		CBPageLayer * pageLayer = [pages objectAtIndex:i];
 		[pageLayer setAlignment:kCBPageDouble];
-		pageRowBase += pageLayer.bounds.size.height;
+		pageRowBase += pageLayer.bounds.size.height + padding;
 		[pageLayer setPosition:CGPointMake(0, pageRowBase)];
 	}
 	verticalTop = pageRowBase;
