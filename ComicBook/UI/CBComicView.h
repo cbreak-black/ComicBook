@@ -33,8 +33,6 @@
 	// View Transformation State
 	CGFloat zoom;
 	CGPoint position;
-	// Helpers
-	void (^updatePagesBlock)(id obj, NSInteger idx);
 }
 
 - (id)initWithFrame:(NSRect)frameRect;

@@ -23,6 +23,8 @@ NS_INLINE CBRange CBRangeMake(NSInteger s, NSInteger e)
 	return range;
 }
 
+typedef void (^CBRangeBufferBlock)(id obj, NSInteger idx);
+
 /*!
  \brief A kind of ring buffer modeling an indexed range
 
@@ -34,30 +36,33 @@ NS_INLINE CBRange CBRangeMake(NSInteger s, NSInteger e)
 	NSMutableArray * buffer;
 	NSInteger bufferBaseIndex; ///< First element in the buffer is at this buffer index
 	NSInteger startIndex;      ///< First element in the buffer has this range index
+	// Blocks
+	CBRangeBufferBlock exitBlock;
+	CBRangeBufferBlock enterBlock;
 }
 
 - (id)init;
 
+@property (nonatomic,copy) CBRangeBufferBlock exitBlock;
+@property (nonatomic,copy) CBRangeBufferBlock enterBlock;
+
 - (void)addObject:(id)anObject;
 - (id)objectAtIndex:(NSInteger)index;
+- (void)replaceObjectAtIndex:(NSInteger)index withObject:(id)anObject;
 
 @property (assign) NSInteger startIndex;
 @property (assign,readonly) NSInteger endIndex;
 @property (assign,readonly) CBRange range;
 
-- (NSInteger)shiftUp;
-- (NSInteger)shiftDown;
-- (void)shiftBy:(NSInteger)offset changedRange:(CBRange*)outRange;
+- (void)affectedRangeOfShiftBy:(NSInteger)offset exitRange:(CBRange*)exitRange enterRange:(CBRange*)enterRange;
 
-- (void)shiftBy:(NSInteger)offset usingBlock:(void (^)(id obj, NSInteger idx))block;
-- (void)shiftBy:(NSInteger)offset usingBlockAsync:(void (^)(id obj, NSInteger idx))block;
-- (void)shiftBy:(NSInteger)offset usingBlockAsync:(void (^)(id obj, NSInteger idx))block
-	 completion:(void (^)())completionBlock;
+- (void)shiftBy:(NSInteger)offset;
+- (void)asyncShiftBy:(NSInteger)offset;
+- (void)asyncShiftBy:(NSInteger)offset completion:(void (^)())completionBlock;
 
-- (void)shiftTo:(NSInteger)newStartIdx usingBlock:(void (^)(id obj, NSInteger idx))block;
-- (void)shiftTo:(NSInteger)newStartIdx usingBlockAsync:(void (^)(id obj, NSInteger idx))block;
-- (void)shiftTo:(NSInteger)newStartIdx usingBlockAsync:(void (^)(id obj, NSInteger idx))block
-	 completion:(void (^)())completionBlock;
+- (void)shiftTo:(NSInteger)newStartIdx;
+- (void)asyncShiftTo:(NSInteger)newStartIdx;
+- (void)asyncShiftTo:(NSInteger)newStartIdx completion:(void (^)())completionBlock;
 
 - (void)enumerateObjectsUsingBlock:(void (^)(id obj, NSInteger idx))block;
 - (void)enumerateObjectsUsingBlockAsync:(void (^)(id obj, NSInteger idx))block;

@@ -87,10 +87,14 @@
 
 - (void)layoutPages
 {
+	[CATransaction begin];
+	[CATransaction setAnimationDuration:0.5];
+	[CATransaction setDisableActions:NO];
 	if (layoutMode == kCBComicLayoutSingle)
 		[self layoutSingle];
 	else
 		[self layoutDouble];
+	[CATransaction commit];
 }
 
 - (void)layoutSublayersOfLayer:(CALayer *)layer

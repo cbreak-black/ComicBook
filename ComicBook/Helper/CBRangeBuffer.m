@@ -21,6 +21,9 @@
 	return self;
 }
 
+@synthesize exitBlock;
+@synthesize enterBlock;
+
 - (NSUInteger)bufferIndexFromRangeIndex:(NSInteger)rangeIndex
 {
 	return (rangeIndex - startIndex + bufferBaseIndex) % [buffer count];
@@ -48,6 +51,8 @@
 			[buffer insertObject:anObject atIndex:bufferBaseIndex];
 			++bufferBaseIndex;
 		}
+		if (enterBlock)
+			enterBlock(anObject, self.endIndex-1);
 	}
 }
 
@@ -61,11 +66,26 @@
 	}
 }
 
+- (void)replaceObjectAtIndex:(NSInteger)index withObject:(id)anObject
+{
+	@synchronized (self)
+	{
+		if (index < startIndex || [self endIndex] <= index)
+			return;
+		NSUInteger bufferIdx = [self bufferIndexFromRangeIndex:index];
+		if (exitBlock)
+			exitBlock([buffer objectAtIndex:bufferIdx], index);
+		[buffer replaceObjectAtIndex:bufferIdx withObject:anObject];
+		if (enterBlock)
+			enterBlock(anObject, index);
+	}
+}
+
 - (void)setStartIndex:(NSInteger)newStartIndex
 {
 	@synchronized (self)
 	{
-		[self shiftBy:(newStartIndex-startIndex) changedRange:NULL];
+		[self shiftBy:(newStartIndex-startIndex)];
 	}
 }
 
@@ -93,21 +113,33 @@
 	}
 }
 
-- (NSInteger)shiftUp
+- (void)affectedRangeOfShiftBy:(NSInteger)offset exitRange:(CBRange*)exitRange enterRange:(CBRange*)enterRange;
 {
-	CBRange range;
-	[self shiftBy:1 changedRange:&range];
-	return range.start;
+	@synchronized (self)
+	{
+		NSInteger bufferCount = [buffer count];
+		if (offset <= -bufferCount || offset >= bufferCount)
+		{
+			// Everything changed
+			*exitRange = CBRangeMake(startIndex, startIndex + bufferCount);
+			*enterRange = CBRangeMake(startIndex + offset, startIndex + bufferCount + offset);
+		}
+		else if (offset <= 0)
+		{
+			// Shifting down
+			*exitRange = CBRangeMake(startIndex + bufferCount + offset, startIndex + bufferCount);
+			*enterRange = CBRangeMake(startIndex + offset, startIndex);
+		}
+		else
+		{
+			// Shifting up
+			*exitRange = CBRangeMake(startIndex, startIndex + offset);
+			*enterRange = CBRangeMake(startIndex + bufferCount, startIndex + bufferCount + offset);
+		}
+	}
 }
 
-- (NSInteger)shiftDown
-{
-	CBRange range;
-	[self shiftBy:-1 changedRange:&range];
-	return range.start;
-}
-
-- (void)shiftBy:(NSInteger)offset changedRange:(CBRange*)outRange
+- (void)internalShiftBy:(NSInteger)offset
 {
 	@synchronized (self)
 	{
@@ -116,70 +148,57 @@
 		bufferBaseIndex = (bufferBaseIndex + offset) % bufferCount;
 		if (bufferBaseIndex < 0)
 			bufferBaseIndex += bufferCount;
-		if (outRange)
-		{
-			if (offset <= -bufferCount || offset >= bufferCount)
-			{
-				// Everything changed
-				outRange->start = startIndex;
-				outRange->end = startIndex + bufferCount;
-			}
-			else if (offset <= 0)
-			{
-				// Shifting down, only start changed
-				outRange->start = startIndex;
-				outRange->end = startIndex - offset;
-			}
-			else
-			{
-				// Shifting up, only end changed
-				outRange->start = startIndex + bufferCount - offset;
-				outRange->end = startIndex + bufferCount;
-			}
-		}
 	}
 }
 
-- (void)shiftBy:(NSInteger)offset usingBlock:(void (^)(id obj, NSInteger idx))block
+- (void)shiftBy:(NSInteger)offset
 {
 	@synchronized (self)
 	{
-		CBRange range;
-		[self shiftBy:offset changedRange:&range];
-		[self enumerateObjectsInRange:range usingBlock:block];
+		CBRange exitRange, enterRange;
+		[self affectedRangeOfShiftBy:offset exitRange:&exitRange enterRange:&enterRange];
+		if (exitBlock)
+			[self enumerateObjectsInRange:exitRange usingBlock:exitBlock];
+		[self internalShiftBy:offset];
+		if (enterBlock)
+			[self enumerateObjectsInRange:enterRange usingBlock:enterBlock];
 	}
 }
 
-- (void)shiftBy:(NSInteger)offset usingBlockAsync:(void (^)(id obj, NSInteger idx))block
+- (void)asyncShiftBy:(NSInteger)offset
 {
-	[self shiftBy:offset usingBlockAsync:block completion:NULL];
+	[self asyncShiftBy:offset completion:NULL];
 }
 
-- (void)shiftBy:(NSInteger)offset usingBlockAsync:(void (^)(id obj, NSInteger idx))block
-	 completion:(void (^)())completionBlock
+- (void)asyncShiftBy:(NSInteger)offset completion:(void (^)())completionBlock
 {
 	@synchronized (self)
 	{
-		CBRange range;
-		[self shiftBy:offset changedRange:&range];
-		[self enumerateObjectsInRange:range usingBlockAsync:block completion:completionBlock];
+		CBRange exitRange, enterRange;
+		if (exitBlock)
+			[self affectedRangeOfShiftBy:offset exitRange:&exitRange enterRange:&enterRange];
+		[self enumerateObjectsInRange:exitRange usingBlockAsync:exitBlock completion:^()
+		 {
+			 [self internalShiftBy:offset];
+			 if (enterBlock)
+				 [self enumerateObjectsInRange:enterRange usingBlockAsync:enterBlock completion:completionBlock];
+		 }];
 	}
 }
 
-- (void)shiftTo:(NSInteger)newStartIdx usingBlock:(void (^)(id obj, NSInteger idx))block
+- (void)shiftTo:(NSInteger)newStartIdx
 {
-	[self shiftBy:(newStartIdx-startIndex) usingBlock:block];
+	[self shiftBy:(newStartIdx-startIndex)];
 }
 
-- (void)shiftTo:(NSInteger)newStartIdx usingBlockAsync:(void (^)(id obj, NSInteger idx))block
+- (void)asyncShiftTo:(NSInteger)newStartIdx
 {
-	[self shiftBy:(newStartIdx-startIndex) usingBlockAsync:block];
+	[self asyncShiftBy:(newStartIdx-startIndex)];
 }
 
-- (void)shiftTo:(NSInteger)newStartIdx usingBlockAsync:(void (^)(id obj, NSInteger idx))block
-	 completion:(void (^)())completionBlock
+- (void)asyncShiftTo:(NSInteger)newStartIdx completion:(void (^)())completionBlock
 {
-	[self shiftBy:(newStartIdx-startIndex) usingBlockAsync:block completion:completionBlock];
+	[self asyncShiftBy:(newStartIdx-startIndex) completion:completionBlock];
 }
 
 - (void)enumerateObjectsUsingBlock:(void (^)(id obj, NSInteger idx))block
@@ -206,6 +225,8 @@
 
 - (void)enumerateObjectsInRange:(CBRange)range usingBlock:(void (^)(id obj, NSInteger idx))block
 {
+	if (!block)
+		return;
 	@synchronized (self)
 	{
 		if (range.start < startIndex) range.start = startIndex;
@@ -225,6 +246,8 @@
 - (void)enumerateObjectsInRange:(CBRange)range usingBlockAsync:(void (^)(id obj, NSInteger idx))block
 					 completion:(void (^)())completionBlock
 {
+	if (!block)
+		return;
 	@synchronized (self)
 	{
 		dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
