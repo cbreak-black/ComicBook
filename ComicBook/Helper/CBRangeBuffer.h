@@ -23,7 +23,8 @@ NS_INLINE CBRange CBRangeMake(NSInteger s, NSInteger e)
 	return range;
 }
 
-typedef void (^CBRangeBufferBlock)(id obj, NSInteger idx);
+typedef void (^CBRangeObjectBlock)(id obj, NSInteger idx);
+typedef void (^CBRangeVoidBlock)();
 
 /*!
  \brief A kind of ring buffer modeling an indexed range
@@ -37,14 +38,20 @@ typedef void (^CBRangeBufferBlock)(id obj, NSInteger idx);
 	NSInteger bufferBaseIndex; ///< First element in the buffer is at this buffer index
 	NSInteger startIndex;      ///< First element in the buffer has this range index
 	// Blocks
-	CBRangeBufferBlock exitBlock;
-	CBRangeBufferBlock enterBlock;
+	CBRangeObjectBlock exitBlock;
+	CBRangeObjectBlock enterBlock;
+	CBRangeVoidBlock postExit;
+	CBRangeVoidBlock postShift;
+	CBRangeVoidBlock postEnter;
 }
 
 - (id)init;
 
-@property (nonatomic,copy) CBRangeBufferBlock exitBlock;
-@property (nonatomic,copy) CBRangeBufferBlock enterBlock;
+@property (nonatomic,copy) CBRangeObjectBlock exitBlock;
+@property (nonatomic,copy) CBRangeObjectBlock enterBlock;
+@property (nonatomic,copy) CBRangeVoidBlock postExit;
+@property (nonatomic,copy) CBRangeVoidBlock postShift;
+@property (nonatomic,copy) CBRangeVoidBlock postEnter;
 
 - (void)addObject:(id)anObject;
 - (id)objectAtIndex:(NSInteger)index;
@@ -58,20 +65,20 @@ typedef void (^CBRangeBufferBlock)(id obj, NSInteger idx);
 
 - (void)shiftBy:(NSInteger)offset;
 - (void)asyncShiftBy:(NSInteger)offset;
-- (void)asyncShiftBy:(NSInteger)offset completion:(void (^)())completionBlock;
+- (void)asyncShiftBy:(NSInteger)offset completion:(CBRangeVoidBlock)completionBlock;
 
 - (void)shiftTo:(NSInteger)newStartIdx;
 - (void)asyncShiftTo:(NSInteger)newStartIdx;
-- (void)asyncShiftTo:(NSInteger)newStartIdx completion:(void (^)())completionBlock;
+- (void)asyncShiftTo:(NSInteger)newStartIdx completion:(CBRangeVoidBlock)completionBlock;
 
-- (void)enumerateObjectsUsingBlock:(void (^)(id obj, NSInteger idx))block;
-- (void)enumerateObjectsUsingBlockAsync:(void (^)(id obj, NSInteger idx))block;
-- (void)enumerateObjectsUsingBlockAsync:(void (^)(id obj, NSInteger idx))block
-							 completion:(void (^)())completionBlock;
+- (void)enumerateObjectsUsingBlock:(CBRangeObjectBlock)block;
+- (void)enumerateObjectsUsingBlockAsync:(CBRangeObjectBlock)block;
+- (void)enumerateObjectsUsingBlockAsync:(CBRangeObjectBlock)block
+							 completion:(CBRangeVoidBlock)completionBlock;
 
-- (void)enumerateObjectsInRange:(CBRange)range usingBlock:(void (^)(id obj, NSInteger idx))block;
-- (void)enumerateObjectsInRange:(CBRange)range usingBlockAsync:(void (^)(id obj, NSInteger idx))block;
-- (void)enumerateObjectsInRange:(CBRange)range usingBlockAsync:(void (^)(id obj, NSInteger idx))block
-					 completion:(void (^)())completionBlock;
+- (void)enumerateObjectsInRange:(CBRange)range usingBlock:(CBRangeObjectBlock)block;
+- (void)enumerateObjectsInRange:(CBRange)range usingBlockAsync:(CBRangeObjectBlock)block;
+- (void)enumerateObjectsInRange:(CBRange)range usingBlockAsync:(CBRangeObjectBlock)block
+					 completion:(CBRangeVoidBlock)completionBlock;
 
 @end

@@ -23,6 +23,9 @@
 
 @synthesize exitBlock;
 @synthesize enterBlock;
+@synthesize postExit;
+@synthesize postShift;
+@synthesize postEnter;
 
 - (NSUInteger)bufferIndexFromRangeIndex:(NSInteger)rangeIndex
 {
@@ -51,8 +54,6 @@
 			[buffer insertObject:anObject atIndex:bufferBaseIndex];
 			++bufferBaseIndex;
 		}
-		if (enterBlock)
-			enterBlock(anObject, self.endIndex-1);
 	}
 }
 
@@ -73,11 +74,7 @@
 		if (index < startIndex || [self endIndex] <= index)
 			return;
 		NSUInteger bufferIdx = [self bufferIndexFromRangeIndex:index];
-		if (exitBlock)
-			exitBlock([buffer objectAtIndex:bufferIdx], index);
 		[buffer replaceObjectAtIndex:bufferIdx withObject:anObject];
-		if (enterBlock)
-			enterBlock(anObject, index);
 	}
 }
 
@@ -159,9 +156,15 @@
 		[self affectedRangeOfShiftBy:offset exitRange:&exitRange enterRange:&enterRange];
 		if (exitBlock)
 			[self enumerateObjectsInRange:exitRange usingBlock:exitBlock];
+		if (postExit)
+			postExit();
 		[self internalShiftBy:offset];
+		if (postShift)
+			postShift();
 		if (enterBlock)
 			[self enumerateObjectsInRange:enterRange usingBlock:enterBlock];
+		if (postEnter)
+			postEnter();
 	}
 }
 
@@ -175,13 +178,21 @@
 	@synchronized (self)
 	{
 		CBRange exitRange, enterRange;
-		if (exitBlock)
-			[self affectedRangeOfShiftBy:offset exitRange:&exitRange enterRange:&enterRange];
+		[self affectedRangeOfShiftBy:offset exitRange:&exitRange enterRange:&enterRange];
 		[self enumerateObjectsInRange:exitRange usingBlockAsync:exitBlock completion:^()
-		 {
-			 [self internalShiftBy:offset];
-			 if (enterBlock)
-				 [self enumerateObjectsInRange:enterRange usingBlockAsync:enterBlock completion:completionBlock];
+		{
+			if (postExit)
+				postExit();
+			[self internalShiftBy:offset];
+			if (postShift)
+				postShift();
+			[self enumerateObjectsInRange:enterRange usingBlockAsync:enterBlock completion:^()
+			{
+				if (postEnter)
+					postEnter();
+				if (completionBlock)
+					completionBlock();
+			}];
 		 }];
 	}
 }
@@ -196,12 +207,12 @@
 	[self asyncShiftBy:(newStartIdx-startIndex)];
 }
 
-- (void)asyncShiftTo:(NSInteger)newStartIdx completion:(void (^)())completionBlock
+- (void)asyncShiftTo:(NSInteger)newStartIdx completion:(CBRangeVoidBlock)completionBlock
 {
 	[self asyncShiftBy:(newStartIdx-startIndex) completion:completionBlock];
 }
 
-- (void)enumerateObjectsUsingBlock:(void (^)(id obj, NSInteger idx))block
+- (void)enumerateObjectsUsingBlock:(CBRangeObjectBlock)block
 {
 	@synchronized (self)
 	{
@@ -209,13 +220,13 @@
 	}
 }
 
-- (void)enumerateObjectsUsingBlockAsync:(void (^)(id obj, NSInteger idx))block
+- (void)enumerateObjectsUsingBlockAsync:(CBRangeObjectBlock)block
 {
 	[self enumerateObjectsUsingBlockAsync:block completion:NULL];
 }
 
-- (void)enumerateObjectsUsingBlockAsync:(void (^)(id obj, NSInteger idx))block
-							 completion:(void (^)())completionBlock
+- (void)enumerateObjectsUsingBlockAsync:(CBRangeObjectBlock)block
+							 completion:(CBRangeVoidBlock)completionBlock
 {
 	@synchronized (self)
 	{
@@ -223,7 +234,7 @@
 	}
 }
 
-- (void)enumerateObjectsInRange:(CBRange)range usingBlock:(void (^)(id obj, NSInteger idx))block
+- (void)enumerateObjectsInRange:(CBRange)range usingBlock:(CBRangeObjectBlock)block
 {
 	if (!block)
 		return;
@@ -238,28 +249,29 @@
 	}
 }
 
-- (void)enumerateObjectsInRange:(CBRange)range usingBlockAsync:(void (^)(id obj, NSInteger idx))block
+- (void)enumerateObjectsInRange:(CBRange)range usingBlockAsync:(CBRangeObjectBlock)block
 {
 	[self enumerateObjectsInRange:range usingBlockAsync:block completion:NULL];
 }
 
-- (void)enumerateObjectsInRange:(CBRange)range usingBlockAsync:(void (^)(id obj, NSInteger idx))block
-					 completion:(void (^)())completionBlock
+- (void)enumerateObjectsInRange:(CBRange)range usingBlockAsync:(CBRangeObjectBlock)block
+					 completion:(CBRangeVoidBlock)completionBlock
 {
-	if (!block)
-		return;
 	@synchronized (self)
 	{
 		dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-		if (range.start < startIndex) range.start = startIndex;
-		if (range.end > [self endIndex]) range.end = [self endIndex];
-		for (NSInteger idx = range.start; idx < range.end; ++idx)
+		if (block)
 		{
-			id obj = [self objectAtIndex:idx];
-			dispatch_async(queue, ^()
+			if (range.start < startIndex) range.start = startIndex;
+			if (range.end > [self endIndex]) range.end = [self endIndex];
+			for (NSInteger idx = range.start; idx < range.end; ++idx)
 			{
-				block(obj, idx);
-			});
+				id obj = [self objectAtIndex:idx];
+				dispatch_async(queue, ^()
+				{
+					block(obj, idx);
+				});
+			}
 		}
 		if (completionBlock)
 		{
