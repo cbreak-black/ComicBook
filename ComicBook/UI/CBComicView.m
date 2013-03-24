@@ -18,8 +18,8 @@
 
 #import <QuartzCore/CoreImage.h>
 
-static const NSInteger kCBPageCacheCountFwd = 32;
-static const NSInteger kCBPageCacheCountBwd = 16;
+static const NSInteger kCBPageCacheCountFwd = 16;
+static const NSInteger kCBPageCacheCountBwd = 8;
 static const CGFloat kCBCoarseLineFactor = 32.0;
 static const CGFloat kCBKeyboardMoveFactor = 0.75;
 static const CGFloat kCBKeyboardZoomFactor = 1.25;
@@ -45,11 +45,18 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 		{
 			CBPageLayer * pageLayer = obj;
 			[CATransaction begin];
-			[CATransaction setDisableActions:YES];
-			[pageLayer setPosition:CGPointMake(0, -weakSelf->position.y)];
-			[pageLayer setZPosition:-1.0];
-			[pageLayer setImage:nil forFrame:nil];
+			[CATransaction setAnimationDuration:0.5];
+			[pageLayer removeFromSuperlayer];
+			CBPageLayer * newPage = [[CBPageLayer alloc] init];
+			[weakSelf->pages replaceObjectAtIndex:idx withObject:newPage];
 			[CATransaction commit];
+		};
+		pages.postShift = ^()
+		{
+			dispatch_sync(dispatch_get_main_queue(), ^()
+			{
+				[weakSelf->comicLayoutManager layoutPages];
+			});
 		};
 		pages.enterBlock = ^(id obj, NSInteger idx)
 		{
@@ -60,11 +67,14 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 				// Load frame in current queue, assign in main thread
 				NSImage * image = [frame image];
 				[CATransaction begin];
-				[pageLayer setZPosition:0.0];
+				[CATransaction setAnimationDuration:0.5];
+				if (!pageLayer.superlayer)
+					[weakSelf->contentLayer addSublayer:pageLayer];
 				[pageLayer setImage:image forFrame:frame];
 				[CATransaction commit];
 			}
 		};
+		pages.postEnter = pages.postShift;
 	}
 	return self;
 }
@@ -91,6 +101,7 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 	// Page Layers
 	contentLayer = [[CALayer alloc] init];
 	contentLayer.anchorPoint = CGPointMake(0.5, 1.0);
+	contentLayer.actions = @{@"sublayers": [NSNull null]};
 	[backgroundLayer addSublayer:contentLayer];
 	for (NSUInteger i = 0; i < kCBPageCacheCountFwd + kCBPageCacheCountBwd; ++i)
 	{
@@ -159,7 +170,6 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 			 {
 				 if ([changed containsIndex:currentFrameIdx])
 					 [self updatePageFromModel];
-				 [comicLayoutManager layoutPages];
 			 });
 		 }];
 	}
@@ -250,19 +260,12 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 				CBPageLayer * page = [pages objectAtIndex:currentPage];
 				if (page.isLaidOut)
 					self.position = CGPointMake(0, -page.position.y);
-				[comicLayoutManager layoutPages];
 			});
 		}];
 	}
 	else
 	{
-		[pages asyncShiftTo:(currentPage-kCBPageCacheCountBwd) completion:^()
-		{
-			dispatch_async(dispatch_get_main_queue(), ^()
-			{
-				[comicLayoutManager layoutPages];
-			});
-		}];
+		[pages asyncShiftTo:(currentPage-kCBPageCacheCountBwd)];
 	}
 }
 

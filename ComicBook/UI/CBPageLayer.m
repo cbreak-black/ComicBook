@@ -99,7 +99,9 @@
 
 - (BOOL)isDoublePage
 {
-	return aspect > kCBPageDoubleThreshold;
+	if (aspect != CGFLOAT_MAX)
+		return aspect > kCBPageDoubleThreshold;
+	return NO;
 }
 
 @synthesize isLaidOut;
