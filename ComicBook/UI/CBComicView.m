@@ -429,7 +429,15 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 
 - (void)swipeWithEvent:(NSEvent*)event
 {
-	NSLog(@"%@", event);
+	NSLog(@"Swipe: %@", event);
+}
+
+- (void)magnifyWithEvent:(NSEvent *)event
+{
+	[CATransaction begin];
+	[CATransaction setDisableActions:YES];
+	[self zoomBy:1.0 + event.magnification];
+	[CATransaction commit];
 }
 
 - (IBAction)setLayoutLeftToRight:(id)sender

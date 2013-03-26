@@ -69,6 +69,7 @@
 - (void)keyDown:(NSEvent*)event;
 - (void)keyUp:(NSEvent*)event;
 - (void)swipeWithEvent:(NSEvent*)event;
+- (void)magnifyWithEvent:(NSEvent *)event;
 
 - (IBAction)setLayoutLeftToRight:(id)sender;
 - (IBAction)setLayoutRightToLeft:(id)sender;
