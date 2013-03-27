@@ -429,7 +429,28 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 
 - (void)swipeWithEvent:(NSEvent*)event
 {
-	NSLog(@"Swipe: %@", event);
+	CBComicLayoutMode mode = comicLayoutManager.layoutMode;
+	if (event.deltaY < 0)
+		[self nextPage];
+	else if (event.deltaY > 0)
+		[self previousPage];
+	else
+	{
+		if (mode == kCBComicLayoutLeftToRight)
+		{
+			if (event.deltaX < 0)
+				[self nextPage];
+			else if (event.deltaX > 0)
+				[self previousPage];
+		}
+		else
+		{
+			if (event.deltaX < 0)
+				[self previousPage];
+			else if (event.deltaX > 0)
+				[self nextPage];
+		}
+	}
 }
 
 - (void)magnifyWithEvent:(NSEvent *)event
