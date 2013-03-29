@@ -23,6 +23,8 @@ static const NSInteger kCBPageCacheCountBwd = 8;
 static const CGFloat kCBCoarseLineFactor = 32.0;
 static const CGFloat kCBKeyboardMoveFactor = 0.75;
 static const CGFloat kCBKeyboardZoomFactor = 1.25;
+static const CGFloat kCBZoomMin = 0.20;
+static const CGFloat kCBZoomMax = 5.00;
 
 @implementation CBComicView
 
@@ -184,24 +186,67 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 	}
 }
 
-- (void)zoomBy:(CGFloat)factor
+- (CGFloat)zoomBy:(CGFloat)factor
 {
+	CGSize bgSize = backgroundLayer.bounds.size;
+	return [self zoomBy:factor withCenter:CGPointMake(bgSize.width/2, bgSize.height/2)];
+}
+
+- (CGFloat)zoomBy:(CGFloat)factor withCenter:(CGPoint)center
+{
+	// Calculate effective zoom factor
+	CGFloat newZoom = zoom*factor;
+	if      (newZoom < kCBZoomMin) factor = kCBZoomMin/zoom;
+	else if (newZoom > kCBZoomMax) factor = kCBZoomMax/zoom;
 	zoom *= factor;
-	[self updateView];
+	// Correct to keep the center where it is
+	CGSize bgSize = backgroundLayer.bounds.size;
+	CGFloat correctionFactor = (1.0-factor);
+	CGPoint delta = {
+		(center.x-bgSize.width/2)*correctionFactor,
+		(center.y-bgSize.height)*correctionFactor
+	};
+	[self moveByWindow:delta]; // calls updateView
+	return factor;
 }
 
-- (void)moveBy:(CGPoint)offset
+- (CGPoint)moveByLayer:(CGPoint)offset
 {
-	position.x += offset.x/contentLayoutManager.contentScale;
-	position.y += offset.y/contentLayoutManager.contentScale;
+	// Limits
+	CGSize contentSize = contentLayer.bounds.size;
+	CGFloat hLimit = fabs(contentSize.width/2*(1.0-1.0/zoom));
+	CGFloat vLimitTop = -comicLayoutManager.verticalTop;
+	CGFloat vLimitBottom = -comicLayoutManager.verticalBottom-contentSize.height/zoom;
+	if (vLimitBottom < vLimitTop)
+	{
+		CGFloat t = vLimitBottom;
+		vLimitBottom = vLimitTop;
+		vLimitTop = t;
+	}
+	// Calculate effective offset
+	CGPoint newPos = CGPointMake(position.x + offset.x, position.y + offset.y);
+	if      (newPos.x < -hLimit) newPos.x = -hLimit;
+	else if (newPos.x > +hLimit) newPos.x = +hLimit;
+	if      (newPos.y < vLimitTop) newPos.y = vLimitTop;
+	else if (newPos.y > vLimitBottom) newPos.y = vLimitBottom;
+	CGPoint effective = CGPointMake(newPos.x-position.x, newPos.y-position.y);
+	position = newPos;
 	[self updateView];
+	return effective;
 }
 
-- (void)moveByRelative:(CGPoint)relativeOffset
+- (CGPoint)moveByWindow:(CGPoint)offset
 {
-	CGRect bounds = backgroundLayer.bounds;
-	[self moveBy:CGPointMake(relativeOffset.x*bounds.size.width/zoom,
-							 relativeOffset.y*bounds.size.height/zoom)];
+	CGFloat contentScale = contentLayoutManager.contentScale*zoom;
+	CGPoint effective = [self moveByLayer:CGPointMake(offset.x/contentScale, offset.y/contentScale)];
+	return CGPointMake(effective.x*contentScale, effective.y*contentScale);
+}
+
+- (CGPoint)moveByRelative:(CGPoint)offset
+{
+	CGSize contentSize = contentLayer.bounds.size;
+	CGPoint effective = [self moveByLayer:CGPointMake(offset.x*contentSize.width, offset.y*contentSize.height)];
+	return CGPointMake(effective.x/contentSize.width, effective.y/contentSize.height);
 }
 
 - (void)nextPage
@@ -284,25 +329,8 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 	[self updatePageToModel];
 }
 
-- (void)clampViewTransformState
-{
-	if      (zoom < 0.20) zoom = 0.20;
-	else if (zoom > 5.00) zoom = 5.00;
-	CGRect bounds = contentLayer.bounds;
-	CGFloat hLimit = fabs(bounds.size.width/2*(1.0-1.0/zoom));
-	// position y is flipped
-	CGFloat vLimitTop = -comicLayoutManager.verticalTop;
-	CGFloat vLimitBottom = -comicLayoutManager.verticalBottom-bounds.size.height/zoom;
-	if (vLimitBottom < vLimitTop) vLimitBottom = vLimitTop;
-	if      (position.x < -hLimit) position.x = -hLimit;
-	else if (position.x > +hLimit) position.x = +hLimit;
-	if      (position.y < vLimitTop) position.y = vLimitTop;
-	else if (position.y > vLimitBottom) position.y = vLimitBottom;
-}
-
 - (void)updateViewTransform
 {
-	[self clampViewTransformState];
 	CATransform3D scale = CATransform3DMakeScale(zoom, zoom, 1);
 	CATransform3D translate = CATransform3DMakeTranslation(position.x, position.y, 0);
 	CATransform3D viewTransform = CATransform3DConcat(translate, scale);
@@ -348,7 +376,7 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 {
 	[CATransaction begin];
 	[CATransaction setDisableActions:YES];
-	[self moveBy:CGPointMake([event deltaX]/zoom, -[event deltaY]/zoom)];
+	[self moveByWindow:CGPointMake([event deltaX], -[event deltaY])];
 	[CATransaction commit];
 }
 
@@ -366,20 +394,24 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 	[CATransaction setDisableActions:YES];
 	if ([event modifierFlags] & NSShiftKeyMask)
 	{
+		// Scale Factor
 		CGFloat offset = [event scrollingDeltaX]-[event scrollingDeltaY];
 		if (![event hasPreciseScrollingDeltas])
 			offset *= kCBCoarseLineFactor;
 		CGFloat factor = pow(0.999, offset);
-		[self zoomBy:factor];
+		// Position
+		NSPoint viewPos = [self convertPoint:event.locationInWindow fromView:nil];
+		NSPoint layerPos = [self convertPointToBacking:viewPos];
+		[self zoomBy:factor withCenter:layerPos];
 	}
 	else
 	{
 		if ([event hasPreciseScrollingDeltas])
-			[self moveBy:CGPointMake(+[event scrollingDeltaX],
-									 -[event scrollingDeltaY])];
+			[self moveByWindow:CGPointMake(+[event scrollingDeltaX],
+										   -[event scrollingDeltaY])];
 		else
-			[self moveBy:CGPointMake(+[event scrollingDeltaX]*kCBCoarseLineFactor,
-									 -[event scrollingDeltaY]*kCBCoarseLineFactor)];
+			[self moveByWindow:CGPointMake(+[event scrollingDeltaX]*kCBCoarseLineFactor,
+										   -[event scrollingDeltaY]*kCBCoarseLineFactor)];
 	}
 	[CATransaction commit];
 }
@@ -457,7 +489,9 @@ static const CGFloat kCBKeyboardZoomFactor = 1.25;
 {
 	[CATransaction begin];
 	[CATransaction setDisableActions:YES];
-	[self zoomBy:1.0 + event.magnification];
+	NSPoint viewPos = [self convertPoint:event.locationInWindow fromView:nil];
+	NSPoint layerPos = [self convertPointToBacking:viewPos];
+	[self zoomBy:1.0 + event.magnification withCenter:layerPos];
 	[CATransaction commit];
 }
 

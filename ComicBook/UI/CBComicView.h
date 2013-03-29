@@ -41,9 +41,11 @@
 
 @property (nonatomic,assign) CGFloat gammaPower;
 
-- (void)zoomBy:(CGFloat)factor;
-- (void)moveBy:(CGPoint)offset;
-- (void)moveByRelative:(CGPoint)relativeOffset;
+- (CGFloat)zoomBy:(CGFloat)factor;
+- (CGFloat)zoomBy:(CGFloat)factor withCenter:(CGPoint)center;
+- (CGPoint)moveByLayer:(CGPoint)offset;
+- (CGPoint)moveByWindow:(CGPoint)offset;
+- (CGPoint)moveByRelative:(CGPoint)offset;
 - (void)nextPage;
 - (void)previousPage;
 
@@ -53,7 +55,6 @@
 - (void)updatePageFromModel;
 - (void)updatePageToModel;
 - (void)updateView;
-- (void)clampViewTransformState;
 - (void)updateViewTransform;
 
 - (NSInteger)currentPageIndex;
