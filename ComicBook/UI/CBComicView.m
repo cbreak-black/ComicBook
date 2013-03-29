@@ -210,7 +210,7 @@ static const CGFloat kCBZoomMax = 5.00;
 	return factor;
 }
 
-- (CGPoint)moveByLayer:(CGPoint)offset
+- (CGPoint)moveToLayer:(CGPoint)newPos
 {
 	// Limits
 	CGSize contentSize = contentLayer.bounds.size;
@@ -223,16 +223,21 @@ static const CGFloat kCBZoomMax = 5.00;
 		vLimitBottom = vLimitTop;
 		vLimitTop = t;
 	}
-	// Calculate effective offset
-	CGPoint newPos = CGPointMake(position.x + offset.x, position.y + offset.y);
+	// Calculate effective position
 	if      (newPos.x < -hLimit) newPos.x = -hLimit;
 	else if (newPos.x > +hLimit) newPos.x = +hLimit;
 	if      (newPos.y < vLimitTop) newPos.y = vLimitTop;
 	else if (newPos.y > vLimitBottom) newPos.y = vLimitBottom;
-	CGPoint effective = CGPointMake(newPos.x-position.x, newPos.y-position.y);
 	position = newPos;
 	[self updateView];
-	return effective;
+	return newPos;
+}
+
+- (CGPoint)moveByLayer:(CGPoint)offset
+{
+	CGPoint newPos = CGPointMake(position.x + offset.x, position.y + offset.y);
+	CGPoint effective = [self moveToLayer:newPos];
+	return CGPointMake(newPos.x-effective.x, newPos.y-effective.y);
 }
 
 - (CGPoint)moveByWindow:(CGPoint)offset

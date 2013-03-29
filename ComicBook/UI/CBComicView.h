@@ -43,6 +43,7 @@
 
 - (CGFloat)zoomBy:(CGFloat)factor;
 - (CGFloat)zoomBy:(CGFloat)factor withCenter:(CGPoint)center;
+- (CGPoint)moveToLayer:(CGPoint)newPos;
 - (CGPoint)moveByLayer:(CGPoint)offset;
 - (CGPoint)moveByWindow:(CGPoint)offset;
 - (CGPoint)moveByRelative:(CGPoint)offset;
