@@ -515,6 +515,11 @@ static const CGFloat kCBZoomMax = 5.00;
 	model.layoutMode = kCBComicLayoutSingle;
 }
 
+- (IBAction)shiftPages:(id)sender
+{
+	[comicLayoutManager shiftPages];
+}
+
 - (void)relayout
 {
 	[comicLayoutManager layoutPages];

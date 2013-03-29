@@ -37,6 +37,19 @@
 @synthesize paddingVertical;
 @synthesize paddingHorizontal;
 
+- (void)shiftPages
+{
+	CBPageLayer * anchorLayer = [pages objectAtIndex:anchorPageIndex];
+	if (anchorLayer && anchorLayer.alignment != kCBPageDouble)
+	{
+		[CATransaction begin];
+		[CATransaction setAnimationDuration:0.5];
+		anchorLayer.alignment = [self nextAlignment:anchorLayer.alignment];
+		[self layoutPages];
+		[CATransaction commit];
+	}
+}
+
 - (CBPageAlignment)lineStartAlignment
 {
 	switch (layoutMode)

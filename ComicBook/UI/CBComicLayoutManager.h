@@ -39,6 +39,7 @@
 @property (nonatomic,readonly) CGFloat verticalBottom;
 @property (nonatomic,readonly) CGFloat width;
 
+- (void)shiftPages;
 - (void)layoutPages;
 - (void)configurePages;
 
