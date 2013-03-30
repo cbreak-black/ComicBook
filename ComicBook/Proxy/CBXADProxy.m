@@ -117,7 +117,7 @@
 {
 	// Sort
 	[files sortUsingComparator:^(CBXADArchiveFileProxy * a, CBXADArchiveFileProxy * b)
-	{ return [a.path compare:b.path options:NSNumericSearch]; }];
+	{ return [a.path compare:b.path options:NSNumericSearch|NSCaseInsensitiveSearch]; }];
 	// Notify with callback
 	for (CBXADArchiveFileProxy * archiveFile in files)
 	{

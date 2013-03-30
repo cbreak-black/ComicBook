@@ -147,7 +147,7 @@
 	NSIndexSet * indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [frames count])];
 	[self willChange:NSKeyValueChangeReplacement valuesAtIndexes:indexes forKey:@"frames"];
 	[frames sortUsingComparator:^(CBFrame * a, CBFrame * b)
-	 { return [a.filteredPath compare:b.filteredPath options:NSNumericSearch]; }];
+	 { return [a.filteredPath compare:b.filteredPath options:NSNumericSearch|NSCaseInsensitiveSearch]; }];
 	[self didChange:NSKeyValueChangeReplacement valuesAtIndexes:indexes forKey:@"frames"];
 }
 
