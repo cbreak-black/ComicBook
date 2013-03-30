@@ -52,6 +52,7 @@
 
 @property (nonatomic,assign) CGFloat zoom;
 @property (nonatomic,assign) CGPoint position;
+@property (nonatomic,readonly) CGPoint focusPoint;
 
 - (void)updatePageFromModel;
 - (void)updatePageToModel;

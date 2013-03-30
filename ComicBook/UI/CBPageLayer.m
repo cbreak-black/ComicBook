@@ -105,6 +105,16 @@
 	return alignment;
 }
 
+- (CGRect)effectiveBounds
+{
+	CGPoint anchor = self.anchorPoint;
+	CGPoint position = self.position;
+	CGRect bounds =  CGRectOffset(self.bounds, position.x, position.y);
+	return CGRectOffset(bounds,
+						-bounds.size.width*anchor.x,
+						-bounds.size.height*anchor.y);
+}
+
 - (BOOL)isDoublePage
 {
 	if (aspect != CGFLOAT_MAX)

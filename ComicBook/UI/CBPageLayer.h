@@ -39,6 +39,7 @@ static const CGFloat kCBPageDoubleThreshold = 1.0;
 @property (atomic,readonly) CGFloat aspect;
 @property (atomic,assign) CGFloat width;
 @property (atomic,assign) CBPageAlignment alignment;
+@property (atomic,readonly) CGRect effectiveBounds;
 @property (atomic,readonly) BOOL isDoublePage; // True if aspect > kCBPageDoubleThreshold
 @property (atomic,readonly) BOOL isLaidOut;
 @property (atomic,readonly) BOOL isValid;

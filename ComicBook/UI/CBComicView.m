@@ -13,6 +13,8 @@
 #import "CBComicModel.h"
 #import "CBFrame.h"
 
+#import "CBGeometryHelpers.h"
+
 #import "CBContentLayoutManager.h"
 #import "CBComicLayoutManager.h"
 
@@ -297,6 +299,12 @@ static const CGFloat kCBZoomMax = 5.00;
 @synthesize zoom;
 @synthesize position;
 
+- (CGPoint)focusPoint
+{
+	CGSize contentSize = contentLayer.bounds.size;
+	return CGPointMake(-position.x, -position.y-contentSize.height*0.25/zoom);
+}
+
 - (void)updatePageFromModel
 {
 	NSInteger currentPage = model.currentFrameIdx;
@@ -347,14 +355,15 @@ static const CGFloat kCBZoomMax = 5.00;
 	// Find closest page
 	__block NSInteger closestPageIdx = -1;
 	__block CGFloat closestPageDistance = CGFLOAT_MAX;
+	CGPoint center = [self focusPoint];
 	[pages enumerateObjectsUsingBlock:^(id obj, NSInteger idx)
 	 {
 		 CBPageLayer * page = obj;
 		 if (!page.isLaidOut || !page.isValid)
 			 return;
-		 CGPoint pagePos = page.position;
-		 CGFloat pageDistance = fabs(-position.y - pagePos.y);
-		 if (closestPageDistance > pageDistance)
+		 CGRect pageBounds = page.effectiveBounds;
+		 CGFloat pageDistance = CBRectPointDistance(pageBounds, center);
+		 if (closestPageDistance > pageDistance + 0.001) // Prefer early pages
 		 {
 			 closestPageDistance = pageDistance;
 			 closestPageIdx = idx;
