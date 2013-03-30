@@ -419,6 +419,7 @@ static const CGFloat kCBZoomMax = 5.00;
 										   -[event scrollingDeltaY]*kCBCoarseLineFactor)];
 	}
 	[CATransaction commit];
+	[self hideMouseCursor];
 }
 
 - (void)keyDown:(NSEvent*)event
@@ -458,6 +459,7 @@ static const CGFloat kCBZoomMax = 5.00;
 			NSLog(@"Unhandled Key Event: %@", event);
 	}
 	[CATransaction commit];
+	[self hideMouseCursor];
 }
 
 - (void)keyUp:(NSEvent*)event
@@ -488,6 +490,7 @@ static const CGFloat kCBZoomMax = 5.00;
 				[self nextPage];
 		}
 	}
+	[self hideMouseCursor];
 }
 
 - (void)magnifyWithEvent:(NSEvent *)event
@@ -498,6 +501,12 @@ static const CGFloat kCBZoomMax = 5.00;
 	NSPoint layerPos = [self convertPointToBacking:viewPos];
 	[self zoomBy:1.0 + event.magnification withCenter:layerPos];
 	[CATransaction commit];
+	[self hideMouseCursor];
+}
+
+- (void)hideMouseCursor
+{
+	[NSCursor setHiddenUntilMouseMoves:YES];
 }
 
 - (IBAction)setLayoutLeftToRight:(id)sender

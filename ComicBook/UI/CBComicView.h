@@ -73,6 +73,8 @@
 - (void)swipeWithEvent:(NSEvent*)event;
 - (void)magnifyWithEvent:(NSEvent *)event;
 
+- (void)hideMouseCursor;
+
 - (IBAction)setLayoutLeftToRight:(id)sender;
 - (IBAction)setLayoutRightToLeft:(id)sender;
 - (IBAction)setLayoutSingle:(id)sender;
