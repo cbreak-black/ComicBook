@@ -35,7 +35,6 @@
 	comicList = [[CBComicListController alloc] init];
 	comicList.model = model;
 	[self addWindowController:comicWindow];
-	[self addWindowController:comicList];
 }
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName
