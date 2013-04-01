@@ -144,6 +144,7 @@ static const CGFloat kCBZoomMax = 5.00;
 		[model removeObserver:self forKeyPath:@"frames"];
 		[model removeObserver:self forKeyPath:@"currentFrameIdx"];
 		[model removeObserver:self forKeyPath:@"layoutMode"];
+		[model removeObserver:self forKeyPath:@"direction"];
 	}
 	model = model_;
 	if (model != nil)
@@ -153,6 +154,8 @@ static const CGFloat kCBZoomMax = 5.00;
 		[model addObserver:self forKeyPath:@"currentFrameIdx"
 				   options:NSKeyValueObservingOptionInitial context:0];
 		[model addObserver:self forKeyPath:@"layoutMode"
+				   options:NSKeyValueObservingOptionInitial context:0];
+		[model addObserver:self forKeyPath:@"direction"
 				   options:NSKeyValueObservingOptionInitial context:0];
 	}
 }
@@ -184,6 +187,11 @@ static const CGFloat kCBZoomMax = 5.00;
 	else if ([keyPath isEqualToString:@"layoutMode"])
 	{
 		comicLayoutManager.layoutMode = model.layoutMode;
+		[self relayout];
+	}
+	else if ([keyPath isEqualToString:@"direction"])
+	{
+		comicLayoutManager.direction = model.direction;
 		[self relayout];
 	}
 }
@@ -477,14 +485,13 @@ static const CGFloat kCBZoomMax = 5.00;
 
 - (void)swipeWithEvent:(NSEvent*)event
 {
-	CBComicLayoutMode mode = comicLayoutManager.layoutMode;
 	if (event.deltaY < 0)
 		[self nextPage];
 	else if (event.deltaY > 0)
 		[self previousPage];
 	else
 	{
-		if (mode == kCBComicLayoutLeftToRight)
+		if (comicLayoutManager.direction == kCBDirectionLeftToRight)
 		{
 			if (event.deltaX < 0)
 				[self nextPage];
@@ -518,19 +525,24 @@ static const CGFloat kCBZoomMax = 5.00;
 	[NSCursor setHiddenUntilMouseMoves:YES];
 }
 
-- (IBAction)setLayoutLeftToRight:(id)sender
-{
-	model.layoutMode = kCBComicLayoutLeftToRight;
-}
-
-- (IBAction)setLayoutRightToLeft:(id)sender
-{
-	model.layoutMode = kCBComicLayoutRightToLeft;
-}
-
 - (IBAction)setLayoutSingle:(id)sender
 {
 	model.layoutMode = kCBComicLayoutSingle;
+}
+
+- (IBAction)setLayoutDouble:(id)sender
+{
+	model.layoutMode = kCBComicLayoutDouble;
+}
+
+- (IBAction)setLeftToRight:(id)sender
+{
+	model.direction = kCBDirectionLeftToRight;
+}
+
+- (IBAction)setRightToLeft:(id)sender
+{
+	model.direction = kCBDirectionRightToLeft;
 }
 
 - (IBAction)shiftPages:(id)sender

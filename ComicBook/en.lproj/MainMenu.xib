@@ -316,10 +316,38 @@
 						<object class="NSMenu" key="NSSubmenu" id="574092979">
 							<string key="NSTitle">Layout</string>
 							<array class="NSMutableArray" key="NSMenuItems">
+								<object class="NSMenuItem" id="722435034">
+									<reference key="NSMenu" ref="574092979"/>
+									<string key="NSTitle">Single Page</string>
+									<string key="NSKeyEquiv">1</string>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
+								<object class="NSMenuItem" id="4944996">
+									<reference key="NSMenu" ref="574092979"/>
+									<string key="NSTitle">Double Page</string>
+									<string key="NSKeyEquiv">2</string>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
+								<object class="NSMenuItem" id="715291738">
+									<reference key="NSMenu" ref="574092979"/>
+									<bool key="NSIsDisabled">YES</bool>
+									<bool key="NSIsSeparator">YES</bool>
+									<string key="NSTitle"/>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
 								<object class="NSMenuItem" id="616288566">
 									<reference key="NSMenu" ref="574092979"/>
 									<string key="NSTitle">Left to Right</string>
-									<string key="NSKeyEquiv">1</string>
+									<string key="NSKeyEquiv">3</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="1033313550"/>
@@ -328,16 +356,7 @@
 								<object class="NSMenuItem" id="1033647602">
 									<reference key="NSMenu" ref="574092979"/>
 									<string key="NSTitle">Right to Left</string>
-									<string key="NSKeyEquiv">2</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="1033313550"/>
-									<reference key="NSMixedImage" ref="310636482"/>
-								</object>
-								<object class="NSMenuItem" id="722435034">
-									<reference key="NSMenu" ref="574092979"/>
-									<string key="NSTitle">Single Page</string>
-									<string key="NSKeyEquiv">3</string>
+									<string key="NSKeyEquiv">4</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="1033313550"/>
@@ -346,7 +365,7 @@
 								<object class="NSMenuItem" id="1063420190">
 									<reference key="NSMenu" ref="574092979"/>
 									<string key="NSTitle">Shift Pages</string>
-									<string key="NSKeyEquiv">4</string>
+									<string key="NSKeyEquiv">5</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="1033313550"/>
@@ -628,22 +647,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">setLayoutLeftToRight:</string>
-						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="616288566"/>
-					</object>
-					<int key="connectionID">548</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">setLayoutRightToLeft:</string>
-						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="1033647602"/>
-					</object>
-					<int key="connectionID">549</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">setLayoutSingle:</string>
 						<reference key="source" ref="1014"/>
 						<reference key="destination" ref="722435034"/>
@@ -665,6 +668,30 @@
 						<reference key="destination" ref="1063420190"/>
 					</object>
 					<int key="connectionID">557</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">setLayoutDouble:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="4944996"/>
+					</object>
+					<int key="connectionID">561</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">setLeftToRight:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="616288566"/>
+					</object>
+					<int key="connectionID">562</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">setRightToLeft:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="1033647602"/>
+					</object>
+					<int key="connectionID">563</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -976,9 +1003,11 @@
 						<reference key="object" ref="574092979"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="616288566"/>
-							<reference ref="722435034"/>
 							<reference ref="1033647602"/>
+							<reference ref="722435034"/>
+							<reference ref="4944996"/>
 							<reference ref="1063420190"/>
+							<reference ref="715291738"/>
 						</array>
 						<reference key="parent" ref="858566255"/>
 					</object>
@@ -1010,6 +1039,16 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">555</int>
 						<reference key="object" ref="1063420190"/>
+						<reference key="parent" ref="574092979"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">558</int>
+						<reference key="object" ref="4944996"/>
+						<reference key="parent" ref="574092979"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">560</int>
+						<reference key="object" ref="715291738"/>
 						<reference key="parent" ref="574092979"/>
 					</object>
 				</array>
@@ -1053,7 +1092,9 @@
 				<string key="551.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="552.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="555.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="558.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="56.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="560.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="57.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="58.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="72.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1072,7 +1113,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">557</int>
+			<int key="maxID">563</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1088,22 +1129,27 @@
 					<string key="className">CBComicView</string>
 					<string key="superclassName">NSView</string>
 					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="setLayoutLeftToRight:">id</string>
-						<string key="setLayoutRightToLeft:">id</string>
+						<string key="setLayoutDouble:">id</string>
 						<string key="setLayoutSingle:">id</string>
+						<string key="setLeftToRight:">id</string>
+						<string key="setRightToLeft:">id</string>
 						<string key="shiftPages:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="setLayoutLeftToRight:">
-							<string key="name">setLayoutLeftToRight:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="setLayoutRightToLeft:">
-							<string key="name">setLayoutRightToLeft:</string>
+						<object class="IBActionInfo" key="setLayoutDouble:">
+							<string key="name">setLayoutDouble:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="setLayoutSingle:">
 							<string key="name">setLayoutSingle:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="setLeftToRight:">
+							<string key="name">setLeftToRight:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="setRightToLeft:">
+							<string key="name">setRightToLeft:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="shiftPages:">

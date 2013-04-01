@@ -76,9 +76,10 @@
 
 - (void)hideMouseCursor;
 
-- (IBAction)setLayoutLeftToRight:(id)sender;
-- (IBAction)setLayoutRightToLeft:(id)sender;
 - (IBAction)setLayoutSingle:(id)sender;
+- (IBAction)setLayoutDouble:(id)sender;
+- (IBAction)setLeftToRight:(id)sender;
+- (IBAction)setRightToLeft:(id)sender;
 - (IBAction)shiftPages:(id)sender;
 
 - (void)relayout;

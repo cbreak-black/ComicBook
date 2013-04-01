@@ -21,7 +21,8 @@
 	{
 		pages = pageBuffer;
 		anchorPageIndex = 0;
-		layoutMode = kCBComicLayoutRightToLeft;
+		layoutMode = kCBComicLayoutDouble;
+		direction = kCBDirectionRightToLeft;
 		paddingVertical = 0.05;
 		paddingHorizontal = 0.025;
 		verticalBottom = 0.0;
@@ -34,6 +35,7 @@
 @synthesize anchorPageIndex;
 
 @synthesize layoutMode;
+@synthesize direction;
 @synthesize paddingVertical;
 @synthesize paddingHorizontal;
 
@@ -52,32 +54,18 @@
 
 - (CBPageAlignment)lineStartAlignment
 {
-	switch (layoutMode)
-	{
-		case kCBComicLayoutLeftToRight:
-			return kCBPageLeft;
-		case kCBComicLayoutRightToLeft:
-			return kCBPageRight;
-		case kCBComicLayoutSingle:
-			return kCBPageDouble;
-		default:
-			return kCBPageUnaligned;
-	}
+	if (direction == kCBDirectionLeftToRight)
+		return kCBPageLeft;
+	else
+		return kCBPageRight;
 }
 
 - (CBPageAlignment)lineEndAlignment
 {
-	switch (layoutMode)
-	{
-		case kCBComicLayoutLeftToRight:
-			return kCBPageRight;
-		case kCBComicLayoutRightToLeft:
-			return kCBPageLeft;
-		case kCBComicLayoutSingle:
-			return kCBPageDouble;
-		default:
-			return kCBPageUnaligned;
-	}
+	if (direction == kCBDirectionLeftToRight)
+		return kCBPageRight;
+	else
+		return kCBPageLeft;
 }
 
 - (CBPageAlignment)nextAlignment:(CBPageAlignment)currentAlignment
@@ -286,12 +274,10 @@
 - (void)configurePages
 {
 	CGSize shadowOffset;
-	if (layoutMode == kCBComicLayoutLeftToRight)
+	if (direction == kCBDirectionLeftToRight)
 		shadowOffset = CGSizeMake(paddingHorizontal, -paddingVertical/2);
-	else if (layoutMode == kCBComicLayoutRightToLeft)
-		shadowOffset = CGSizeMake(-paddingHorizontal, -paddingVertical/2);
 	else
-		shadowOffset = CGSizeMake(0.0, -paddingVertical/2);
+		shadowOffset = CGSizeMake(-paddingHorizontal, -paddingVertical/2);
 	[pages enumerateObjectsUsingBlock:^(id obj, NSInteger idx)
 	{
 		CBPageLayer * page = obj;

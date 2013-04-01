@@ -20,6 +20,7 @@
 	NSInteger anchorPageIndex;
 	// Layout Settings
 	CBComicLayoutMode layoutMode;
+	CBComicDirection direction;
 	CGFloat paddingHorizontal;
 	CGFloat paddingVertical;
 	// Meta Infos
@@ -32,6 +33,7 @@
 
 @property (nonatomic,assign) NSInteger anchorPageIndex;
 @property (nonatomic,assign) CBComicLayoutMode layoutMode;
+@property (nonatomic,assign) CBComicDirection direction;
 @property (nonatomic,assign) CGFloat paddingVertical;
 @property (nonatomic,assign) CGFloat paddingHorizontal;
 

@@ -10,9 +10,13 @@
 #define CBCONSTANTS_H
 
 typedef enum {
-	kCBComicLayoutLeftToRight,
-	kCBComicLayoutRightToLeft,
+	kCBComicLayoutDouble,
 	kCBComicLayoutSingle
 } CBComicLayoutMode;
+
+typedef enum {
+	kCBDirectionLeftToRight,
+	kCBDirectionRightToLeft
+} CBComicDirection;
 
 #endif

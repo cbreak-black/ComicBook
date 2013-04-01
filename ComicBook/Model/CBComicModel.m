@@ -25,6 +25,7 @@
 		comicURL = [url fileReferenceURL];
 		currentFrameIdx = 0;
 		layoutMode = (CBComicLayoutMode)[defaults integerForKey:@"defaultLayoutMode"];
+		direction = (CBComicDirection)[defaults integerForKey:@"defaultDirection"];
 		frames = [NSMutableArray arrayWithCapacity:40];
 		[self loadPersistentData];
 		// Asyncronously load frames
@@ -47,7 +48,8 @@
 {
 	NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
 	[defaults registerDefaults:@{
-		@"defaultLayoutMode": [NSNumber numberWithInteger:kCBComicLayoutRightToLeft]
+		@"defaultLayoutMode": [NSNumber numberWithInteger:kCBComicLayoutDouble],
+		@"defaultDirection": [NSNumber numberWithInteger:kCBDirectionRightToLeft]
 	 }];
 }
 
@@ -93,6 +95,7 @@
 }
 
 @synthesize layoutMode;
+@synthesize direction;
 
 - (void)shiftCurrentFrameIdx:(NSInteger)offset
 {
@@ -160,6 +163,8 @@
 		if (n) currentFrameIdx = [n unsignedIntegerValue];
 		NSNumber * l = [dict objectForKey:@"layoutMode"];
 		if (l) layoutMode = (CBComicLayoutMode)[l unsignedIntegerValue];
+		NSNumber * d = [dict objectForKey:@"direction"];
+		if (d) direction = (CBComicDirection)[d unsignedIntegerValue];
 	}
 }
 
@@ -171,6 +176,7 @@
 		@"name": [comicURL lastPathComponent],
 		@"currentFrameIdx": [NSNumber numberWithUnsignedInteger:currentFrameIdx],
 		@"layoutMode": [NSNumber numberWithUnsignedInteger:layoutMode],
+		@"direction": [NSNumber numberWithUnsignedInteger:direction],
 		@"bookmark": bookmark
 	};
 	[CBComicModel storePersistentDictionary:dict forURL:comicURL];

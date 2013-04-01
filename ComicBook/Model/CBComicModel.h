@@ -18,6 +18,7 @@
 	NSMutableArray * frames;
 	NSUInteger currentFrameIdx;
 	CBComicLayoutMode layoutMode;
+	CBComicDirection direction;
 }
 
 - (id)initWithURL:(NSURL*)url error:(NSError **)error;
@@ -31,6 +32,7 @@
 @property (nonatomic,assign) NSUInteger currentFrameIdx;
 @property (nonatomic,retain) NSIndexSet * currentFrameSet;
 @property (nonatomic,assign) CBComicLayoutMode layoutMode;
+@property (nonatomic,assign) CBComicDirection direction;
 
 - (void)shiftCurrentFrameIdx:(NSInteger)offset;
 
