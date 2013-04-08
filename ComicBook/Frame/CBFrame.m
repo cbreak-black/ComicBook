@@ -32,10 +32,11 @@
 @synthesize filteredPath;
 
 static NSString * empty = @"";
+static NSString * spacePattern = @"[ _-]++";
 static NSString * bracketPatterns[] = {
-	@"[ _]*+\\[.*?\\][ _]*+",
-	@"[ _]*+\\(.*?\\)[ _]*+",
-	@"[ _]*+\\{.*?\\}[ _]*+"
+	@" ?\\[.*?\\] ?",
+	@" ?\\(.*?\\) ?",
+	@" ?\\{.*?\\} ?"
 };
 
 - (NSString*)filterPathWithRoot:(NSString*)rootPath
@@ -43,6 +44,8 @@ static NSString * bracketPatterns[] = {
 	filteredPath = [self.path mutableCopy];
 	[filteredPath replaceOccurrencesOfString:rootPath withString:empty
 		options:NSAnchoredSearch range:NSMakeRange(0, [filteredPath length])];
+	[filteredPath replaceOccurrencesOfString:spacePattern withString:@" "
+		options:NSRegularExpressionSearch range:NSMakeRange(0, [filteredPath length])];
 	// Remove stuff in bracketed things
 	for (NSUInteger i = 0; i < sizeof(bracketPatterns)/sizeof(NSString*); ++i)
 	{
