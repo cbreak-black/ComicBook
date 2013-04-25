@@ -170,6 +170,18 @@
 			<key>NSDocumentClass</key>
 			<string>CBDocument</string>
 		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>archive-lzh</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.archive.lha</string>
+			</array>
+			<key>NSDocumentClass</key>
+			<string>CBDocument</string>
+		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
@@ -622,6 +634,33 @@
 				<key>public.mime-type</key>
 				<array>
 					<string>application/x-7z-compressed</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>LHA Archive</string>
+			<key>UTTypeIconFile</key>
+			<string></string>
+			<key>UTTypeIdentifier</key>
+			<string>public.archive.lha</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://en.wikipedia.org/wiki/LHA_%28file_format%29</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>lha</string>
+					<string>lzh</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/x-lzh-compressed</string>
 				</array>
 			</dict>
 		</dict>
