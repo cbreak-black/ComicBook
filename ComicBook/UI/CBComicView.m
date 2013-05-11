@@ -310,8 +310,7 @@ static const CGFloat kCBZoomMax = 5.00;
 
 - (CGPoint)focusPoint
 {
-	CGSize contentSize = contentLayer.bounds.size;
-	return CGPointMake(-position.x, -position.y-contentSize.height*0.25/zoom);
+	return CGPointMake(-position.x, -position.y);
 }
 
 - (void)updatePageFromModel
