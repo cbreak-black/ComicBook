@@ -245,9 +245,10 @@ static const CGFloat kCBZoomMax = 5.00;
 
 - (CGPoint)moveByLayer:(CGPoint)offset
 {
-	CGPoint newPos = CGPointMake(position.x + offset.x, position.y + offset.y);
+	CGPoint oldPos = position;
+	CGPoint newPos = CGPointMake(oldPos.x + offset.x, oldPos.y + offset.y);
 	CGPoint effective = [self moveToLayer:newPos];
-	return CGPointMake(newPos.x-effective.x, newPos.y-effective.y);
+	return CGPointMake(oldPos.x-effective.x, oldPos.y-effective.y);
 }
 
 - (CGPoint)moveByWindow:(CGPoint)offset
@@ -259,9 +260,9 @@ static const CGFloat kCBZoomMax = 5.00;
 
 - (CGPoint)moveByRelative:(CGPoint)offset
 {
-	CGSize contentSize = contentLayer.bounds.size;
-	CGPoint effective = [self moveByLayer:CGPointMake(offset.x*contentSize.width, offset.y*contentSize.height)];
-	return CGPointMake(effective.x/contentSize.width, effective.y/contentSize.height);
+	CGSize windowSize = backgroundLayer.bounds.size;
+	CGPoint effective = [self moveByWindow:CGPointMake(offset.x*windowSize.width, offset.y*windowSize.height)];
+	return CGPointMake(effective.x/windowSize.width, effective.y/windowSize.height);
 }
 
 - (void)nextPage
