@@ -25,8 +25,9 @@ static const NSInteger kCBPageCacheCountBwd = 8;
 static const CGFloat kCBCoarseLineFactor = 32.0;
 static const CGFloat kCBKeyboardMoveFactor = 0.75;
 static const CGFloat kCBKeyboardZoomFactor = 1.25;
-static const CGFloat kCBZoomMin = 0.20;
-static const CGFloat kCBZoomMax = 5.00;
+static const CGFloat kCBZoomMin = 0.125;
+static const CGFloat kCBZoomMax = 8.000;
+static const CGFloat kCBZoomSnapDist = 0.025;
 
 @implementation CBComicView
 
@@ -39,6 +40,7 @@ static const CGFloat kCBZoomMax = 5.00;
 		comicLayoutManager = [[CBComicLayoutManager alloc] initWithPages:pages];
 		// Default View State
 		zoom = 1.0;
+		zoomAccumulated = zoom;
 		position = CGPointMake(0, 0);
 		// Configuration
 		[self configureLayers];
@@ -204,11 +206,15 @@ static const CGFloat kCBZoomMax = 5.00;
 
 - (CGFloat)zoomBy:(CGFloat)factor withCenter:(CGPoint)center
 {
+	// Accumulate zoom effect, since zoom snaps
+	zoomAccumulated *= factor;
+	// Clamp
+	if      (zoomAccumulated < kCBZoomMin) zoomAccumulated = kCBZoomMin;
+	else if (zoomAccumulated > kCBZoomMax) zoomAccumulated = kCBZoomMax;
 	// Calculate effective zoom factor
-	CGFloat newZoom = zoom*factor;
-	if      (newZoom < kCBZoomMin) factor = kCBZoomMin/zoom;
-	else if (newZoom > kCBZoomMax) factor = kCBZoomMax/zoom;
-	zoom *= factor;
+	CGFloat zoomOld = zoom;
+	[self setZoom:zoomAccumulated];
+	factor = zoom/zoomOld;
 	// Correct to keep the center where it is
 	CGSize bgSize = backgroundLayer.bounds.size;
 	CGFloat correctionFactor = (1.0-factor);
@@ -295,7 +301,18 @@ static const CGFloat kCBZoomMax = 5.00;
 
 - (void)setZoom:(CGFloat)zoom_
 {
+	// Clamp
+	if      (zoom_ < kCBZoomMin) zoom_ = kCBZoomMin;
+	else if (zoom_ > kCBZoomMax) zoom_ = kCBZoomMax;
 	zoom = zoom_;
+	// Snap factor
+	CGFloat snappedZoom;
+	if (zoom < 1.0)
+		snappedZoom = 1/round(1/zoom);
+	else
+		snappedZoom = round(zoom);
+	if (fabs((zoom-snappedZoom)/snappedZoom) < kCBZoomSnapDist)
+		zoom = snappedZoom;
 	[self updateView];
 }
 

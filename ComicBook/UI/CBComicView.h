@@ -32,6 +32,7 @@
 	CIFilter * gammaFilter;
 	// View Transformation State
 	CGFloat zoom;
+	CGFloat zoomAccumulated;
 	CGPoint position;
 }
 
