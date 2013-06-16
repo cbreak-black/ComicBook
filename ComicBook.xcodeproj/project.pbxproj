@@ -40,6 +40,8 @@
 		7060C097168642B1008A9E92 /* CBPDFFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C096168642B1008A9E92 /* CBPDFFrame.m */; };
 		7060C09D168660CA008A9E92 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C09C168660CA008A9E92 /* Quartz.framework */; };
 		7060C0A4168669AC008A9E92 /* CBDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C0A3168669AC008A9E92 /* CBDocumentController.m */; };
+		709994F9176E74C500A05583 /* XADMaster.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 7060C07E1685DF4A008A9E92 /* XADMaster.framework */; };
+		709994FA176E74CB00A05583 /* UniversalDetector.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 7060C07D1685DF4A008A9E92 /* UniversalDetector.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,21 @@
 			remoteInfo = ComicBook;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		709994F8176E74B500A05583 /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				709994FA176E74CB00A05583 /* UniversalDetector.framework in Copy Files */,
+				709994F9176E74C500A05583 /* XADMaster.framework in Copy Files */,
+			);
+			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		702ADC6116866CB900D55B9E /* CBApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBApplicationDelegate.h; path = Controller/CBApplicationDelegate.h; sourceTree = "<group>"; };
@@ -323,6 +340,7 @@
 				7060C018167CAA14008A9E92 /* Sources */,
 				7060C019167CAA14008A9E92 /* Frameworks */,
 				7060C01A167CAA14008A9E92 /* Resources */,
+				709994F8176E74B500A05583 /* Copy Files */,
 			);
 			buildRules = (
 			);
