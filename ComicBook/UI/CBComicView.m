@@ -94,6 +94,11 @@ static const CGFloat kCBZoomSnapDist = 0.025;
 {
 }
 
+- (BOOL)isOpaque
+{
+	return YES;
+}
+
 - (void)configureLayers
 {
 	// Background layer
