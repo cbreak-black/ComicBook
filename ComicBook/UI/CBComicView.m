@@ -125,8 +125,6 @@ static const CGFloat kCBZoomSnapDist = 0.025;
 	// Gamma Correction
 	gammaFilter = [CIFilter filterWithName:@"CIGammaAdjust"];
 	[self setGammaPower:1.0]; // 0.1 - 3.0
-	// Registering
-	backgroundLayer.filters = @[gammaFilter];
 }
 
 - (CGFloat)gammaPower
