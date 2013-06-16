@@ -20,6 +20,8 @@
 		isLaidOut = NO;
 		self.shadowOpacity = 0.25;
 		self.shadowRadius = 0.025;
+		self.minificationFilter = kCAFilterTrilinear;
+		self.magnificationFilter = kCAFilterLinear; // Default
 	}
 	return self;
 }
