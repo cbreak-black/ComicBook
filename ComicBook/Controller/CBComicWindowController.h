@@ -17,11 +17,16 @@
 @interface CBComicWindowController : NSWindowController
 {
 	IBOutlet CBComicView * comicView;
+	IBOutlet NSWindow * loadingSheet;
+	IBOutlet NSProgressIndicator * loadingIndicator;
 	CBComicModel * model;
 }
 
 - (id)init;
 
 @property (nonatomic,retain) CBComicModel * model;
+
+- (void)startLoading;
+- (void)stopLoading;
 
 @end

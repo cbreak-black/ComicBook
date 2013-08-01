@@ -27,6 +27,7 @@
 		layoutMode = (CBComicLayoutMode)[defaults integerForKey:@"defaultLayoutMode"];
 		direction = (CBComicDirection)[defaults integerForKey:@"defaultDirection"];
 		frames = [NSMutableArray arrayWithCapacity:40];
+		framesLoaded = NO;
 		[self loadPersistentData];
 		// Asyncronously load frames
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^()
@@ -38,6 +39,9 @@
 			}];
 			dispatch_async(dispatch_get_main_queue(), ^(){
 				[self sortFrames];
+				[self willChangeValueForKey:@"framesLoaded"];
+				framesLoaded = YES;
+				[self didChangeValueForKey:@"framesLoaded"];
 			});
 		});
 	}
@@ -71,6 +75,7 @@
 }
 
 @synthesize frames;
+@synthesize framesLoaded;
 
 - (void)setCurrentFrameIdx:(NSUInteger)newFrameIdx
 {

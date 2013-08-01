@@ -147,6 +147,7 @@ static const CGFloat kCBZoomSnapDist = 0.025;
 	if (model != nil)
 	{
 		[model removeObserver:self forKeyPath:@"frames"];
+		[model removeObserver:self forKeyPath:@"framesLoaded"];
 		[model removeObserver:self forKeyPath:@"currentFrameIdx"];
 		[model removeObserver:self forKeyPath:@"layoutMode"];
 		[model removeObserver:self forKeyPath:@"direction"];
@@ -155,6 +156,8 @@ static const CGFloat kCBZoomSnapDist = 0.025;
 	if (model != nil)
 	{
 		[model addObserver:self forKeyPath:@"frames"
+				   options:0 context:0];
+		[model addObserver:self forKeyPath:@"framesLoaded"
 				   options:0 context:0];
 		[model addObserver:self forKeyPath:@"currentFrameIdx"
 				   options:NSKeyValueObservingOptionInitial context:0];
@@ -173,17 +176,12 @@ static const CGFloat kCBZoomSnapDist = 0.025;
 	if ([keyPath isEqualToString:@"frames"])
 	{
 		NSIndexSet * changed = [change objectForKey:NSKeyValueChangeIndexesKey];
-		NSUInteger currentFrameIdx = model.currentFrameIdx;
 		[pages enumerateObjectsInRange:CBRangeMake([changed firstIndex], [changed lastIndex]+1)
-					   usingBlockAsync:pages.enterBlock
-							completion:^()
-		 {
-			 dispatch_async(dispatch_get_main_queue(), ^()
-			 {
-				 if ([changed containsIndex:currentFrameIdx])
-					 [self updatePageFromModel];
-			 });
-		 }];
+					   usingBlockAsync:pages.enterBlock];
+	}
+	else if ([keyPath isEqualToString:@"framesLoaded"])
+	{
+		[self updatePageFromModel];
 	}
 	else if ([keyPath isEqualToString:@"currentFrameIdx"])
 	{

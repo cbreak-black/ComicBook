@@ -16,6 +16,7 @@
 {
 	NSURL * comicURL;
 	NSMutableArray * frames;
+	BOOL framesLoaded;
 	NSUInteger currentFrameIdx;
 	CBComicLayoutMode layoutMode;
 	CBComicDirection direction;
@@ -29,6 +30,7 @@
 @property (nonatomic,readonly) NSString * comicPath;
 @property (nonatomic,readonly) NSUInteger frameCount;
 @property (nonatomic,readonly) NSArray * frames;
+@property (nonatomic,readonly) BOOL framesLoaded;
 @property (nonatomic,assign) NSUInteger currentFrameIdx;
 @property (nonatomic,retain) NSIndexSet * currentFrameSet;
 @property (nonatomic,assign) CBComicLayoutMode layoutMode;
