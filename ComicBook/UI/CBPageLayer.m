@@ -8,6 +8,9 @@
 
 #import "CBPageLayer.h"
 
+// Single Page Aspect limit (Standard DIN A4 Paper has an aspect of 0.71)
+static const CGFloat kCBPageAspectMin = 0.5;
+
 @implementation CBPageLayer
 
 - (id)init
@@ -47,19 +50,33 @@
 			aspect = CGFLOAT_MAX;
 			self.contents = nil;
 		}
-		self.bounds = CGRectMake(0, 0, width, width/aspect);
+		[self calculateBounds];
 	}
 }
 
 @synthesize comicFrame;
 @synthesize aspect;
 
+- (void)calculateBounds
+{
+	if (alignment != kCBPageDouble && aspect < kCBPageAspectMin)
+	{
+		// Prevent abnormally tall single pages
+		CGFloat maxHeight = width/kCBPageAspectMin;
+		self.bounds = CGRectMake(0, 0, maxHeight*aspect, maxHeight);
+	}
+	else
+	{
+		self.bounds = CGRectMake(0, 0, width, width/aspect);
+	}
+}
+
 - (void)setWidth:(CGFloat)width_
 {
 	@synchronized (self)
 	{
 		width = width_;
-		self.bounds = CGRectMake(0, 0, width, width/aspect);
+		[self calculateBounds];
 	}
 }
 
@@ -99,6 +116,7 @@
 				return;
 		}
 		alignment = alignment_;
+		[self calculateBounds];
 	}
 }
 
