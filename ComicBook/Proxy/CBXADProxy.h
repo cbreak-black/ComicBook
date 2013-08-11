@@ -10,6 +10,9 @@
 
 @class XADArchiveParser;
 
+@class CBXADArchiveFileProxy;
+@class CBXADArchiveParserProxy;
+
 @interface CBXADArchiveFileProxy : NSObject
 {
 	NSURL * baseURL;
@@ -27,11 +30,38 @@
 @property (readonly) NSArray * entries; //!< All entries, identifying files in the archive chain
 @property (readonly) NSDictionary * entry; //!< The last entry, identifying the file in the archive
 
-/*!
- The archive parsers, the first is the root file, all others are contained archives. The entry refers
- to the last archive.
- */
-@property (readonly) NSArray * archiveParser;
+@property (readonly) CBXADArchiveParserProxy * archiveParser;
+
+@end
+
+@interface CBXADArchiveParserProxy : NSObject
+{
+	CBXADArchiveParserProxy * baseArchive; // weak
+	CBXADArchiveParserProxy * parentArchive;
+	XADArchiveParser * archiveParser;
+	BOOL parsed;
+}
+
+- (id)initWithArchiveParser:(XADArchiveParser*)archive parent:(CBXADArchiveParserProxy*)parent;
+- (void)dealloc;
+
++ (CBXADArchiveParserProxy*)proxyWithArchiveParser:(XADArchiveParser*)archive parent:(CBXADArchiveParserProxy*)parent;
++ (CBXADArchiveParserProxy*)proxyWithArchiveFile:(CBXADArchiveFileProxy*)archiveFile;
++ (CBXADArchiveParserProxy*)proxyWithArchiveURL:(NSURL*)url;
+
+@property (readonly) CBXADArchiveParserProxy * baseArchive;
+@property (readonly) CBXADArchiveParserProxy * parentArchive;
+@property (readonly) XADArchiveParser * archiveParser;
+
+- (CBXADArchiveParserProxy*)getSubarchiveForEntry:(NSDictionary*)entry;
+- (NSData*)getDataForEntry:(NSDictionary*)entry;
+
+- (BOOL)needsParsing;
+- (int)parseIfNeeded;
+- (int)parse;
+- (int)parseWithDelegate:(id)delegate;
+
++ (void)initialize;
 
 @end
 
@@ -39,8 +69,6 @@
  \brief Isolates non-arc compliant code from XADMaster from normal code
  */
 @interface CBXADProxy : NSObject
-
-+ (void)initialize;
 
 + (BOOL)canLoadArchiveAtURL:(NSURL*)url;
 + (BOOL)loadArchiveAtURL:(NSURL*)url

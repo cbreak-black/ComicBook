@@ -11,8 +11,6 @@
 #import <XADMaster/XADArchiveParser.h>
 #import <XADMaster/XADException.h>
 
-static XADArchiveParser * getCachedArchiveParserForPath(NSString * path);
-
 // Archive File Proxy
 @implementation CBXADArchiveFileProxy
 
@@ -58,15 +56,10 @@ static XADArchiveParser * getCachedArchiveParserForPath(NSString * path);
 {
 	@try
 	{
-		NSArray * archiveParserChain = [self archiveParser];
-		if (archiveParserChain)
+		CBXADArchiveParserProxy * archiveParser = [self archiveParser];
+		if (archiveParser)
 		{
-			@synchronized([archiveParserChain objectAtIndex:0])
-			{
-				XADArchiveParser * archive = [archiveParserChain lastObject];
-				CSHandle * dataHandle = [archive handleForEntryWithDictionary:[entries lastObject] wantChecksum:YES];
-				return [dataHandle remainingFileContents];
-			}
+			return [archiveParser getDataForEntry:[entries lastObject]];
 		}
 	}
 	@catch (NSException * e)
@@ -76,23 +69,16 @@ static XADArchiveParser * getCachedArchiveParserForPath(NSString * path);
 	return nil;
 }
 
-- (NSArray*)archiveParser
+- (CBXADArchiveParserProxy*)archiveParser
 {
 	@try
 	{
-		NSMutableArray * archiveParserChain = [NSMutableArray arrayWithCapacity:8];
-		XADArchiveParser * archive = getCachedArchiveParserForPath([baseURL path]);
-		[archiveParserChain addObject:archive];
-		@synchronized(archive)
+		CBXADArchiveParserProxy * proxy = [CBXADArchiveParserProxy proxyWithArchiveURL:baseURL];
+		for (NSUInteger entryIdx = 0; entryIdx < [entries count]-1; ++entryIdx)
 		{
-			for (NSUInteger entryIdx = 0; entryIdx < [entries count]-1; ++entryIdx)
-			{
-				archive = [XADArchiveParser archiveParserForEntryWithDictionary:[entries objectAtIndex:entryIdx]
-																  archiveParser:archive wantChecksum:YES];
-				[archiveParserChain addObject:archive];
-			}
+			proxy = [proxy getSubarchiveForEntry:[entries objectAtIndex:entryIdx]];
 		}
-		return archiveParserChain;
+		return proxy;
 	}
 	@catch (NSException * e)
 	{
@@ -109,6 +95,151 @@ static XADArchiveParser * getCachedArchiveParserForPath(NSString * path);
 	return [entries lastObject];
 }
 
+@end
+
+// Archive Parser Proxy
+
+// Archive Parser Proxy Cache
+static NSCache * archiveParserProxyCache = nil; // Initialized by +[CBXADProxy initialize]
+
+@implementation CBXADArchiveParserProxy : NSObject
+
+- (id)initWithArchiveParser:(XADArchiveParser*)archive_ parent:(CBXADArchiveParserProxy*)parent_
+{
+	if (self = [super init])
+	{
+		if (parent_)
+		{
+			baseArchive = [parent_ baseArchive];
+			parentArchive = [parent_ retain];
+		}
+		else
+		{
+			baseArchive = self;
+			parentArchive = nil;
+		}
+		archiveParser = [archive_ retain];
+		// Some parsers don't need to be parsed before using entry dicts
+		if ([archiveParser isKindOfClass:NSClassFromString(@"XADZipParser")] ||
+			[archiveParser isKindOfClass:NSClassFromString(@"XADRARParser")])
+		{
+			parsed = YES;
+		}
+		else
+		{
+			parsed = NO;
+		}
+	}
+	return self;
+}
+
+- (void)dealloc
+{
+	[archiveParser release];
+	[parentArchive release];
+	// baseArchive is weak
+	[super dealloc];
+}
+
++ (CBXADArchiveParserProxy*)proxyWithArchiveParser:(XADArchiveParser*)archive parent:(CBXADArchiveParserProxy*)parent;
+{
+	CBXADArchiveParserProxy * proxy = [[CBXADArchiveParserProxy alloc] initWithArchiveParser:archive parent:parent];
+	return [proxy autorelease];
+}
+
++ (CBXADArchiveParserProxy*)proxyWithArchiveURL:(NSURL*)url
+{
+	CBXADArchiveParserProxy * proxy = [archiveParserProxyCache objectForKey:url];
+	if (proxy)
+		return proxy;
+	XADError error = XADNoError;
+	XADArchiveParser * archive = [XADArchiveParser archiveParserForPath:[url path] error:&error];
+	if (archive && error == XADNoError)
+	{
+		proxy = [CBXADArchiveParserProxy proxyWithArchiveParser:archive parent:nil];
+		[archiveParserProxyCache setObject:proxy forKey:url];
+		return proxy;
+	}
+	return nil;
+}
+
++ (CBXADArchiveParserProxy*)proxyWithArchiveFile:(CBXADArchiveFileProxy*)archiveFile
+{
+	CBXADArchiveParserProxy * archiveParserProxy = [archiveFile archiveParser];
+	return [archiveParserProxy getSubarchiveForEntry:[archiveFile entry]];
+}
+
+@synthesize baseArchive;
+@synthesize parentArchive;
+@synthesize archiveParser;
+
+- (CBXADArchiveParserProxy*)getSubarchiveForEntry:(NSDictionary*)entry
+{
+	[self parseIfNeeded];
+	@synchronized(baseArchive)
+	{
+		XADArchiveParser * subArchive = [XADArchiveParser
+			archiveParserForEntryWithDictionary:entry archiveParser:archiveParser wantChecksum:YES];
+		if (subArchive)
+			return [CBXADArchiveParserProxy proxyWithArchiveParser:subArchive parent:self];
+	}
+	return nil;
+}
+
+- (NSData*)getDataForEntry:(NSDictionary*)entry
+{
+	[self parseIfNeeded];
+	@synchronized(baseArchive)
+	{
+		CSHandle * dataHandle = [archiveParser handleForEntryWithDictionary:entry wantChecksum:YES];
+		if (dataHandle)
+			return [dataHandle remainingFileContents];
+	}
+	return nil;
+}
+
+- (BOOL)needsParsing
+{
+	return !parsed;
+}
+
+- (int)parseIfNeeded
+{
+	if ([self needsParsing])
+	{
+		return [self parse];
+	}
+	return XADNoError;
+}
+
+- (int)parse
+{
+	@synchronized(baseArchive)
+	{
+		XADError error = [archiveParser parseWithoutExceptions];
+		parsed = (error == XADNoError);
+		return error;
+	}
+	return nil;
+}
+
+- (int)parseWithDelegate:(id)delegate
+{
+	[archiveParser setDelegate:delegate];
+	XADError error = [self parse];
+	[archiveParser setDelegate:nil];
+	return error;
+}
+
++ (void)initialize
+{
+	if (archiveParserProxyCache == nil)
+	{
+		archiveParserProxyCache = [[NSCache alloc] init];
+		archiveParserProxyCache.countLimit = 128;
+		archiveParserProxyCache.name = @"Archive Parser Cache";
+	}
+}
 
 @end
 
@@ -212,42 +343,15 @@ static XADArchiveParser * getCachedArchiveParserForPath(NSString * path);
 
 @end
 
-// Cache
-static NSCache * archiveFileCache = nil; // Initialized by +[CBXADProxy initialize]
-
-static XADArchiveParser * getCachedArchiveParserForPath(NSString * path)
-{
-	XADArchiveParser * archive = [archiveFileCache objectForKey:path];
-	if (archive)
-		return archive;
-	XADError error = XADNoError;
-	archive = [XADArchiveParser archiveParserForPath:path error:&error];
-	if (archive && error == XADNoError)
-	{
-		[archiveFileCache setObject:archive forKey:path];
-		return archive;
-	}
-	return nil;
-}
-
 // Proxy
 @implementation CBXADProxy
-
-+ (void)initialize
-{
-	if (archiveFileCache == nil)
-	{
-		archiveFileCache = [[NSCache alloc] init];
-		archiveFileCache.countLimit = 128;
-		archiveFileCache.name = @"Archive Parser Cache";
-	}
-}
 
 + (BOOL)canLoadArchiveAtURL:(NSURL*)url
 {
 	@autoreleasepool
 	{
-		return getCachedArchiveParserForPath([url path]) != nil;
+		CBXADArchiveParserProxy * proxy = [CBXADArchiveParserProxy proxyWithArchiveURL:url];
+		return proxy != nil;
 	}
 }
 
@@ -256,14 +360,12 @@ static XADArchiveParser * getCachedArchiveParserForPath(NSString * path)
 {
 	@autoreleasepool
 	{
-		XADError error = XADNoError;
-		XADArchiveParser * parser = getCachedArchiveParserForPath([url path]);
-		if (parser && error == XADNoError)
+		CBXADArchiveParserProxy * proxy = [CBXADArchiveParserProxy proxyWithArchiveURL:url];
+		if (proxy)
 		{
 			CBXADParserDelegate * delegate = [[CBXADParserDelegate alloc]
 											  initWithBlock:fileCallback forURL:url];
-			[parser setDelegate:delegate];
-			error = [parser parseWithoutExceptions];
+			XADError error = [proxy parseWithDelegate:delegate];
 			[delegate commit];
 			[delegate release];
 			return error == XADNoError;
@@ -276,11 +378,8 @@ static XADArchiveParser * getCachedArchiveParserForPath(NSString * path)
 {
 	@autoreleasepool
 	{
-		XADError error = XADNoError;
-		NSArray * archiveParserChain = [archiveFile archiveParser];
-		XADArchiveParser * parser = [XADArchiveParser archiveParserForEntryWithDictionary:[archiveFile entry]
-			archiveParser:[archiveParserChain lastObject] wantChecksum:NO error:&error];
-		return (parser && error == XADNoError);
+		CBXADArchiveParserProxy * proxy = [CBXADArchiveParserProxy proxyWithArchiveFile:archiveFile];
+		return proxy != nil;
 	}
 }
 
@@ -289,18 +388,12 @@ static XADArchiveParser * getCachedArchiveParserForPath(NSString * path)
 {
 	@autoreleasepool
 	{
-		XADError error = XADNoError;
-		NSArray * archiveParserChain = [archiveFile archiveParser];
-		XADArchiveParser * parser = [XADArchiveParser archiveParserForEntryWithDictionary:[archiveFile entry]
-			archiveParser:[archiveParserChain lastObject] wantChecksum:NO error:&error];
-		if (parser && error == XADNoError)
+		CBXADArchiveParserProxy * proxy = [CBXADArchiveParserProxy proxyWithArchiveFile:archiveFile];
+		if (proxy)
 		{
-			if ([parser filename] == nil)
-				[parser setFilename:[archiveFile path]];
 			CBXADParserDelegate * delegate = [[CBXADParserDelegate alloc]
 					initWithBlock:fileCallback forURL:[archiveFile baseURL] entries:[archiveFile entries]];
-			[parser setDelegate:delegate];
-			error = [parser parseWithoutExceptions];
+			XADError error = [proxy parseWithDelegate:delegate];
 			[delegate commit];
 			[delegate release];
 			return error == XADNoError;
