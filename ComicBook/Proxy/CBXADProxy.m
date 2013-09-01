@@ -99,8 +99,10 @@
 
 // Archive Parser Proxy
 
-// Archive Parser Proxy Cache
-static NSCache * archiveParserProxyCache = nil; // Initialized by +[CBXADProxy initialize]
+// Archive Parser Proxy global state
+// Initialized by +[CBXADArchiveParserProxy initialize]
+static NSCache * archiveParserProxyCache = nil;
+static NSArray * archiveExtensionBlacklist = nil;
 
 @implementation CBXADArchiveParserProxy : NSObject
 
@@ -149,6 +151,9 @@ static NSCache * archiveParserProxyCache = nil; // Initialized by +[CBXADProxy i
 
 + (CBXADArchiveParserProxy*)proxyWithArchiveURL:(NSURL*)url
 {
+	NSString * extension = [url pathExtension];
+	if ([[CBXADArchiveParserProxy archiveExtensionBlacklist] containsObject:extension])
+		return nil;
 	CBXADArchiveParserProxy * proxy = [archiveParserProxyCache objectForKey:url];
 	if (proxy)
 		return proxy;
@@ -175,6 +180,9 @@ static NSCache * archiveParserProxyCache = nil; // Initialized by +[CBXADProxy i
 
 - (CBXADArchiveParserProxy*)getSubarchiveForEntry:(NSDictionary*)entry
 {
+	NSString * extension = [[[entry objectForKey:XADFileNameKey] string] pathExtension];
+	if ([[CBXADArchiveParserProxy archiveExtensionBlacklist] containsObject:extension])
+		return nil;
 	[self parseIfNeeded];
 	@synchronized(baseArchive)
 	{
@@ -239,6 +247,15 @@ static NSCache * archiveParserProxyCache = nil; // Initialized by +[CBXADProxy i
 		archiveParserProxyCache.countLimit = 128;
 		archiveParserProxyCache.name = @"Archive Parser Cache";
 	}
+	if (archiveExtensionBlacklist == nil)
+	{
+		archiveExtensionBlacklist = [[NSArray alloc] initWithObjects:@"db", nil];
+	}
+}
+
++ (NSArray*)archiveExtensionBlacklist
+{
+	return archiveExtensionBlacklist;
 }
 
 @end

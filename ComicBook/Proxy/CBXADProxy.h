@@ -62,6 +62,7 @@
 - (int)parseWithDelegate:(id)delegate;
 
 + (void)initialize;
++ (NSArray*)archiveExtensionBlacklist;
 
 @end
 
