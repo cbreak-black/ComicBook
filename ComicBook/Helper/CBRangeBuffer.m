@@ -24,7 +24,6 @@
 
 - (void)dealloc
 {
-	dispatch_release(queue);
 }
 
 @synthesize exitBlock;
