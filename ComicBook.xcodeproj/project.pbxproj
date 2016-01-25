@@ -28,7 +28,6 @@
 		7060C031167CAA14008A9E92 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 7060C02F167CAA14008A9E92 /* Credits.rtf */; };
 		7060C034167CAA14008A9E92 /* CBDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C033167CAA14008A9E92 /* CBDocument.m */; };
 		7060C03A167CAA14008A9E92 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7060C038167CAA14008A9E92 /* MainMenu.xib */; };
-		7060C042167CAA14008A9E92 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C041167CAA14008A9E92 /* SenTestingKit.framework */; };
 		7060C043167CAA14008A9E92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C020167CAA14008A9E92 /* Cocoa.framework */; };
 		7060C04B167CAA14008A9E92 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7060C049167CAA14008A9E92 /* InfoPlist.strings */; };
 		7060C04E167CAA14008A9E92 /* ComicBookTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C04D167CAA14008A9E92 /* ComicBookTests.m */; };
@@ -40,8 +39,8 @@
 		7060C097168642B1008A9E92 /* CBPDFFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C096168642B1008A9E92 /* CBPDFFrame.m */; };
 		7060C09D168660CA008A9E92 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7060C09C168660CA008A9E92 /* Quartz.framework */; };
 		7060C0A4168669AC008A9E92 /* CBDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7060C0A3168669AC008A9E92 /* CBDocumentController.m */; };
-		709994F9176E74C500A05583 /* XADMaster.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 7060C07E1685DF4A008A9E92 /* XADMaster.framework */; };
-		709994FA176E74CB00A05583 /* UniversalDetector.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 7060C07D1685DF4A008A9E92 /* UniversalDetector.framework */; };
+		709994F9176E74C500A05583 /* XADMaster.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 7060C07E1685DF4A008A9E92 /* XADMaster.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		709994FA176E74CB00A05583 /* UniversalDetector.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 7060C07D1685DF4A008A9E92 /* UniversalDetector.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,7 +112,6 @@
 		7060C033167CAA14008A9E92 /* CBDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CBDocument.m; path = Controller/CBDocument.m; sourceTree = "<group>"; };
 		7060C039167CAA14008A9E92 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		7060C040167CAA14008A9E92 /* ComicBookTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ComicBookTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		7060C041167CAA14008A9E92 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		7060C048167CAA14008A9E92 /* ComicBookTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ComicBookTests-Info.plist"; sourceTree = "<group>"; };
 		7060C04A167CAA14008A9E92 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7060C04C167CAA14008A9E92 /* ComicBookTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ComicBookTests.h; sourceTree = "<group>"; };
@@ -150,7 +148,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7060C042167CAA14008A9E92 /* SenTestingKit.framework in Frameworks */,
 				7060C043167CAA14008A9E92 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -228,7 +225,6 @@
 				7060C07D1685DF4A008A9E92 /* UniversalDetector.framework */,
 				7060C07E1685DF4A008A9E92 /* XADMaster.framework */,
 				7060C020167CAA14008A9E92 /* Cocoa.framework */,
-				7060C041167CAA14008A9E92 /* SenTestingKit.framework */,
 				7060C022167CAA14008A9E92 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -368,7 +364,7 @@
 			name = ComicBookTests;
 			productName = ComicBookTests;
 			productReference = 7060C040167CAA14008A9E92 /* ComicBookTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productType = "com.apple.product-type.bundle.ocunit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -377,8 +373,14 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = CB;
-				LastUpgradeCheck = 0450;
+				LastTestingUpgradeCheck = 0720;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "the-color-black.net";
+				TargetAttributes = {
+					7060C01B167CAA14008A9E92 = {
+						DevelopmentTeam = 8THUW5GT6P;
+					};
+				};
 			};
 			buildConfigurationList = 7060C016167CAA13008A9E92 /* Build configuration list for PBXProject "ComicBook" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -539,7 +541,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -547,6 +548,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -573,7 +575,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -602,6 +603,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ComicBook/ComicBook.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -610,7 +613,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ComicBook/ComicBook-Prefix.pch";
 				INFOPLIST_FILE = "ComicBook/ComicBook-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.the-color-black.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -619,6 +624,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ComicBook/ComicBook.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -627,7 +634,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ComicBook/ComicBook-Prefix.pch";
 				INFOPLIST_FILE = "ComicBook/ComicBook-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.the-color-black.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -641,6 +650,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ComicBook/ComicBook-Prefix.pch";
 				INFOPLIST_FILE = "ComicBookTests/ComicBookTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.the-color-black.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
@@ -656,6 +666,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ComicBook/ComicBook-Prefix.pch";
 				INFOPLIST_FILE = "ComicBookTests/ComicBookTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.the-color-black.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
